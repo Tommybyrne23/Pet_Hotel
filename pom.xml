@@ -1,0 +1,22 @@
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.tus.student</groupId>
+  <artifactId>3A-Pet-Hotel</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+<build>
+<plugins>
+	<plugins>
+
+	<groupID>org.apache.maven.plugins</groupID>
+	<artifactId>maven-war-plugin</artifactId>
+	<version>3.3.1</version>
+	<configuration>
+		<failOnMIssingWebXML>false</failOnMIssingWebXML>
+	</configuration>
+	</plugins>
+
+</plugins>
+</build>
+</project>
