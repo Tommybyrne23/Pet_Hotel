@@ -1,3 +1,7 @@
+/*
+ * think i may not need this, 
+ */
+
 package com.tus.pethotel;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,11 +12,15 @@ import org.junit.jupiter.api.Test;
 
 class UserTest {
 
-	User user; 
+	User user1; 
+	User user2; 
+	User user3; 
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		user = new User("jonathn"); 
+		user1 = new User("Jonathan", "a00347373@student.tus.ie", "CSE2026" ); 
+		user2 = new User("Tommy", "a00347372@student.tus.ie", "Software" ); 
+		user3 = new User("Rupali", "a00347380@student.tus.ie", "Development" ); 
 	}
 
 
@@ -23,9 +31,9 @@ class UserTest {
 	 */
 	@Test
 	@DisplayName("Test: Create a new account")
-	void createUser() {
-		user("Jonathan", String "a00347373@student.tus.ie", String "087654321", "3 Shiny Shell, Puffin Rock, Dublin", "P113R0CK", false);
-		fail("Not yet implemented");
+	void testCreateNewUser() {
+		user4 = new User("Markus","a00311226@student.tus.ie", "AthloneTUS" );
+		
 	}
 
 	/*
@@ -33,7 +41,7 @@ class UserTest {
 	 */
 	@Test
 	@DisplayName("Test: Duplicate email ")
-	void registeredEmail() {
+	void testDuplicateEmail() {
 		fail("Not yet implemented");
 	}
 
