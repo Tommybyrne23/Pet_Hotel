@@ -1,6 +1,10 @@
 package com.tus.registration;
 import java.io.Serializable;
+
+import com.tus.pethotel.UserList;
+
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 @Named
@@ -12,7 +16,14 @@ public class RegistrationBean implements Serializable {
 	private String email;
 	private String password;
 	
+	//allows us to inject the bean into the Userlist array object identified in the user list array.
+	@Inject
+	private UserList userList;
+	
+	
+	//registers the user before redirecting to the sample webpage.
 	public String register() {
+		userList.addUser(name, email, password);
 		return "sampleWebpage?faces-redirect=true";
 	}
 		

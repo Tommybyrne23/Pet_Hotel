@@ -15,8 +15,7 @@ public class UserList {
 			this.users = new ArrayList<>();
 		}
 		
-		
-		
+				
 		//how big is the size of the array 
 		public int getNumberOfUsers() {
 			return users.size();
