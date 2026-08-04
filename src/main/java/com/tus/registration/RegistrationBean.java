@@ -13,7 +13,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-@Named("RegistrationBean")
+@Named("RegistrationBean")				//this was named incorrectly in the xhtml page. Added the captial R in the xhtml file 
 @SessionScoped
 
 public class RegistrationBean implements Serializable {
