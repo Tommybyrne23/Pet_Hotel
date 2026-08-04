@@ -12,15 +12,19 @@ import org.junit.jupiter.api.Test;
 
 class UserTest {
 
+	/* 
+	 * Delare 3 users as part of the test create a Userlist Array 
+	 */
 	User user1; 
-	User user2; 
-	User user3; 
+//	User user2; 
+//	User user3; 
+	UserList userlist;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		user1 = new User("Jonathan", "a00347373@student.tus.ie", "CSE2026" ); 
-		user2 = new User("Tommy", "a00347372@student.tus.ie", "Software" ); 
-		user3 = new User("Rupali", "a00347380@student.tus.ie", "Development" ); 
+		user1 = new User("Jonathan", "a00347373@student.tus.ie", "CSE2026" ); 			// currently not added to the array
+//		user2 = new User("Tommy", "a00347372@student.tus.ie", "Software" ); 			// not sure if we need these 
+//		user3 = new User("Rupali", "a00347380@student.tus.ie", "Development" ); 
 	}
 
 
@@ -33,8 +37,13 @@ class UserTest {
 	@Test
 	@DisplayName("Test: Create a new account")
 	void testCreateNewUser() {
-		user4 = new User("Markus","a00311226@student.tus.ie", "AthloneTUS" );
-		
+	assertNotNull(user1, "User object should not be null after creation");
+	assertEquals("Jonathan", user1.getName(), "Name Should match constructor input");
+	assertEquals("a00347373@student.tus.ie", user1.getEmail(), "Email should match constructor input");
+	assertEquals("CSE2026", user1.getPassword(), "Password should match constructor input");
+	
+	// Assert that userID was auto-generated and assigned
+			assertTrue(user1.getUserID() > 0, "User ID should be greater than 0");	
 	}
 
 	/*
