@@ -29,6 +29,7 @@ class UserTest {
 	 * 
 	 * All tests have been made from the user story tasks and acceptence criteria
 	 */
+	
 	@Test
 	@DisplayName("Test: Create a new account")
 	void testCreateNewUser() {
@@ -37,7 +38,7 @@ class UserTest {
 	}
 
 	/*
-	 * Test to check whether an error is thrown when 
+	 * Test to check whether an error is thrown when a user registers with an existing 
 	 */
 	@Test
 	@DisplayName("Test: Duplicate email ")

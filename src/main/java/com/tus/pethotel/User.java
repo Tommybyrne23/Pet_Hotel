@@ -1,13 +1,21 @@
 package com.tus.pethotel;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 	
-	private static int uuID;			//make the unique user ID static so that object ++
+	private static final long serialVersionUID = 1L;
+	
+	
+	private static int uuID = 0 ;		//make the unique user ID static so that object ++
 	private int userID;					// we 
 	private String name;
 	private String email;
 	private String password;
 
+	
+	public User() {				//default constructor that won't be called or do anything 
+		}						// it is required by jakarta faces so will do nothing and should be easy to test 
 	
 	//only required fields are entered.
 
