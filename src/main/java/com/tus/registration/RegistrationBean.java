@@ -8,6 +8,8 @@ import com.tus.pethotel.UserList;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
