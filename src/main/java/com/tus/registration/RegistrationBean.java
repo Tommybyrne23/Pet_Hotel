@@ -24,7 +24,7 @@ public class RegistrationBean implements Serializable {
 	//registers the user before redirecting to the sample webpage.
 	public String register() {
 		userList.addUser(name, email, password);
-		return "sampleWebpage?faces-redirect=true";
+		return "sampleWebpage?faces-redirect=true";  // change this to index. 
 	}
 		
 	public String getName() {

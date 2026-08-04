@@ -26,8 +26,7 @@ public class UserList {
 		public void addUser(String name, String email, String password){
 			User newUser = new User(name, email, password);			// delcare a new object in the method to be sent to the array
 			users.add(newUser);										// delcare the object above as the new item to be added to the array. 
-			
-		}
+			for (UserList L )}
 		
 		public ArrayList<User> getUsers(){
 			return users;
