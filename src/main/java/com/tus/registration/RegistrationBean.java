@@ -15,6 +15,8 @@ public class RegistrationBean implements Serializable {
 	private String name;
 	private String email;
 	private String password;
+	private String message;
+
 	
 	//allows us to inject the bean into the Userlist array object identified in the user list array.
 	@Inject
@@ -22,11 +24,32 @@ public class RegistrationBean implements Serializable {
 	
 	
 	//registers the user before redirecting to the sample webpage.
+//	public String register() {
+//		userList.addUser(name, email, password);
+//		return "sampleWebpage?faces-redirect=true";  // change this to index. 
+//	}
 	public String register() {
-		userList.addUser(name, email, password);
-		return "sampleWebpage?faces-redirect=true";  // change this to index. 
+	    if (name == null || name.isBlank() ||
+	        email == null || email.isBlank() ||
+	        password == null || password.isBlank()) {
+	        message = "Please fill in all required fields.";
+	        return null;
+	    }
+
+	    if (userList.userExists(email)) {
+	        message = "User already exists.";
+	        return null;
+	    }
+
+	    userList.addUser(name, email, password);
+	    message = "Account created successfully.";
+	    return "sampleWebpage?faces-redirect=true";
 	}
-		
+
+	    userList.addUser(name, email, password);
+	    message = "Account created successfully.";
+	    return "sampleWebpage?faces-redirect=true";
+	}
 	public String getName() {
 		return name;
 	}
@@ -49,5 +72,12 @@ public class RegistrationBean implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getMessage() {
+	    return message;
+	}
+
+	public void setMessage(String message) {
+	    this.message = message;
 	}
 }

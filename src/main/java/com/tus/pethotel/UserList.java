@@ -32,6 +32,16 @@ public class UserList {
 			return users;
 		}
 		
+		public boolean userExists(String email) {
+		    for (Object obj : users) {
+		        User user = (User) obj;
+		        if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(email)) {
+		            return true;
+		        }
+		    }
+		    return false;
+		}
+		
 	//get the size of the list 
 		
 	

@@ -1,38 +1,53 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
 
 <h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
-	<title>Account Registration</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Account Registration</title>
 </h:head>
+
 <h:body>
-	<h1>Register an account</h1>
-	<h:form>
-		<h:panelGrid columns="1" styleClass="register-grid">
-			<h:outputLabel value="Name:" />
-			<h:inputText id="nameInput" value="#{registrationBean.name}">
-				<f:validateLength minimum="1" />
-			</h:inputText>
-			
+    <h1>Register an account</h1>
 
-			<h:outputLabel value="Email:" />
-			<h:inputText id="emailInput" value="#{registrationBean.email}">
-				<f:validateLength minimum="1" />
-			</h:inputText>
+    <h:form>
+        <h:messages globalOnly="true" style="color:red;" />
 
-			<h:outputLabel value="Password:" />
-			<h:inputSecret id="passwordInput"
-				value="#{registrationBean.password}">
-				<f:validateLength minimum="1" />
-				<!--  message to pop-up for empty password message -->
-			</h:inputSecret>
+        <h:panelGroup rendered="#{not empty registrationBean.message}">
+            <h:outputText value="#{registrationBean.message}" style="color:green;" />
+        </h:panelGroup>
 
-			<br />
-			<h:commandButton value="Register"
-				action="#{registrationBean.register}" />
-			<h:commandButton type="reset" value="Reset" />
-		</h:panelGrid>
-	</h:form>
+        <h:panelGrid columns="1" styleClass="register-grid">
+
+            <h:outputLabel for="nameInput" value="Name:" />
+            <h:inputText id="nameInput"
+                         value="#{registrationBean.name}"
+                         required="true"
+                         requiredMessage="Name is required." />
+            <h:message for="nameInput" style="color:red;" />
+
+            <h:outputLabel for="emailInput" value="Email:" />
+            <h:inputText id="emailInput"
+                         value="#{registrationBean.email}"
+                         required="true"
+                         requiredMessage="Email is required." />
+            <h:message for="emailInput" style="color:red;" />
+
+            <h:outputLabel for="passwordInput" value="Password:" />
+            <h:inputSecret id="passwordInput"
+                           value="#{registrationBean.password}"
+                           required="true"
+                           requiredMessage="Password is required." />
+            <h:message for="passwordInput" style="color:red;" />
+
+            <br />
+            <h:commandButton value="Register"
+                             action="#{registrationBean.register}" />
+            <h:commandButton type="reset" value="Reset" />
+
+        </h:panelGrid>
+    </h:form>
 </h:body>
 </html>
+
