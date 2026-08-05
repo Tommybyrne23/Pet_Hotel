@@ -12,19 +12,21 @@
 		<h:panelGrid columns="1" styleClass="register-grid">
 			<h:outputLabel value="Name:" />
 			<!-- added the .user.name to add the User object to the registration bean and will align witht user.bean -->
-			<h:inputText id="nameInput" value="#{RegistrationBean.user.name}">
+			<h:inputText id="nameInput" value="#{RegistrationBean.user.name}"
+				required="true">
 				<f:validateLength minimum="1" />
 			</h:inputText>
-			
+
 
 			<h:outputLabel value="Email:" />
-			<h:inputText id="emailInput" value="#{RegistrationBean.user.email}">
+			<h:inputText id="emailInput" value="#{RegistrationBean.user.email}"
+				required="true">
 				<f:validateLength minimum="1" />
 			</h:inputText>
 
 			<h:outputLabel value="Password:" />
 			<h:inputSecret id="passwordInput"
-				value="#{RegistrationBean.user.password}">
+				value="#{RegistrationBean.user.password}" required="true">
 				<f:validateLength minimum="1" />
 				<!--  message to pop-up for empty password message -->
 			</h:inputSecret>
@@ -32,7 +34,7 @@
 			<br />
 			<h:commandButton value="Register"
 				action="#{RegistrationBean.register}" />
-			<h:commandButton type="reset" value="Reset" />
+			<h:commandButton value="Reset" immediate="true" action="#{RegistrationBean.reset}"/>
 		</h:panelGrid>
 	</h:form>
 </h:body>
