@@ -36,7 +36,7 @@ public class LoginBean implements Serializable {
 
                 loggedInUser = user;
 
-                return "index?faces-redirect=true";
+                return "userHomepage?faces-redirect=true";
             }
         }
 
