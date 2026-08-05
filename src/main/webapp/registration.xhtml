@@ -8,7 +8,7 @@
 </h:head>
 <h:body>
 	<h1>Register an account</h1>
-	<h:form>
+	<h:form styleClass="register-box">
 		<h:panelGrid columns="1" styleClass="register-grid">
 			<h:outputLabel value="Name:" />
 			<!-- added the .user.name to add the User object to the registration bean and will align witht user.bean -->
@@ -31,10 +31,13 @@
 				<!--  message to pop-up for empty password message -->
 			</h:inputSecret>
 
-			<br />
-			<h:commandButton value="Register"
-				action="#{RegistrationBean.register}" />
-			<h:commandButton value="Reset" immediate="true" action="#{RegistrationBean.reset}"/>
+			<h:panelGroup styleClass="button-row">
+				<h:commandButton value="Register"
+					action="#{RegistrationBean.register}" />
+				<h:commandButton value="Reset" immediate="true"
+					action="#{RegistrationBean.reset}" />
+			</h:panelGroup>
+
 		</h:panelGrid>
 	</h:form>
 </h:body>
