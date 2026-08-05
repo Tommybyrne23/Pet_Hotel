@@ -57,6 +57,8 @@ public class RegistrationBean implements Serializable {
 
 		user = new User(); 					// reset the form to allow for the next registration, clears any data stored in the system 
 		return "login?faces-redirect=true";  // redirects to the index page 
+		
+		
 	}
 
 	public String reset() {

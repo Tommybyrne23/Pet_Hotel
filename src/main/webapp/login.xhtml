@@ -33,8 +33,15 @@
 
 			<h:commandButton value="Login"
 				action="#{LoginBean.login}" />
-
+				
 			<h:commandButton type="reset" value="Reset" />
+			
+				<h:panelGroup styleClass="login-prompt">
+				    Need to register?
+	    			<h:link outcome="registration" value="Register here." />
+	    			<br />
+    				<h:link outcome="index" value="Return Home." />
+    			</h:panelGroup>
 
 		</h:panelGrid>
 
