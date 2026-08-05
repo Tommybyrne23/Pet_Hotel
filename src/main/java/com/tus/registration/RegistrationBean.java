@@ -56,7 +56,7 @@ public class RegistrationBean implements Serializable {
 		//if it is successful then the user was in the boolean userList.addUser(user) so we don't need to do anything else 
 
 		user = new User(); 					// reset the form to allow for the next registration, clears any data stored in the system 
-		return "index?faces-redirect=true";  // redirects to the index page 
+		return "login?faces-redirect=true";  // redirects to the index page 
 	}
 
 	public String reset() {
