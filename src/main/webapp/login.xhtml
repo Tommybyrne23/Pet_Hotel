@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Login</title>
+</h:head>
+
+<h:body>
+
+	<h1>Login To Account</h1>
+
+	<h:form id="loginForm">
+
+		<h:panelGrid columns="1" styleClass="account">
+
+			<h:outputLabel value="Email:" />
+			<h:inputText id="emailInput" value="#{LoginBean.email}">
+				<f:validateLength minimum="1" />
+			</h:inputText>
+
+
+			<h:outputLabel value="Password:" />
+			<h:inputSecret id="passwordInput"
+				value="#{LoginBean.password}">
+				<f:validateLength minimum="1" />
+			</h:inputSecret>
+
+
+			<br />
+
+			<h:commandButton value="Login"
+				action="#{LoginBean.login}" />
+				
+			<h:commandButton type="reset" value="Reset" />
+			
+				<h:panelGroup styleClass="login-prompt">
+				    Need to register?
+	    			<h:link outcome="registration" value="Register here." />
+	    			<br />
+    				<h:link outcome="index" value="Return Home." />
+    			</h:panelGroup>
+
+		</h:panelGrid>
+
+		<h:messages />
+
+	</h:form>
+
+</h:body>
+</html>

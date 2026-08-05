@@ -1,7 +1,7 @@
 <project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.tus.app</groupId>
-  <artifactId>week_3</artifactId>
+  <artifactId>3A_Pet_Hotel</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
    <properties>
@@ -13,6 +13,24 @@
         <artifactId>jakarta.faces</artifactId>
         <version>4.0.9</version>
     </dependency>
+
+
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>6.0.0-M1</version> 
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>6.0.0-M1</version>
+    <scope>test</scope>
+</dependency>
+
+
+
      <dependency>
         <groupId>org.jboss.weld.servlet</groupId>
         <artifactId>weld-servlet-shaded</artifactId>

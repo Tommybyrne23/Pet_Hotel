@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Adam's Ark and Avery</title>
+</h:head>
+<h:body>
+<!-- Dummy button for registration and login -->
+<div class="button" style="text-align:right">
+    <h:button outcome="login" value="Login" styleClass="nav-btn"/>
+    <br />
+    <h:button outcome="registration" value="Register" styleClass="nav-btn"/>
+</div>
+<h1>Adams Ark and Avery</h1>
+	<p class="intro">
+	Whether you're away for a day, a weekend, or an extended holiday,
+	<br /> 
+	our dedicated team is committed to providing a safe, comfortable, and caring environment for every pet in our care.
+	</p>
+<!-- Services displayed here -->
+<h2>Services</h2>
+<!-- Services formatted to work with the CSS file -->
+<div class="service-left">
+	<!-- Services for dogs -->
+	<img src="images/dog.jpg" alt="Dog Boarding" />
+    <div class="service-text">
+        <h3>Dog Boarding</h3>
+        <p>
+            Our spacious dog boarding facilities provide a safe and comfortable environment for dogs of all breeds and sizes. 
+            <br />
+            Each guest receives daily exercise, regular feeding, fresh water, and plenty of attention from our experienced staff.
+            <br />
+            We aim to make every stay enjoyable, whether ist's for a weekend or an extended holiday.
+        </p>
+    </div>
+</div>
+<div class="service-right">
+	<!-- Services for cats -->
+	<img src="images/cat.jpg" alt="Cat Boarding" />
+    <div class="service-text">
+        <h3>Cat Boarding</h3>
+        <p>
+            Our cat accommodation offers a quiet and relaxing environment designed to reduce stress while you're away.
+            <br />
+            Each cat has its own clean, comfortable space for daily feeding, fresh litter, and regular care from our team.
+            <br />
+            We strive to ensure every feline guest feels secure and well looked after.
+        </p>
+    </div>
+</div>
+<div class="service-left">
+	<!-- Services for reptiles -->
+	<img src="images/reptile.jpg" alt="Reptile Boarding" />
+    <div class="service-text">
+        <h3>Reptile Boarding</h3>
+        <p>
+            Our reptile boarding service is designed to meet the specialised needs of reptiles and other exotic pets.
+            <br />
+            Enclosures are maintained with appropriate heating, lighting, and humidity where required.
+            <br />
+            Our trained staff ensure feeding schedules and habitat conditions are carefully followed throughout your pet's stay.
+        </p>
+    </div>
+</div>
+<div class="service-right">
+	<!-- Services for birds -->
+	<img src="images/bird.jpg" alt="Bird Boarding" />
+    <div class="service-text">
+        <h3>Bird Boarding</h3>
+        <p>
+            We provide spacious, hygienic cages suitable for a variety of bird species.
+            <br />
+            Birds are cared for with daily feeding, fresh water, cage cleaning, and regular interaction where appropriate.
+            <br />
+            Our staff work to maintain a calm environment that supports your bird's health and wellbeing.
+        </p>
+    </div>
+</div>
+<!-- Contact Details section - displays 3A business contact information for customers -->
+<h2>Contact Details</h2>
+	<p class="contact">
+	    <!-- Business name and address -->
+	    <strong>Adam's Ark and Avery (3A Pet Hotel)</strong>
+	    <br />
+	    <!-- Street address -->
+	    12 Zoological Park Road
+	    <br />
+	    <!-- City and county -->
+	    Dublin 8, Ireland
+	    <br /><br />
+	    <!-- Phone contact -->
+	    Phone: 01 456 7890
+	    <br />
+	    <!-- Mobile contact -->
+	    Mobile: 087 777 5656
+	    <br />
+	    <!-- Email contact - customers can use this to make enquiries -->
+	    Email: info@3apetshotel.ie
+	    <br /><br />
+	    <!-- Opening hours for customer reference -->
+	    Opening Hours: Monday to Sunday, 8am to 8pm
+	</p>
+</h:body>
+</html>

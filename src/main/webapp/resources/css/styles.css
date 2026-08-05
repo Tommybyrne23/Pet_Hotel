@@ -1,6 +1,7 @@
 body {
 	background-color: beige;
 	font-family: Arial, sans-serif;
+	color: #4E342E;
 }
 /*Align headings in the center and add a line beneath it*/
 h1 {
@@ -31,17 +32,28 @@ button:hover {
     text-align: center;
 }
 
+.account {
+    width: 90%;
+    max-width: 350px;
+    margin: 40px auto;
+}
+
+
 .service-left,
 .service-right {
     display: flex; /*Make images and text appear side by side*/
+     margin: 5px;
+        border-radius: 10px;
     align-items: flex-start; /*Test aligns with the top of the image*/
     gap: 30px; /*Space between image and text*/
     margin: 40px auto; /*Vertical spacing*/
     width: 90%; /*Keep content from the edges of the page*/
+    line-height: 1.5;
 }
 
 .service-right {
     flex-direction: row-reverse; /*Force content to the right of the page*/
+	background-color: tan;
 }
 
 /*Make images one uniform size, doesn't stretch images but crops them
@@ -54,7 +66,17 @@ so best if images are a correct ratio size*/
     object-fit: cover;
 }
 
-/*Keeps text to the left size of the page*/
-.service-text {
-    flex: 1;
+/*class for intro color scheme*/
+.intro {
+
+    text-align: center;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #4E342E;
+    
 }
+
+/*Keeps text to the left size of the page*/
+/*.service-text {
+    flex: 1;
+}*/
