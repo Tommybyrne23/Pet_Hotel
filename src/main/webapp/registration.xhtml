@@ -37,7 +37,11 @@
 				<h:commandButton value="Reset" immediate="true"
 					action="#{RegistrationBean.reset}" />
 			</h:panelGroup>
-
+			
+			<h:panelGroup styleClass="login-prompt">
+    			Already have an account?
+    			<h:link outcome="login" value="Log in here." />
+			</h:panelGroup>
 		</h:panelGrid>
 	</h:form>
 </h:body>
