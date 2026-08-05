@@ -3,15 +3,15 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
 <h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Adam's Ark and Avery</title>
-	<link rel="stylesheet" href="resources/css/styles.css" />
 </h:head>
 <h:body>
 <!-- Dummy button for registration and login -->
 <div class="button" style="text-align:right">
-    <button>Login</button>
+    <h:button outcome="login" value="Login" styleClass="nav-btn"/>
     <br />
-    <button>Register</button>
+    <h:button outcome="registration" value="Register" styleClass="nav-btn"/>
 </div>
 <h1>Adams Ark and Avery</h1>
 	<p class="intro">
@@ -24,7 +24,7 @@
 <!-- Services formatted to work with the CSS file -->
 <div class="service-left">
 	<!-- Services for dogs -->
-	<img src="resources/images/dog.jpg" alt="Dog Boarding" />
+	<img src="images/dog.jpg" alt="Dog Boarding" />
     <div class="service-text">
         <h3>Dog Boarding</h3>
         <p>
@@ -38,7 +38,7 @@
 </div>
 <div class="service-right">
 	<!-- Services for cats -->
-	<img src="resources/images/cat.jpg" alt="Dog Boarding" />
+	<img src="images/cat.jpg" alt="Cat Boarding" />
     <div class="service-text">
         <h3>Cat Boarding</h3>
         <p>
@@ -52,7 +52,7 @@
 </div>
 <div class="service-left">
 	<!-- Services for reptiles -->
-	<img src="resources/images/reptile.jpg" alt="Dog Boarding" />
+	<img src="images/reptile.jpg" alt="Reptile Boarding" />
     <div class="service-text">
         <h3>Reptile Boarding</h3>
         <p>
@@ -66,7 +66,7 @@
 </div>
 <div class="service-right">
 	<!-- Services for birds -->
-	<img src="resources/images/bird.jpg" alt="Dog Boarding" />
+	<img src="images/bird.jpg" alt="Bird Boarding" />
     <div class="service-text">
         <h3>Bird Boarding</h3>
         <p>
