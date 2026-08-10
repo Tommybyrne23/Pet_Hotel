@@ -14,83 +14,95 @@ import jakarta.inject.Named;
 @Named("LoginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String email;
-    private String password;
+	private String email;
+	private String password;
 
-    private User loggedInUser;
+	private User loggedInUser;
 
-    @Inject
-    private UserList userList;
-
-
-    public String login() {
-
-        // Loop through all registered users
-        for (User user : userList.getUsers()) {
-
-            // Check email and password match
-            if (user.getEmail().equalsIgnoreCase(email)
-                    && user.getPassword().equals(password)) {
-
-                loggedInUser = user;
-
-                return "userHomepage?faces-redirect=true";
-            }
-        }
+	@Inject
+	private UserList userList;
 
 
-        // If no match found
-        FacesContext.getCurrentInstance().addMessage(
-                "loginForm:emailInput",
-                new FacesMessage(
-                        FacesMessage.SEVERITY_ERROR,
-                        "Invalid email or password.",
-                        null
-                )
-        );
+	public String login() {
 
-        return null; // stay on login page
-    }
+		// Loop through all registered users
+		for (User user : userList.getUsers()) {
 
+			// Check email and password match
+			if (user.getEmail().equalsIgnoreCase(email)
+					&& user.getPassword().equals(password)) {
 
-    public String logout() {
+				loggedInUser = user;
 
-        loggedInUser = null;
-        email = null;
-        password = null;
+				//                return "userHomepage?faces-redirect=true";
+				// SCRUM-129: Redirect to user dashboard after successful login
+				//     return "userDashboard?faces-redirect=true";
+				// Redirect based on user role
+		String role = user.getRole();
 
-        return "login?faces-redirect=true";
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+				if ("admin".equals(role)) {
+					return "adminDashboard?faces-redirect=true";
+				} else if ("petAttendant".equals(role)) {
+					return "petAttendantDashboard?faces-redirect=true";
+				} else {
+					return "userDashboard?faces-redirect=true";
+				}
+			}
+		}
 
 
-    public String getPassword() {
-        return password;
-    }
+		// If no match found
+		FacesContext.getCurrentInstance().addMessage(
+				"loginForm:emailInput",
+				new FacesMessage(
+						FacesMessage.SEVERITY_ERROR,
+						"Invalid email or password.",
+						null
+						)
+				);
+
+		return null; // stay on login page
+	}
 
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String logout() {
+
+		loggedInUser = null;
+		email = null;
+		password = null;
+
+		return "login?faces-redirect=true";
+	}
 
 
-    public User getLoggedInUser() {
-        return loggedInUser;
-    }
+	public String getEmail() {
+		return email;
+	}
 
 
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public User getLoggedInUser() {
+		return loggedInUser;
+	}
+
+
+	public void setLoggedInUser(User loggedInUser) {
+		this.loggedInUser = loggedInUser;
+	}
 }

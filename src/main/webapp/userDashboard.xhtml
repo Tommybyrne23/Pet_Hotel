@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>User Dashboard</title>
+</h:head>
+
+<h:body>
+
+	<h1>User Dashboard</h1>
+
+	<h:form styleClass="account">
+		<h:panelGrid columns="1" styleClass="account">
+
+			<!-- Welcome message showing the logged in user name -->
+			<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
+				style="font-size: 18px; font-weight: bold;" />
+
+			<br />
+
+			<!-- SCRUM-130: Button for customer profile management view -->
+			<h:commandButton value="My Profile"
+				action="userHomepage?faces-redirect=true" />
+
+			<!-- SCRUM-131: Button to add pets -->
+			<h:commandButton value="Add a Pet"
+				action="addPet?faces-redirect=true" />
+
+			<!-- SCRUM-132: Button to make a booking -->
+			<h:commandButton value="Make a Booking"
+				action="makeBooking?faces-redirect=true" />
+
+			<!-- SCRUM-133: Button to view bookings -->
+			<h:commandButton value="View Bookings"
+				action="viewBookings?faces-redirect=true" />
+
+			<!-- View Services on the homepage -->
+			<h:commandButton value="View Services"
+				action="index?faces-redirect=true" />
+
+			<br />
+
+			<!-- Logout button -->
+			<h:commandButton value="Logout"
+				action="#{LoginBean.logout}" />
+
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>
