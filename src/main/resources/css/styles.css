@@ -1,0 +1,60 @@
+body {
+	background-color: beige;
+	font-family: Arial, sans-serif;
+}
+/*Align headings in the center and add a line beneath it*/
+h1 {
+	text-align:center;
+	border-bottom: 4px solid #6D4C41;
+}
+
+/*Align subheadings in the center and add a line beneath it*/
+h2 {
+	text-align:center;
+    border-bottom: 2px solid #6D4C41;
+}
+
+
+/*Add colour and border to the buttons*/
+button {
+    background-color: #C96C4A;
+    border-radius: 12px;
+    color: white;
+}
+
+button:hover {
+    background-color: #A65237;
+}
+
+/*Make contact information be centered*/
+.contact {
+    text-align: center;
+}
+
+.service-left,
+.service-right {
+    display: flex; /*Make images and text appear side by side*/
+    align-items: flex-start; /*Test aligns with the top of the image*/
+    gap: 30px; /*Space between image and text*/
+    margin: 40px auto; /*Vertical spacing*/
+    width: 90%; /*Keep content from the edges of the page*/
+}
+
+.service-right {
+    flex-direction: row-reverse; /*Force content to the right of the page*/
+}
+
+/*Make images one uniform size, doesn't stretch images but crops them
+so best if images are a correct ratio size*/
+.service-left img,
+.service-right img {
+    width: 250px;
+    height: 180px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/*Keeps text to the left size of the page*/
+.service-text {
+    flex: 1;
+}

@@ -38,10 +38,7 @@ public class LoginBean implements Serializable {
                 
                 Role role = user.getRole();
 
-                // return "userHomepage?faces-redirect=true";
-
-				//     return "userDashboard?faces-redirect=true";
-				// Redirect based on user role
+               
                 if (user.getRole().equals(Role.ADMIN)){
                 	return "adminDashboard?faces-redirect=true";
                 } else if (user.getRole().equals(Role.CUSTOMER)){
@@ -50,13 +47,6 @@ public class LoginBean implements Serializable {
                 	return "petAttendantDashboard?faces-redirect=true";
                 }
 
-//				if (role.equals())) {
-//					
-//				} else if ("petAttendant".equals(role)) {
-//					return "petAttendantDashboard?faces-redirect=true";
-//				} else {
-//					return "userDashboard?faces-redirect=true";
-//				}
 			}
 		} //end of for enhanced loop 
 
