@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+<f:view transient="true">
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Login</title>
 </h:head>
-
+	
 <h:body>
 
 	<h1>Login To Account</h1>
@@ -23,25 +24,23 @@
 
 
 			<h:outputLabel value="Password:" />
-			<h:inputSecret id="passwordInput"
-				value="#{LoginBean.password}">
+			<h:inputSecret id="passwordInput" value="#{LoginBean.password}">
 				<f:validateLength minimum="1" />
 			</h:inputSecret>
 
 
 			<br />
 
-			<h:commandButton value="Login"
-				action="#{LoginBean.login}" />
-				
+			<h:commandButton value="Login" action="#{LoginBean.login}" />
+
 			<h:commandButton type="reset" value="Reset" />
-			
-				<h:panelGroup styleClass="login-prompt">
+
+			<h:panelGroup styleClass="login-prompt">
 				    Need to register?
 	    			<h:link outcome="registration" value="Register here." />
-	    			<br />
-    				<h:link outcome="index" value="Return Home." />
-    			</h:panelGroup>
+				<br />
+				<h:link outcome="index" value="Return Home." />
+			</h:panelGroup>
 
 		</h:panelGrid>
 
@@ -50,4 +49,5 @@
 	</h:form>
 
 </h:body>
+</f:view>
 </html>

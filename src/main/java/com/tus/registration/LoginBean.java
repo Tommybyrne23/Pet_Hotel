@@ -2,6 +2,7 @@ package com.tus.registration;
 
 import java.io.Serializable;
 
+import com.tus.pethotel.Role;
 import com.tus.pethotel.User;
 import com.tus.pethotel.UserList;
 
@@ -14,95 +15,103 @@ import jakarta.inject.Named;
 @Named("LoginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String email;
-	private String password;
+    private String email;
+    private String password;
+    private User loggedInUser;
 
-	private User loggedInUser;
-
-	@Inject
-	private UserList userList;
+    @Inject
+    private UserList userList;
 
 
-	public String login() {
+    public String login() {
 
-		// Loop through all registered users
-		for (User user : userList.getUsers()) {
+        // Loop through all registered users
+        for (User user : userList.getUsers()) {
 
-			// Check email and password match
-			if (user.getEmail().equalsIgnoreCase(email)
-					&& user.getPassword().equals(password)) {
+            // Check email and password match
+            if (user.getEmail().equalsIgnoreCase(email)
+                    && user.getPassword().equals(password)) {
 
-				loggedInUser = user;
+                loggedInUser = user;
+                
+                Role role = user.getRole();
 
-				//                return "userHomepage?faces-redirect=true";
-				// SCRUM-129: Redirect to user dashboard after successful login
+                // return "userHomepage?faces-redirect=true";
+
 				//     return "userDashboard?faces-redirect=true";
 				// Redirect based on user role
-		String role = user.getRole();
+                if (user.getRole().equals(Role.ADMIN)){
+                	return "adminDashboard?faces-redirect=true";
+                } else if (user.getRole().equals(Role.CUSTOMER)){
+                	return "userDashboard?faces-redirect=true";
+                } else  {
+                	return "petAttendantDashboard?faces-redirect=true";
+                }
 
-				if ("admin".equals(role)) {
-					return "adminDashboard?faces-redirect=true";
-				} else if ("petAttendant".equals(role)) {
-					return "petAttendantDashboard?faces-redirect=true";
-				} else {
-					return "userDashboard?faces-redirect=true";
-				}
+//				if (role.equals())) {
+//					
+//				} else if ("petAttendant".equals(role)) {
+//					return "petAttendantDashboard?faces-redirect=true";
+//				} else {
+//					return "userDashboard?faces-redirect=true";
+//				}
 			}
-		}
+		} //end of for enhanced loop 
+
+        // If no match found
+        FacesContext.getCurrentInstance().addMessage(
+                "loginForm:emailInput",
+                new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR,
+                        "Invalid email or password.",
+                        null
+                )   );
+
+        return null; // stay on login page
+    }
 
 
-		// If no match found
-		FacesContext.getCurrentInstance().addMessage(
-				"loginForm:emailInput",
-				new FacesMessage(
-						FacesMessage.SEVERITY_ERROR,
-						"Invalid email or password.",
-						null
-						)
-				);
-
-		return null; // stay on login page
-	}
+    public String logout() {
+    	//use jakarta faces to inavlidate the session
+    	 FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
 
-	public String logout() {
-
-		loggedInUser = null;
-		email = null;
-		password = null;
-
-		return "login?faces-redirect=true";
-	}
+        return "login?faces-redirect=true";
+    }
 
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 
-	public User getLoggedInUser() {
-		return loggedInUser;
-	}
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
 
 
-	public void setLoggedInUser(User loggedInUser) {
-		this.loggedInUser = loggedInUser;
-	}
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+    
+    public void setUserList(UserList userList) {
+        this.userList = userList;
+    }
 }
