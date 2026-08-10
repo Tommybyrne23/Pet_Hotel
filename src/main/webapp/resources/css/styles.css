@@ -148,3 +148,32 @@ so best if images are a correct ratio size*/
 	background-color: #d9534f;
 	color: #ffffff;
 }
+
+/* imported from week five */
+
+productTable {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.productTableHeader {
+    text-align: center;
+    background: #b5b5b5;
+    border-bottom: 1px solid black;
+    padding: 6px;
+}
+
+.productTableOddRow {
+    text-align: center;
+    background: #ffffff;
+}
+
+.productTableEvenRow {
+    text-align: center;
+    background: #d3d3d3;
+}
+
+.productTable td {
+    padding: 6px 12px;
+    border: 1px solid black;
+}
