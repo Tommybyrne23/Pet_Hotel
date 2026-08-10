@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
@@ -12,41 +11,58 @@
 
 	<h1>User Dashboard</h1>
 
-	<h:form styleClass="account">
+	<h:form>
 		<h:panelGrid columns="1" styleClass="account">
+			<div class="dashboard-grid">
 
-			<!-- Welcome message showing the logged in user name -->
-			<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
-				style="font-size: 18px; font-weight: bold;" />
+				<!-- Welcome message showing the logged in user name -->
+				<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
+					style="font-size: 18px; font-weight: bold;" />
 
-			<br />
+				<br />
+				<div class="dashboard-card">
+					<h2>My Profile</h2>
+					<p>View my user account and make changes to my profile</p>
+					<!-- SCRUM-130: Button for customer profile management view -->
+					<h:commandButton value="My Profile"
+						action="manageProfile?faces-redirect=true" />
+				</div>
 
-			<!-- SCRUM-130: Button for customer profile management view -->
-			<h:commandButton value="My Profile"
-				action="userHomepage?faces-redirect=true" />
+				<div class="dashboard-card">
+					<h2>Add Pet</h2>
+					<p>Add a pet to your account</p>
+					<!-- SCRUM-131: Button to add pets -->
+					<h:commandButton value="Add a Pet"
+						action="addPet?faces-redirect=true" />
+				</div>
 
-			<!-- SCRUM-131: Button to add pets -->
-			<h:commandButton value="Add a Pet"
-				action="addPet?faces-redirect=true" />
 
-			<!-- SCRUM-132: Button to make a booking -->
-			<h:commandButton value="Make a Booking"
-				action="makeBooking?faces-redirect=true" />
+				<div class="dashboard-card">
+					<h2>Create a new booking</h2>
+					<p>Make a new booking</p>
+					<!-- SCRUM-132: Button to make a booking -->
+					<h:commandButton value="Make a Booking"
+						action="makeBooking?faces-redirect=true" />
+				</div>
 
-			<!-- SCRUM-133: Button to view bookings -->
-			<h:commandButton value="View Bookings"
-				action="viewBookings?faces-redirect=true" />
+				<div class="dashboard-card">
+					<h2>View Your Bookings</h2>
+					<p>View all your confirmed bookings</p>
+					<!-- SCRUM-133: Button to view bookings -->
+					<h:commandButton value="View Bookings"
+						action="viewBookings?faces-redirect=true" />
+				</div>
 
-			<!-- View Services on the homepage -->
-			<h:commandButton value="View Services"
-				action="index?faces-redirect=true" />
 
-			<br />
+				<!-- View Services on the homepage -->
+				<h:commandButton value="View Services"
+					action="index?faces-redirect=true" />
 
-			<!-- Logout button -->
-			<h:commandButton value="Logout"
-				action="#{LoginBean.logout}" />
+				<br />
 
+				<!-- Logout button -->
+				<h:commandButton value="Logout" action="#{LoginBean.logout}" />
+			</div>
 		</h:panelGrid>
 	</h:form>
 
