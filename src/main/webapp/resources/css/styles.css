@@ -148,6 +148,7 @@ so best if images are a correct ratio size*/
 	background-color: #d9534f;
 	color: #ffffff;
 }
+<<<<<<< HEAD
 .error-messages {
     background-color: #f8d7da;
     color: #721c24;
@@ -174,3 +175,34 @@ so best if images are a correct ratio size*/
     padding: 0;
     margin: 0;
 }
+=======
+
+/* imported from week five */
+
+productTable {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.productTableHeader {
+    text-align: center;
+    background: #b5b5b5;
+    border-bottom: 1px solid black;
+    padding: 6px;
+}
+
+.productTableOddRow {
+    text-align: center;
+    background: #ffffff;
+}
+
+.productTableEvenRow {
+    text-align: center;
+    background: #d3d3d3;
+}
+
+.productTable td {
+    padding: 6px 12px;
+    border: 1px solid black;
+}
+>>>>>>> branch 'dashboards' of https://a00347380@bitbucket.org/cse4/3apethotel.git
