@@ -17,16 +17,18 @@ h2 {
 
 
 .commandButton {
-  background-color: red;
+  background-color: #538f3b;
   border: none;
+  border-radius: 10px;
   color: white;
-  padding: 15px 32px;
+  padding: 15px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
 }
+ 
 
 /*Add colour and border to the buttons*/
 .button {
@@ -175,7 +177,6 @@ so best if images are a correct ratio size*/
     padding: 0;
     margin: 0;
 }
-=======
 
 /* imported from week five */
 
@@ -205,4 +206,4 @@ productTable {
     padding: 6px 12px;
     border: 1px solid black;
 }
->>>>>>> branch 'dashboards' of https://a00347380@bitbucket.org/cse4/3apethotel.git
+
