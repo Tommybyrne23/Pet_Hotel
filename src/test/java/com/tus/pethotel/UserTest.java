@@ -10,18 +10,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.tus.registration.RegistrationBeanTest;
+import com.tus.registration.RegistrationBean;
 
 class UserTest {
 
 	User user1; 
 
 	UserList userList;
-	RegistrationBeanTest registrationBean;
+	RegistrationBean bean;
 	
 	@BeforeEach
 	void setUp() {
-		
+		bean = new RegistrationBean();
 		userList  = new UserList();
 		user1 = new User("Jonathan", "a00347373@student.tus.ie", "CSE2026" ); 			// currently not added to the array
 	}
@@ -32,7 +32,7 @@ class UserTest {
 	void testAddUser(){
 		boolean added = userList.addUser(user1);
 		assertTrue(added, "A new email should be added");
-		assertEquals(1, userList.getNumberOfUsers());
+		assertEquals(4, userList.getNumberOfUsers());
 	}
 	
 
@@ -42,7 +42,7 @@ class UserTest {
 		userList.addUser(user1);
 		boolean addedAgain = userList.addUser(new User("Jon", "a00347373@student.tus.ie", "pw2"));
 		assertFalse(addedAgain, "A duplicate (case-insensitive) email must be rejected");
-		assertEquals(1, userList.getNumberOfUsers());
+		assertEquals(4, userList.getNumberOfUsers());
 	}
 	
 

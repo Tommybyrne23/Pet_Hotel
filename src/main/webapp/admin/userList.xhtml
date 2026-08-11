@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core">
+	xmlns:f="jakarta.faces.core" 
+	xmlns:ui="jakarta.faces.facelets" >
 
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
@@ -40,11 +41,19 @@
             #{u.email}
         </h:column>
 			<h:column>
-				<f:facet name="header">Email</f:facet>
+				<f:facet name="header">Role</f:facet>
             #{u.role}
         </h:column>
-
 			
+			<!-- Add pet column for users registered with pets -->
+			<h:column>
+				<f:facet name="header">Pets</f:facet>
+				<ui:repeat value="#{petList.findByUserID(u.userID)}" var="pet">
+        #{pet.name}<br />
+				</ui:repeat>
+			</h:column>
+
+
 		</h:dataTable>
 			<!-- Wrapped in h:form so action navigation works properly --><br />
 			<h:form id="navigationForm">
