@@ -28,7 +28,7 @@ class LoginBeanTest {
 		loginBean.setEmail("a00347373@student.tus.ie");
 		loginBean.setPassword("password");
 		String outcome = loginBean.login();
-		assertEquals("userHomepage?faces-redirect=true", outcome);
+		assertEquals("userDashboard?faces-redirect=true", outcome);
 		assertEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
 	}
 	
@@ -40,5 +40,29 @@ class LoginBeanTest {
 		assertNull(outcome);
 		assertNotEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
 	}
+	
+	@Test
+	@DisplayName("Test: Admin Logs in")
+	void testAdminLogin() {
+		loginBean.setEmail("admin@3apets.ie");
+		loginBean.setPassword("admin123");
+		String outcome = loginBean.login();
+		assertEquals("adminDashboard?faces-redirect=true", outcome);
+		String isAdmin = loginBean.checkAdminAccess();
+		assertNull(isAdmin);
+		}
+	
+	@Test
+	@DisplayName("Test: User Profile fails admin checks")
+	void testUserAsAdmin() {
+		loginBean.setEmail("user@3apets.ie");
+		loginBean.setPassword("user123");
+		String outcome = loginBean.login();
+		assertEquals("userDashboard?faces-redirect=true", outcome);
+		boolean loggedInCheck = longBean.isLoggedin();
+		boolean AdminCheck = longBean.isLoggedin();
+		
+	}
+	
 
 }

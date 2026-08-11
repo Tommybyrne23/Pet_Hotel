@@ -150,7 +150,7 @@ so best if images are a correct ratio size*/
 	background-color: #d9534f;
 	color: #ffffff;
 }
-<<<<<<< HEAD
+
 .error-messages {
     background-color: #f8d7da;
     color: #721c24;
@@ -180,7 +180,7 @@ so best if images are a correct ratio size*/
 
 /* imported from week five */
 
-productTable {
+.productTable {
     border-collapse: collapse;
     border: 1px solid black;
 }

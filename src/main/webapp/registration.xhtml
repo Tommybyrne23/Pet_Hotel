@@ -3,51 +3,80 @@
 	xmlns:f="jakarta.faces.core">
 
 <h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="registration.css" />
+	<link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
 	<title>Account Registration</title>
 </h:head>
-<h:body>
-	<h1>Register an account</h1>
-	<h:form id="registrationForm" styleClass="account">
-		<h:panelGrid columns="1" styleClass="account">
-			<h:outputLabel value="Name:" />
-			<!-- added the .user.name to add the User object to the registration bean and will align witht user.bean -->
-			<h:inputText id="nameInput" value="#{RegistrationBean.user.name}"
-				required="true" requiredMessage="Name is required." />
 
+<h:body styleClass="reg-page">
 
-			<h:outputLabel value="Email:" />
-			<h:inputText id="emailInput" value="#{RegistrationBean.user.email}"
-				required="true" requiredMessage="Email is required." />
+	<div class="reg-split">
 
-			<h:outputLabel value="Password:" />
-			<h:inputSecret id="passwordInput"
-				value="#{RegistrationBean.user.password}" required="true"
-				requiredMessage="Password is required." />
+		<!-- ===== LEFT THIRD: form ===== -->
+		<div class="reg-panel">
 
+			<h:form id="registrationForm" styleClass="reg-form">
 
-			<h:outputLabel value="Confirm Password:" />
-			<h:inputSecret id="confirmPasswordInput"
-				value="#{RegistrationBean.confirmPassword}" required="true"
-				requiredMessage="Please confirm your password." />
+				<h1 class="reg-brand">3A Pet Hotel</h1>
+				<h2 class="reg-welcome">Create your account to book your pet's stay.</h2>
 
-			<h:panelGroup styleClass="button-row">
-				<h:commandButton value="Register"
+				<h:panelGroup layout="block" styleClass="message-box">
+					<h:messages globalOnly="true" errorClass="error-messages"
+						infoClass="success-messages" />
+				</h:panelGroup>
+
+				<div class="form-field">
+					<h:outputLabel for="nameInput" value="Name" />
+					<h:inputText id="nameInput" value="#{RegistrationBean.user.name}"
+						required="true" requiredMessage="Name is required." />
+					<h:message for="nameInput" errorClass="field-error" />
+				</div>
+
+				<div class="form-field">
+					<h:outputLabel for="emailInput" value="Email" />
+					<h:inputText id="emailInput" value="#{RegistrationBean.user.email}"
+						required="true" requiredMessage="Email is required." />
+					<h:message for="emailInput" errorClass="field-error" />
+				</div>
+
+				<div class="form-field">
+					<h:outputLabel for="passwordInput" value="Password" />
+					<h:inputSecret id="passwordInput" value="#{RegistrationBean.user.password}"
+						required="true" requiredMessage="Password is required." />
+					<h:message for="passwordInput" errorClass="field-error" />
+				</div>
+
+				<div class="form-field">
+					<h:outputLabel for="confirmPasswordInput" value="Confirm Password" />
+					<h:inputSecret id="confirmPasswordInput" value="#{RegistrationBean.confirmPassword}"
+						required="true" requiredMessage="Please confirm your password." />
+					<h:message for="confirmPasswordInput" errorClass="field-error" />
+				</div>
+
+				<h:commandButton value="Register" styleClass="btn-green"
 					action="#{RegistrationBean.register}" />
-				<h:commandButton value="Reset" immediate="true"
-					action="#{RegistrationBean.reset}" />
-			</h:panelGroup>
 
-			<h:panelGroup styleClass="login-prompt">
-    			Already have an account?
-    			<h:link outcome="login" value="Log in here." />
-				<br />
-				<h:link outcome="index" value="Return Home." />
-			</h:panelGroup>
-		</h:panelGrid>
-		<h:panelGroup layout="block" styleClass="message-box">
-			<h:messages errorClass="error-messages" infoClass="success-messages" />
-		</h:panelGroup>
-	</h:form>
+				<h:commandButton value="Reset" styleClass="btn-green-outline"
+					immediate="true" action="#{RegistrationBean.reset}" />
+
+				<div class="reg-divider">or</div>
+
+				<h:button outcome="login" value="Log In Here" styleClass="btn-green" />
+
+				<h:button outcome="index" value="Return to Homepage" styleClass="btn-green" />
+
+			</h:form>
+
+		</div>
+
+		<!-- ===== RIGHT TWO THIRDS: hero image ===== -->
+		<div class="reg-hero">
+			<h:graphicImage value="/images/cat.jpg" alt="A cat relaxing in a 3A pod"
+				styleClass="reg-hero-img" />
+			<span class="reg-hero-text">Join the family.</span>
+		</div>
+
+	</div>
+
 </h:body>
 </html>
