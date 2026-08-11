@@ -60,6 +60,12 @@
         </h:column>
 
     </h:dataTable>
+    <br />
+    <!-- Wrapped in h:form so action navigation works properly -->
+			<h:form id="navigationForm">
+				<h:commandButton value="Back to Dashboard"
+					action="/adminDashboard?faces-redirect=true" class="commandButton" />
+			</h:form>
 </center>
     <br />
 
