@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
 
 <h:head>
 	<h:outputStylesheet library="css" name="login.css"/>
@@ -36,17 +37,6 @@
 						required="true" requiredMessage="Password is required." />
 				</div>
 
-
-		</h:form>
-<!--  Login error message from faces -->
-<h:panelGroup rendered="#{not empty facesContext.messageList}">
-    <script type="text/javascript">
-        window.addEventListener("DOMContentLoaded", function() {
-            alert("#{facesContext.messageList[0].summary}");
-        });
-    </script>
-</h:panelGroup>
-
 				<h:commandButton value="Login" styleClass="btn-green"
 					action="#{LoginBean.login}" />
 				<div class="login-divider">or</div>
@@ -59,6 +49,7 @@
 
 			</h:form>
 
+		</div>
 
 		<!-- ===== RIGHT TWO THIRDS: hero image ===== -->
 		<div class="login-hero">
@@ -68,6 +59,15 @@
 		</div>
 
 	</div>
+
+	<!-- Login error message from faces keep this at the bottom of the page -->
+	<h:panelGroup rendered="#{not empty facesContext.messageList}">
+	    <script type="text/javascript">
+	        window.addEventListener("DOMContentLoaded", function() {
+	            alert("#{facesContext.messageList[0].summary}");
+	        });
+	    </script>
+	</h:panelGroup>
 
 </h:body>
 </html>
