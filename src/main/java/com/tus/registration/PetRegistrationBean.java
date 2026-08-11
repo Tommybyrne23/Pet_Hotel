@@ -69,6 +69,7 @@ public class PetRegistrationBean implements Serializable {
                 breeds.add(new SelectItem("Poodle", "Poodle"));
                 breeds.add(new SelectItem("Golden Retriever", "Golden Retriever"));
                 breeds.add(new SelectItem("Bulldog", "Bulldog"));
+                breeds.add(new SelectItem("Other", "Other"));
                 break;
 
             case "Cat":
@@ -77,6 +78,7 @@ public class PetRegistrationBean implements Serializable {
                 breeds.add(new SelectItem("Maine Coon", "Maine Coon"));
                 breeds.add(new SelectItem("British Shorthair", "British Shorthair"));
                 breeds.add(new SelectItem("Bengal", "Bengal"));
+                breeds.add(new SelectItem("Other", "Other"));
                 break;
 
             case "Bird":
@@ -84,6 +86,7 @@ public class PetRegistrationBean implements Serializable {
                 breeds.add(new SelectItem("Canary", "Canary"));
                 breeds.add(new SelectItem("Parrot", "Parrot"));
                 breeds.add(new SelectItem("Cockatiel", "Cockatiel"));
+                breeds.add(new SelectItem("Other", "Other"));
                 break;
 
             case "Reptile":
@@ -91,6 +94,7 @@ public class PetRegistrationBean implements Serializable {
                 breeds.add(new SelectItem("Gecko", "Gecko"));
                 breeds.add(new SelectItem("Corn Snake", "Corn Snake"));
                 breeds.add(new SelectItem("Tortoise", "Tortoise"));
+                breeds.add(new SelectItem("Other", "Other"));
                 break;
 
             case "Fish":
@@ -98,6 +102,7 @@ public class PetRegistrationBean implements Serializable {
                 breeds.add(new SelectItem("Betta", "Betta"));
                 breeds.add(new SelectItem("Guppy", "Guppy"));
                 breeds.add(new SelectItem("Tetra", "Tetra"));
+                breeds.add(new SelectItem("Other", "Other"));
                 break;
         }
 
