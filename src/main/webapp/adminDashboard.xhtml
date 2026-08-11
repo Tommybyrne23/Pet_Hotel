@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
-
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Admin Dashboard</title>
@@ -22,14 +22,14 @@
 			<div class="dashboard-card">
 				<p>Manage user accounts, privileges, and profile settings.</p>
 				<h:commandButton value="View all users"
-					action="userList?faces-redirect=true" />
+					action="/admin/userList?faces-redirect=true" />
 			</div>
 
 			<!-- SCRUM-135: View all confirmed reservations -->
 			<div class="dashboard-card">
 				<p>Review and confirm current customer reservations.</p>
 				<h:commandButton value="View all bookings"
-					action="viewbookings?faces-redirect=true" />
+					action="/admin/viewBookings?faces-redirect=true" />
 			</div>
 
 			<!-- SCRUM-137: View All listings -->

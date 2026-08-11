@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Registered Users</title>
+</h:head>
+
+<h:body>
+	<!--  TODO ONCE BOOKINGS HAVE BEEN MADE 
+	table created for the dashboard view  
+	This page has been made as a placeholder
+	-->
+    <h1>Confirmed bookings </h1>
+
+    <!-- Display total number of registered users -->
+    <p>Number of confirmed bookings: <strong>#{confirmedBookings.numberOfBookings}</strong></p>
+    
+
+    <!-- Table displaying all users stored in the ApplicationScoped list -->
+    <h:dataTable value="#{confirmBookings.bookings}" var="booking" styleClass="productTable"
+                 headerClass="productTableHeader"
+                 rowClasses="productTableOddRow, productTableEvenRow">
+        <h:column>
+            <f:facet name="header">Booking Number</f:facet>
+            #{booking.userID}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Name</f:facet>
+            #{booking.name}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Email</f:facet>
+            #{booking.email}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Date from </f:facet>
+            #{booking.dateFrom}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Date to </f:facet>
+            #{booking.dateTo}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Pets </f:facet>
+            #{booking.petType}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Requirement </f:facet>
+            <!-- Fixed EL space issue to match standard Java field getters -->
+            #{booking.petSpecialRequirements}
+        </h:column>
+    </h:dataTable>
+	<div class="dashboard-grid">
+	
+	
+	</div>
+    <br />
+    
+</h:body>
+</html>
