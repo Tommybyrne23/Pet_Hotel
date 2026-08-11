@@ -3,7 +3,13 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:p="http://primefaces.org/ui">
-<h:head>
+      
+<f:metadata>
+    <!-- Checks the user is an admin before the view is rendered -->
+    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+</f:metadata>
+
+<h:head>	
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Admin Dashboard</title>
 </h:head>
@@ -14,6 +20,8 @@
 	<!-- Welcome message showing the logged in user name -->
 	<h:outputText value="Welcome back, #{LoginBean.loggedInUser.name}!"
 		style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;" />
+		<p>Your Role: <strong>#{LoginBean.loggedInUser.role.label}</strong></p>
+		
 
 	<h:form styleClass="account">
 		<div class="dashboard-grid">
