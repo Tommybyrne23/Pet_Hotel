@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Attendant Dashboard</title>
+</h:head>
+
+<h:body>
+
+	<h1>Attendant Dashboard</h1>
+
+	<h:form>
+		<h:panelGrid columns="1" styleClass="account">
+			<div class="dashboard-grid">
+
+				<!-- Welcome message showing the logged in user name -->
+				<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
+					style="font-size: 18px; font-weight: bold;" />
+
+				<!-- Logout button -->
+				<h:commandButton value="Logout" action="#{LoginBean.logout}" />
+			</div>
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>

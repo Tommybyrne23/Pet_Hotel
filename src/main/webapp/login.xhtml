@@ -4,50 +4,54 @@
 
 <f:view transient="true">
 
-<h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
-	<title>Login</title>
-</h:head>
-	
-<h:body>
+	<h:head>
+		<h:outputStylesheet library="css" name="styles.css" />
+		<title>Login</title>
+	</h:head>
 
-	<h1>Login To Account</h1>
+	<h:body>
 
-	<h:form id="loginForm">
+		<h1>Login To Account</h1>
 
-		<h:panelGrid columns="1" styleClass="account">
+		<h:form id="loginForm">
 
-			<h:outputLabel value="Email:" />
-			<h:inputText id="emailInput" value="#{LoginBean.email}">
-				<f:validateLength minimum="1" />
-			</h:inputText>
+			<h:panelGrid columns="1" styleClass="account">
 
-
-			<h:outputLabel value="Password:" />
-			<h:inputSecret id="passwordInput" value="#{LoginBean.password}">
-				<f:validateLength minimum="1" />
-			</h:inputSecret>
+				<h:outputLabel value="Email:" />
+				<h:inputText id="emailInput" value="#{LoginBean.email}">
+					<f:validateLength minimum="1" />
+				</h:inputText>
 
 
-			<br />
+				<h:outputLabel value="Password:" />
+				<h:inputSecret id="passwordInput" value="#{LoginBean.password}">
+					<f:validateLength minimum="1" />
+				</h:inputSecret>
 
-			<h:commandButton value="Login" action="#{LoginBean.login}" />
 
-			<h:commandButton type="reset" value="Reset" />
+				<br />
 
-			<h:panelGroup styleClass="login-prompt">
+				<h:commandButton value="Login" action="#{LoginBean.login}" />
+
+				<h:commandButton type="reset" value="Reset" />
+
+				<h:panelGroup styleClass="login-prompt">
 				    Need to register?
 	    			<h:link outcome="registration" value="Register here." />
-				<br />
-				<h:link outcome="index" value="Return Home." />
-			</h:panelGroup>
+					<br />
+					<h:link outcome="index" value="Return Home." />
+				</h:panelGroup>
 
-		</h:panelGrid>
+				<h:panelGroup layout="block" styleClass="message-box">
+					<h:messages errorClass="error-messages"
+						infoClass="success-messages" />
+				</h:panelGroup>
+			</h:panelGrid>
 
-		<h:messages />
 
-	</h:form>
 
-</h:body>
+		</h:form>
+
+	</h:body>
 </f:view>
 </html>
