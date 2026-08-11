@@ -2,66 +2,63 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
 	xmlns:f="jakarta.faces.core">
 
-<f:view transient="true">
-
-<<<<<<< HEAD
 <h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="login.css"/>
 	<link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
 	<title>Login</title>
 </h:head>
-	
-<h:body>
-=======
-	<h:head>
-		<h:outputStylesheet library="css" name="styles.css" />
-		<title>Login</title>
-	</h:head>
->>>>>>> branch 'dashboards' of https://a00347372@bitbucket.org/cse4/3apethotel.git
 
-	<h:body>
+<h:body styleClass="login-page">
 
-		<h1>Login To Account</h1>
+	<div class="login-split">
 
-		<h:form id="loginForm">
+		<!-- ===== LEFT THIRD: form ===== -->
+		<div class="login-panel">
 
-			<h:panelGrid columns="1" styleClass="account">
+			<h:form id="loginForm" styleClass="login-form">
 
-				<h:outputLabel value="Email:" />
-				<h:inputText id="emailInput" value="#{LoginBean.email}">
-					<f:validateLength minimum="1" />
-				</h:inputText>
-
-
-				<h:outputLabel value="Password:" />
-				<h:inputSecret id="passwordInput" value="#{LoginBean.password}">
-					<f:validateLength minimum="1" />
-				</h:inputSecret>
-
-
-				<br />
-
-				<h:commandButton value="Login" action="#{LoginBean.login}" />
-
-				<h:commandButton type="reset" value="Reset" />
-
-				<h:panelGroup styleClass="login-prompt">
-				    Need to register?
-	    			<h:link outcome="registration" value="Register here." />
-					<br />
-					<h:link outcome="index" value="Return Home." />
-				</h:panelGroup>
+				<h1 class="login-brand">3A Pet Hotel</h1>
+				<h2 class="login-welcome">Welcome back, login to access your account.</h2>
 
 				<h:panelGroup layout="block" styleClass="message-box">
-					<h:messages errorClass="error-messages"
-						infoClass="success-messages" />
+					<h:messages errorClass="error-messages" infoClass="success-messages" />
 				</h:panelGroup>
-			</h:panelGrid>
 
+				<div class="form-field">
+					<h:outputLabel for="emailInput" value="Email" />
+					<h:inputText id="emailInput" value="#{LoginBean.email}"
+						required="true" requiredMessage="Email is required." />
+				</div>
 
+				<div class="form-field">
+					<h:outputLabel for="passwordInput" value="Password" />
+					<h:inputSecret id="passwordInput" value="#{LoginBean.password}"
+						required="true" requiredMessage="Password is required." />
+				</div>
 
-		</h:form>
+				<h:commandButton value="Login" styleClass="btn-green"
+					action="#{LoginBean.login}" />
 
-	</h:body>
-</f:view>
+				<div class="login-divider">or</div>
+
+				<h:button outcome="registration" value="Register Here"
+					styleClass="btn-green" />
+
+				<h:button outcome="index" value="Return to Homepage"
+					styleClass="btn-green" />
+
+			</h:form>
+
+		</div>
+
+		<!-- ===== RIGHT TWO THIRDS: hero image ===== -->
+		<div class="login-hero">
+			<h:graphicImage value="/images/AdamsArkAndAvery.ico" alt="3A Company Logo"
+				styleClass="login-hero-img" />
+			<span class="login-hero-text">Serving luxury care since 2012.</span>
+		</div>
+
+	</div>
+
+</h:body>
 </html>
