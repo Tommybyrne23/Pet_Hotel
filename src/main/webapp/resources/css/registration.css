@@ -3,7 +3,7 @@
 	padding: 0;
 	font-family: Arial, sans-serif;
 	color: #4E342E;
-	background-color: beige;
+	background-color: tan;
 }
 
 
@@ -20,7 +20,7 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 40px 35px;
-	background-color: #FFFDF9;
+	background-color: beige;
 	box-sizing: border-box;
 	overflow-y: auto;
 }
