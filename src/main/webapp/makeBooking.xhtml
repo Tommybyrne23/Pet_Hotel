@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:pt="jakarta.faces.passthrough">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Make a Booking</title>
+</h:head>
+
+<h:body>
+
+	<h1>Make a Booking</h1>
+
+	<h:form id="bookingForm" styleClass="account">
+		<h:panelGrid columns="1" styleClass="account"
+			style="max-width: 450px;">
+
+			<!-- Messages area -->
+			<h:panelGroup layout="block" styleClass="message-box">
+				<h:messages errorClass="error-messages"
+					infoClass="success-messages" />
+			</h:panelGroup>
+
+			<!-- AC4: If user has no pets, show message -->
+			<h:panelGroup rendered="#{!BookingBean.hasPets}">
+				<p style="font-size: 16px; color: #721c24;
+					background-color: #f8d7da; padding: 15px;
+					border-radius: 6px;">
+					You need to register a pet before making a booking.
+				</p>
+				<h:link outcome="addPet" value="Register a Pet"
+					style="font-size: 16px; font-weight: bold;" />
+			</h:panelGroup>
+
+			<!-- AC1: Booking form - only shown if user has pets -->
+			<h:panelGroup rendered="#{BookingBean.hasPets}">
+
+				<!-- Select Pet (dropdown of registered pets) -->
+				<h:outputLabel value="Select Pet:" />
+				<h:selectOneMenu id="petSelect"
+					value="#{BookingBean.selectedPetID}">
+					<f:selectItem itemLabel="-- Select a Pet --"
+						itemValue="0" />
+					<f:selectItems value="#{BookingBean.userPets}"
+						var="pet"
+						itemLabel="#{pet.name} (#{pet.species} - #{pet.breed})"
+						itemValue="#{pet.petID}" />
+				</h:selectOneMenu>
+
+				<br />
+
+				<!-- Check-in date with calendar picker -->
+				<h:outputLabel value="Check-in Date:" />
+				<h:inputText id="checkInDate"
+					value="#{BookingBean.checkInDate}"
+					required="true"
+					requiredMessage="Check-in date is required."
+					pt:type="date" />
+
+				<!-- Check-out date with calendar picker -->
+				<h:outputLabel value="Check-out Date:" />
+				<h:inputText id="checkOutDate"
+					value="#{BookingBean.checkOutDate}"
+					required="true"
+					requiredMessage="Check-out date is required."
+					pt:type="date" />
+
+				<br />
+
+				<!-- AC1: Services selection -->
+				<h:outputText value="Extra Services:"
+					style="font-weight: bold;" />
+
+				<h:panelGroup layout="block" style="margin: 8px 0;">
+					<h:selectBooleanCheckbox id="groomingCheck"
+						value="#{BookingBean.grooming}" />
+					<h:outputLabel for="groomingCheck"
+						value=" Grooming (+&#8364;15/night)" />
+				</h:panelGroup>
+
+				<h:panelGroup layout="block" style="margin: 8px 0;">
+					<h:selectBooleanCheckbox id="walksCheck"
+						value="#{BookingBean.walks}" />
+					<h:outputLabel for="walksCheck"
+						value=" Daily Walks (+&#8364;10/night)" />
+				</h:panelGroup>
+
+				<h:panelGroup layout="block" style="margin: 8px 0;">
+					<h:selectBooleanCheckbox id="premiumFoodCheck"
+						value="#{BookingBean.premiumFood}" />
+					<h:outputLabel for="premiumFoodCheck"
+						value=" Premium Food (+&#8364;8/night)" />
+				</h:panelGroup>
+
+				<br />
+
+				<!-- AC2: Calculate Price button -->
+				<h:commandButton value="Calculate Price"
+					action="#{BookingBean.calculatePrice}" />
+
+				<!-- AC2: Show total price after calculation -->
+				<h:panelGroup rendered="#{BookingBean.priceCalculated}"
+					layout="block"
+					style="background-color: #d4edda; color: #155724;
+						padding: 15px; border-radius: 6px;
+						margin: 10px 0; font-size: 18px;
+						font-weight: bold;">
+					Total Price: &#8364;
+					<h:outputText value="#{BookingBean.totalPrice}">
+						<f:convertNumber type="number"
+							minFractionDigits="2"
+							maxFractionDigits="2" />
+					</h:outputText>
+				</h:panelGroup>
+
+				<!-- AC3: Confirm Booking button -->
+				<h:panelGroup rendered="#{BookingBean.priceCalculated}">
+					<h:commandButton value="Confirm Booking"
+						action="#{BookingBean.confirmBooking}" />
+				</h:panelGroup>
+
+			</h:panelGroup>
+
+			<br />
+
+			<!-- Cancel / Back -->
+			<h:commandButton value="Cancel" immediate="true"
+				action="#{BookingBean.cancel}" />
+
+			<h:panelGroup styleClass="login-prompt">
+				<h:link outcome="userDashboard"
+					value="Back to Dashboard" />
+			</h:panelGroup>
+
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>
+
