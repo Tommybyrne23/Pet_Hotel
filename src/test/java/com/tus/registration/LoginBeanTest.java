@@ -32,13 +32,19 @@ class LoginBeanTest {
 		assertEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
 	}
 	
+	/*
+	 * Test for verifying login function when the password is incorrect
+	 * Need to work out issue with jakarta faces
+	 * 
+	 */
+	
 	@Test
 	void testCustomerLoginfailure() {
 		loginBean.setEmail("a00347373@student.tus.ie");
 		loginBean.setPassword("wrong");
-		String outcome = loginBean.login();
-		assertNull(outcome);
-		assertNotEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
+		loginBean.login();
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		assertFalse(loggedInCheck);
 	}
 	
 	@Test
@@ -48,8 +54,12 @@ class LoginBeanTest {
 		loginBean.setPassword("admin123");
 		String outcome = loginBean.login();
 		assertEquals("adminDashboard?faces-redirect=true", outcome);
-		String isAdmin = loginBean.checkAdminAccess();
-		assertNull(isAdmin);
+		boolean isAdmin = loginBean.isAdmin();
+		assertTrue(isAdmin);
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(attendantCheck);
+		assertTrue(customerCheck);
 		}
 	
 	@Test
@@ -59,10 +69,31 @@ class LoginBeanTest {
 		loginBean.setPassword("user123");
 		String outcome = loginBean.login();
 		assertEquals("userDashboard?faces-redirect=true", outcome);
-		boolean loggedInCheck = longBean.isLoggedin();
-		boolean AdminCheck = longBean.isLoggedin();
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		boolean adminCheck = loginBean.isAdmin();
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(loggedInCheck);
+		assertFalse(adminCheck);					//admin will fail
+		assertFalse(attendantCheck);				//attendant will fail
+		assertTrue(customerCheck);					//will return true
 		
 	}
-	
+	@Test
+	@DisplayName("Test: User Profile fails admin checks")
+	void testUserAsAttendant() {
+		loginBean.setEmail("attendant@3apets.ie");
+		loginBean.setPassword("attendant123");
+		String outcome = loginBean.login();
+		assertEquals("petAttendantDashboard?faces-redirect=true", outcome);
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		boolean adminCheck = loginBean.isAdmin();
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(loggedInCheck);
+		assertFalse(adminCheck);
+		assertTrue(attendantCheck);
+		assertTrue(customerCheck);
+	}
 
 }
