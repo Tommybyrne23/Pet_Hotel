@@ -151,7 +151,7 @@ so best if images are a correct ratio size*/
 
 /* imported from week five */
 
-productTable {
+.productTable {
     border-collapse: collapse;
     border: 1px solid black;
 }
