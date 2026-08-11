@@ -3,6 +3,11 @@
 	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+<f:metadata>
+    <!-- Checks the user is an admin before the view is rendered -->
+    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+</f:metadata>
+
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Pet Hotel - Registered Users</title>
