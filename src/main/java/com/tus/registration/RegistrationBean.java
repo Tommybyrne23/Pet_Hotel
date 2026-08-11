@@ -87,4 +87,4 @@ public class RegistrationBean implements Serializable {
 	    return "registration?faces-redirect=true";
 	}
 }
-
+//Test
