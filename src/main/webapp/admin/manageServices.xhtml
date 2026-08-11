@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel -ADMIN MANAGE SERVICES </title>
+</h:head>
+
+<h:body>
+	<!--  TODO ONCE BOOKINGS HAVE BEEN MADE 
+	table created for the dashboard view  
+	This page has been made as a placeholder
+	-->
+    <h1>View all products and services </h1>
+
+    <!-- Display total number of registered users -->
+    
+    <!-- count commented out because we won't need it 
+    
+       <p>Number of confirmed bookings: <strong>#{confirmedBookings.numberOfBookings}</strong></p>-->
+    
+
+    <!-- Table displaying all users stored in the ApplicationScoped list -->
+    <center><h:dataTable value="#{confirmBookings.bookings}" var="booking" styleClass="productTable"
+                 headerClass="productTableHeader"
+                 rowClasses="productTableOddRow, productTableEvenRow">
+        <h:column>
+            <f:facet name="header">Service Name</f:facet>
+            #{services.names}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Description </f:facet>
+            #{services.description}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Price</f:facet>
+            #{services.price}
+        </h:column>
+        <h:column>
+            <f:facet name="header">image link </f:facet>
+            #{services.imagelink}
+        </h:column>
+       
+    </h:dataTable>
+    
+    	<h:commandButton value="Back to Dashboard"
+					action="../adminDashboard?faces-redirect=true" />
+			</div>
+    
+    </center>
+	<div class="dashboard-grid">
+	
+	
+	</div>
+    <br />
+    
+</h:body>
+</html>
