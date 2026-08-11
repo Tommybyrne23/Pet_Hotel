@@ -25,6 +25,8 @@ public class RegistrationBean implements Serializable {
 	//allows us to inject the bean into the Userlist array object identified in the user list array.
 	@Inject
 	private UserList userList;
+	
+	private String confirmPassword;
 
 	@PostConstruct
 	public void init() {
@@ -40,9 +42,25 @@ public class RegistrationBean implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public String getConfirmPassword() {
+	    return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+	    this.confirmPassword = confirmPassword;
+	}
 
 	//registers the user before redirecting to the sample webpage.
 	public String register() {
+		
+		if (!PasswordValidator.checkPasswordsMatch(user.getPassword(), confirmPassword)) {
+	        FacesContext.getCurrentInstance().addMessage("registrationForm:confirmPasswordInput",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                        "Passwords do not match.", null));
+	        return null;
+	    }
+		
 		boolean success = userList.addUser(user);		//use the boolean in Userlist to check if the user was added to the array list 
 
 		if (!success) {									// if not successful 
@@ -55,7 +73,9 @@ public class RegistrationBean implements Serializable {
 
 		//if it is successful then the user was in the boolean userList.addUser(user) so we don't need to do anything else 
 
-		user = new User(); 					// reset the form to allow for the next registration, clears any data stored in the system 
+		user = new User(); 		
+		// reset the form to allow for the next registration, clears any data stored in the system 
+		confirmPassword = null;
 		return "login?faces-redirect=true";  // redirects to the index page 
 		
 		
@@ -63,6 +83,7 @@ public class RegistrationBean implements Serializable {
 
 	public String reset() {
 	    user = new User();
+	    confirmPassword = null;
 	    return "registration?faces-redirect=true";
 	}
 }
