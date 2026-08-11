@@ -67,6 +67,21 @@ public class UserList implements Serializable{
 			return users;
 		}
 		
+		
+		/**
+	     * Finds a user's name given their user ID.
+	     */
+	    public String getUserNameById(int userID) {
+	        if (users == null) {
+	            return "Unknown";
+	        }
+
+	        return users.stream()
+	                .filter(u -> u.getUserID() == userID) // Match against User.getUserID()
+	                .map(User::getName)                   // Map to User.getName()
+	                .findFirst()
+	                .orElse("Unknown");
+	    }
 
 	
 }

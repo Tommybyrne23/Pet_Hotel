@@ -20,9 +20,15 @@
 
 			<!-- SCRUM-134: View all users view -->
 			<div class="dashboard-card">
-				<p>Manage user accounts, privileges, and profile settings.</p>
+				<p>Manage user accounts, account types, and profile settings.</p>
 				<h:commandButton value="View all users"
 					action="/admin/userList?faces-redirect=true" />
+			</div>
+			<!-- SCRUM-138: View Pods and Rooms -->
+			<div class="dashboard-card">
+				<p>Review and manage registered pets on our system</p>
+				<h:commandButton value="View All Pets"
+					action="/admin/petManagement?faces-redirect=true" />
 			</div>
 
 			<!-- SCRUM-135: View all confirmed reservations -->
