@@ -86,5 +86,11 @@ public class RegistrationBean implements Serializable {
 	    confirmPassword = null;
 	    return "registration?faces-redirect=true";
 	}
+	
+	//this is used for testing 
+	public void setUserList(UserList userList) {
+		this.userList = userList;
+	}
+	
 }
 

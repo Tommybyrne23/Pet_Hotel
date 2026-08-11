@@ -10,14 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.tus.registration.RegistrationBean;
+import com.tus.registration.RegistrationBeanTest;
 
 class UserTest {
 
 	User user1; 
 
 	UserList userList;
-	RegistrationBean registrationBean;
+	RegistrationBeanTest registrationBean;
 	
 	@BeforeEach
 	void setUp() {
