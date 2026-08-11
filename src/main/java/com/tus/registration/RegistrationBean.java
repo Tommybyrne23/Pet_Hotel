@@ -53,7 +53,17 @@ public class RegistrationBean implements Serializable {
 
 	//refactored testing so facesmessage is moved to a different method.
 	public String register() {
+		if (user.getName() == null || user.getName().trim().isEmpty()) {
+			addFacesMessage("registrationForm:nameInput", "Your name is required.");					//return faces message 
+	        return null;
+		}
+		
+	    if (user.getEmail() == null || user.getEmail().trim().isEmpty() || !user.getEmail().contains("@")) {									//check email is not null, even though this is already checked in jakarta faces 
+	        addFacesMessage("registrationForm:emailInput", "Email address is required.");					//return faces message 
+	        return null;
+	    }
 
+		
 	    if (!PasswordValidator.checkPasswordsMatch(user.getPassword(), confirmPassword)) {
 	        addFacesMessage("registrationForm:confirmPasswordInput", "Passwords do not match.");			//send the faces message to the method below
 	        return null;																					//returns a null string for JUNIT testing 
@@ -79,6 +89,7 @@ public class RegistrationBean implements Serializable {
 	    }
 	}
 
+	//method resets the form 
 	public String reset() {
 	    user = new User();
 	    confirmPassword = null;

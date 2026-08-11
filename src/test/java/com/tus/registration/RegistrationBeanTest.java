@@ -83,10 +83,46 @@ class RegistrationBeanTest {
 	void testBlankEmailField() {
 		bean.getUser().setName("Thiago");				
 		bean.getUser().setEmail("");							//THIS SHOULD FAIL BUT IS CURRENTLY ALLOWING SIGNUP
-		bean.getUser().setPassword("pass123");
+		bean.getUser().setPassword("pass123");				
 		bean.setConfirmPassword("pass123");	
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		assertNull(userList.findByEmail(""));			//confirms user hasn't been added to the list 
 	}
+	
+	@Test
+	@DisplayName("Test: Text in Email Field but no @")
+	void testEmailHasTextNoAT() {
+		bean.getUser().setName("Thiago");				
+		bean.getUser().setEmail("thiago.tus.ie");							//THIS SHOULD FAIL BUT IS CURRENTLY ALLOWING SIGNUP
+		bean.getUser().setPassword("pass123");				
+		bean.setConfirmPassword("pass123");	
+		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
+		assertNull(outcome);									// if successful this would be a redirection link
+		assertNull(userList.findByEmail(""));			//confirms user hasn't been added to the list 
+	}
+	
+	@Test
+	@DisplayName("Test: Reset Form Functionality")
+	void testResetForm(){
+		bean.getUser().setName("Tommy");
+		bean.getUser().setEmail("tommy@birr.com");
+		bean.getUser().setPassword("birrisgreat");
+		bean.setConfirmPassword("birrisgreat");
+		
+		User firstEntry = bean.getUser();					//record the entries we're putting in the bean on the form 
+		
+		//reset the form 
+		String outcome = bean.reset();
+		
+		//results
+		assertEquals("registration?faces-redirect=true", outcome);
+		assertNull(bean.getConfirmPassword());//confirm the password has been reset 
+		assertNull(bean.getUser().getName());
+		assertNull(bean.getUser().getEmail());
+		assertNull(bean.getUser().getPassword());
+		assertNotSame(firstEntry, bean.getUser());			//confirming the reset values have wiped the entries we put in earlier 
+
+	}
+	
 }
