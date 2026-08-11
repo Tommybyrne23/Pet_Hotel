@@ -42,9 +42,11 @@ class LoginBeanTest {
 	void testCustomerLoginfailure() {
 		loginBean.setEmail("a00347373@student.tus.ie");
 		loginBean.setPassword("wrong");
-		loginBean.login();
+		String result = loginBean.login();
 		boolean loggedInCheck = loginBean.isLoggedIn();
+		assertEquals(null, result);			//LOGIN CHECK FAILS
 		assertFalse(loggedInCheck);
+		
 	}
 	
 	@Test
@@ -95,5 +97,24 @@ class LoginBeanTest {
 		assertTrue(attendantCheck);
 		assertTrue(customerCheck);
 	}
-
+	
+	@Test
+	@DisplayName("Test: Logout")
+	void testUserLogout(){
+	//add details to the login bean
+	loginBean.setEmail("user@3apets.ie");
+	loginBean.setPassword("user123");
+	String outcome = loginBean.login();
+	
+	//confirm the user is logged in 
+	assertEquals("userDashboard?faces-redirect=true", outcome);
+	boolean loggedInCheck = loginBean.isLoggedIn();
+	assertTrue(loggedInCheck);
+	
+	//now....log out...
+	loginBean.logout();
+	//confirm the status is logged out
+	assertFalse(loginBean.isLoggedIn());
+	
+	}
 }

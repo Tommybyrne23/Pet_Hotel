@@ -24,53 +24,52 @@ public class LoginBean implements Serializable {
     @Inject
     private UserList userList;
 
-
-    public String login() {
-
-        // Loop through all registered users
-        for (User user : userList.getUsers()) {
-
-            // Check email and password match
-            if (user.getEmail().equalsIgnoreCase(email)
-                    && user.getPassword().equals(password)) {
-
-                loggedInUser = user;
-                
-                Role role = user.getRole();
-
-               
-                if (user.getRole().equals(Role.ADMIN)){
-                	return "adminDashboard?faces-redirect=true";
-                } else if (user.getRole().equals(Role.CUSTOMER)){
-                	return "userDashboard?faces-redirect=true";
-                } else  {
-                	return "petAttendantDashboard?faces-redirect=true";
-                }
-
-			}
-		} //end of for enhanced loop 
-
-        // If no match found
-        FacesContext.getCurrentInstance().addMessage(
-                "loginForm:emailInput",
-                new FacesMessage(
-                        FacesMessage.SEVERITY_ERROR,
-                        "Invalid email or password.",
-                        null
-                )   );
-
-        return null; // stay on login page
+    
+ // centralised helper — every FacesContext-touching method routes through this
+    private void addFacesMessage(String clientId, FacesMessage.Severity severity, String summary) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context != null) {
+            context.addMessage(clientId, new FacesMessage(severity, summary, null));
+        }
     }
 
+    public String login() {
+        for (User user : userList.getUsers()) {
+            if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)) {
+                loggedInUser = user;
+
+                if (user.getRole().equals(Role.ADMIN)) {
+                    return "adminDashboard?faces-redirect=true";
+                } else if (user.getRole().equals(Role.CUSTOMER)) {
+                    return "userDashboard?faces-redirect=true";
+                } else {
+                    return "petAttendantDashboard?faces-redirect=true";
+                }
+            }
+        }
+
+        addFacesMessage("loginForm:emailInput", FacesMessage.SEVERITY_ERROR, "Invalid email or password.");
+        return null;
+    }
 
     public String logout() {
-    	//use jakarta faces to inavlidate the session
-    	 FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-
-
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context != null) {
+            context.getExternalContext().invalidateSession();
+        }
+        loggedInUser = null; // explicitly clear state — see note below on why this matters
         return "login?faces-redirect=true";
     }
 
+    private String handleUnauthorizedAccess(String messageText) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context != null) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, messageText, null));
+            context.getExternalContext().getFlash().setKeepMessages(true);
+        }
+        return "login?faces-redirect=true";
+    }
+    
 
  /*
   * Tests to keep track of the users status (logged in or not and user role) across the website, 
@@ -127,15 +126,7 @@ public class LoginBean implements Serializable {
         return null;
     }
 
-    /**
-     * Helper to handle unauthorized redirects gracefully
-     */
-    private String handleUnauthorizedAccess(String messageText) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, messageText, null));
-        context.getExternalContext().getFlash().setKeepMessages(true);
-        return "login?faces-redirect=true";						//returns the user to the login page as they won't have acces
-    }
+  
     
     //setters and getters
 
