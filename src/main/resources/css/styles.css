@@ -164,3 +164,154 @@ so best if images are a correct ratio size*/
     border-radius: 6px;
     margin-top: 10px;
 }
+
+
+
+
+/*CSS Styling for Login and registration pages*/
+/* ============================================
+   AUTH PAGES - login and registration
+   SCRUM-XX
+   ============================================ */
+
+.auth-card {
+	display: block;
+	width: 90%;
+	max-width: 420px;
+	margin: 60px auto;
+	background-color: #FFFDF9;
+	border: 1px solid #d9cfc7;
+	border-top: 5px solid #C96C4A;
+	border-radius: 14px;
+	padding: 40px 35px;
+	box-shadow: 0 4px 20px rgba(78, 52, 46, 0.12);
+	box-sizing: border-box;
+}
+
+/* border-bottom:none overrides the global h1 rule further up this file */
+.auth-title {
+	text-align: center;
+	font-size: 26px;
+	margin: 0 0 6px 0;
+	border-bottom: none;
+	color: #4E342E;
+}
+
+.auth-subtitle {
+	text-align: center;
+	font-size: 14px;
+	color: #8a7a70;
+	margin: 0 0 28px 0;
+}
+
+.form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 20px;
+}
+
+.form-field label {
+	font-size: 13px;
+	font-weight: bold;
+	color: #6D4C41;
+	letter-spacing: 0.02em;
+}
+
+.form-field input {
+	width: 100%;
+	padding: 12px 14px;
+	font-size: 15px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input:focus {
+	outline: none;
+	border-color: #C96C4A;
+	box-shadow: 0 0 0 3px rgba(201, 108, 74, 0.18);
+}
+
+.btn-primary {
+	width: 100%;
+	padding: 13px;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #C96C4A;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	margin-top: 8px;
+	transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+	background-color: #A65237;
+}
+
+.auth-links {
+	text-align: center;
+	font-size: 14px;
+	margin-top: 24px;
+	padding-top: 20px;
+	border-top: 1px solid #ece4dd;
+	color: #6D4C41;
+	line-height: 1.9;
+}
+
+.auth-links a {
+	color: #C96C4A;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.auth-links a:hover {
+	text-decoration: underline;
+}
+
+/* --- Faces messages --- */
+.message-box {
+	margin-bottom: 20px;
+}
+
+.message-box ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.error-messages {
+	display: block;
+	background-color: #fdecea;
+	border-left: 4px solid #c0392b;
+	color: #922b21;
+	padding: 10px 14px;
+	border-radius: 6px;
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+.success-messages {
+	display: block;
+	background-color: #eaf6ec;
+	border-left: 4px solid #27804a;
+	color: #1d6138;
+	padding: 10px 14px;
+	border-radius: 6px;
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+	.auth-card {
+		margin: 30px auto;
+		padding: 30px 22px;
+	}
+}
