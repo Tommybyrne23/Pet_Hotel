@@ -14,6 +14,7 @@ public class Pet implements Serializable {
     private String species;
     private String breed;
     private String age;
+    private String requirements;
 
 
     // Default constructor required by Jakarta Faces
@@ -22,15 +23,18 @@ public class Pet implements Serializable {
 
 
     // Constructor for creating a new pet
-    public Pet(int userID, String name, String species, String breed, String age) {
-        uuID++;
-        petID = uuID;
+    public Pet(int userID, String name, String species, String breed,
+            String age, String requirements) {
 
-        this.userID = userID;
-        this.name = name;
-        this.species = species;
-        this.breed = breed;
-        this.age = age;
+     uuID++;
+     petID = uuID;
+
+     this.userID = userID;
+     this.name = name;
+     this.species = species;
+     this.breed = breed;
+     this.age = age;
+     this.requirements = requirements;
     }
 
 
@@ -41,21 +45,9 @@ public class Pet implements Serializable {
     }
 
 
-    /*
-     * No setter for petID.
-     * The Pet class generates its own unique ID.
-     */
-
-
     public int getUserID() {
         return userID;
     }
-
-
-    /*
-     * No setter for userID.
-     * The userID should come from the currently logged-in user.
-     */
 
 
     public String getName() {
@@ -95,6 +87,14 @@ public class Pet implements Serializable {
 
     public void setAge(String age) {
         this.age = age;
+    }
+    
+    public String getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(String requirements) {
+        this.requirements = requirements;
     }
 }
 

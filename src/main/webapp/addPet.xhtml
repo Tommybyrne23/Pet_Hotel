@@ -5,6 +5,19 @@
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>Pet Registration</title>
+	
+	<!-- Script to limit characters in special requirements textbox -->
+	
+	<script>
+	function updateCharacterCount(textarea) {
+	    if (textarea.value.length > 200) {
+	        textarea.value = textarea.value.substring(0, 200);
+	    }
+
+	    document.getElementById('requirementsCounter').textContent =
+	        textarea.value.length + ' / 200 characters';
+	}
+</script>
 </h:head>
 <h:body>
 
@@ -84,6 +97,25 @@
 			    <f:selectItems value="#{petRegistrationBean.ageRanges}" />
 			
 			</h:selectOneMenu>
+			
+			<!-- OPTIONAL REQUIREMENTS -->
+			
+			<h:outputLabel value="Additional Requirements:" />
+			
+			<h:panelGroup id="requirementsGroup">
+			
+			<h:inputTextarea id="requirementsInput"
+			                 value="#{petRegistrationBean.pet.requirements}"
+			                 rows="5"
+			                 cols="40"
+			                 maxlength="200"
+			                 onkeyup="updateCharacterCount(this)" />
+			
+			    <br />
+			
+			    <span id="requirementsCounter">0 / 200 characters</span>
+			
+			</h:panelGroup>
 
 
             <!-- BUTTONS -->
@@ -98,6 +130,7 @@
                                  action="#{petRegistrationBean.reset}" />
 
             </h:panelGroup>
+            
 
 
             <!-- RETURN TO DASHBOARD -->
