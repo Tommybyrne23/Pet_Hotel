@@ -58,7 +58,14 @@
 				<!-- Fixed EL space issue to match standard Java field getters -->
             #{booking.petSpecialRequirements}
         </h:column>
+       
+       
 		</h:dataTable>
+		 <h:form id="navigationForm">
+            <h:commandButton value="Back to Dashboard"
+                             action="/adminDashboard?faces-redirect=true" 
+                             class="commandButton"/>
+        </h:form>
 	</center>
 	<div class="dashboard-grid"></div>
 	<br />

@@ -1,49 +1,55 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
 
 <h:head>
-    <h:outputStylesheet library="css" name="styles.css" />
-    <title>Pet Hotel - Registered Users</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Pet Hotel - Registered Users</title>
 </h:head>
 
 <h:body>
 
-    <h1>Registered Users Directory</h1>
-<center>
-    <!-- Display total number of registered users -->
-    <p>Total Registered Users: <strong>#{userList.numberOfUsers}</strong></p>
+	<h1>Registered Users Directory</h1>
+	<center>
+		<!-- Display total number of registered users -->
+		<p>
+			Total Registered Users: <strong>#{userList.numberOfUsers}</strong>
+		</p>
 
-    <!-- Table displaying all users stored in the ApplicationScoped list -->
-    <h:dataTable value="#{userList.users}" var="u" styleClass="productTable"
-                 headerClass="productTableHeader"
-                 rowClasses="productTableOddRow, productTableEvenRow">
-        <h:column>
-            <f:facet name="header">User ID</f:facet>
+		<!-- Table displaying all users stored in the ApplicationScoped list -->
+		<h:dataTable value="#{userList.users}" var="u"
+			styleClass="productTable" headerClass="productTableHeader"
+			rowClasses="productTableOddRow, productTableEvenRow">
+			<h:column>
+				<f:facet name="header">User ID</f:facet>
             #{u.userID}
         </h:column>
 
-        <h:column>
-            <f:facet name="header">Name</f:facet>
+			<h:column>
+				<f:facet name="header">Name</f:facet>
             #{u.name}
         </h:column>
 
-        <h:column>
-            <f:facet name="header">Email</f:facet>
+			<h:column>
+				<f:facet name="header">Email</f:facet>
             #{u.email}
         </h:column>
-        <h:column>
-            <f:facet name="header">Email</f:facet>
+			<h:column>
+				<f:facet name="header">Email</f:facet>
             #{u.role}
         </h:column>
-    </h:dataTable>
-</center>
-	<div class="dashboard-grid">
-	
-	
-	</div>
-    <br />
-    
+
+			
+		</h:dataTable>
+			<!-- Wrapped in h:form so action navigation works properly -->
+			<h:form id="navigationForm">
+				<h:commandButton value="Back to Dashboard"
+					action="/adminDashboard?faces-redirect=true" class="commandButton" />
+			</h:form>
+		
+	</center>
+	<div class="dashboard-grid"></div>
+	<br />
+
 </h:body>
 </html>
