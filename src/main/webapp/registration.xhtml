@@ -26,6 +26,7 @@
 				value="#{RegistrationBean.user.password}" required="true"
 				requiredMessage="Password is required." />
 
+
 			<h:outputLabel value="Confirm Password:" />
 			<h:inputSecret id="confirmPasswordInput"
 				value="#{RegistrationBean.confirmPassword}" required="true"
@@ -45,7 +46,9 @@
 				<h:link outcome="index" value="Return Home." />
 			</h:panelGroup>
 		</h:panelGrid>
-		<h:messages />
+		<h:panelGroup layout="block" styleClass="message-box">
+			<h:messages errorClass="error-messages" infoClass="success-messages" />
+		</h:panelGroup>
 	</h:form>
 </h:body>
 </html>
