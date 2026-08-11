@@ -21,7 +21,7 @@
 		<p>
 			Total Registered Users: <strong>#{userList.numberOfUsers}</strong>
 		</p>
-
+	<h:form id="userTableForm">
 		<!-- Table displaying all users stored in the ApplicationScoped list -->
 		<h:dataTable value="#{userList.users}" var="u"
 			styleClass="productTable" headerClass="productTableHeader"
@@ -40,21 +40,36 @@
 				<f:facet name="header">Email</f:facet>
             #{u.email}
         </h:column>
-			<h:column>
-				<f:facet name="header">Role</f:facet>
-            #{u.role}
-        </h:column>
-			
-			<!-- Add pet column for users registered with pets -->
-			<h:column>
-				<f:facet name="header">Pets</f:facet>
-				<ui:repeat value="#{petList.findByUserID(u.userID)}" var="pet">
+
+				<h:column>
+					<f:facet name="header">Role</f:facet>
+
+					<h:panelGroup
+						rendered="#{u.userID == LoginBean.loggedInUser.userID}">
+  					      #{u.role} (you)
+   						 </h:panelGroup>
+
+					<h:selectOneMenu value="#{u.role}"
+						rendered="#{u.userID != LoginBean.loggedInUser.userID}">
+						<f:selectItems value="#{userList.roles}" var="r" itemLabel="#{r}"
+							itemValue="#{r}" />
+					</h:selectOneMenu>
+				</h:column>
+
+				<!-- Add pet column for users registered with pets
+			One row for each pet -->
+				<h:column>
+					<f:facet name="header">Pets</f:facet>
+					<ui:repeat value="#{petList.findByUserID(u.userID)}" var="pet">
         #{pet.name}<br />
-				</ui:repeat>
-			</h:column>
+					</ui:repeat>
+				</h:column>
 
 
-		</h:dataTable>
+			</h:dataTable>
+		<br />
+		<h:commandButton value="Save Role Changes" class="commandButton" /> 
+		</h:form>
 			<!-- Wrapped in h:form so action navigation works properly --><br />
 			<h:form id="navigationForm">
 				<h:commandButton value="Back to Dashboard"

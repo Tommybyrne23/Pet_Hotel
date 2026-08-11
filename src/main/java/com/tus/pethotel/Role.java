@@ -17,4 +17,5 @@ public enum Role {
 	public String getLabel() {
 		return label;
 	}
+	
 }

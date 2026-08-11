@@ -83,5 +83,8 @@ public class UserList implements Serializable{
 	                .orElse("Unknown");
 	    }
 
-	
+	    public Role[] getRoles() {
+	        return Role.values();
+	    }
+	    
 }
