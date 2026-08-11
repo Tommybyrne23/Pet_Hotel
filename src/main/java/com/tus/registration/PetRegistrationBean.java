@@ -180,7 +180,8 @@ public class PetRegistrationBean implements Serializable {
                 pet.getName(),
                 pet.getSpecies(),
                 pet.getBreed(),
-                pet.getAge()
+                pet.getAge(),
+                pet.getRequirements()
         );
 
         // Add the pet to the PetList
