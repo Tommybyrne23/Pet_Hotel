@@ -51,34 +51,32 @@ public class RegistrationBean implements Serializable {
 	    this.confirmPassword = confirmPassword;
 	}
 
-	//registers the user before redirecting to the sample webpage.
+	//refactored testing so facesmessage is moved to a different method.
 	public String register() {
-		
-		if (!PasswordValidator.checkPasswordsMatch(user.getPassword(), confirmPassword)) {
-	        FacesContext.getCurrentInstance().addMessage("registrationForm:confirmPasswordInput",
-	                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-	                        "Passwords do not match.", null));
-	        return null;
+
+	    if (!PasswordValidator.checkPasswordsMatch(user.getPassword(), confirmPassword)) {
+	        addFacesMessage("registrationForm:confirmPasswordInput", "Passwords do not match.");			//send the faces message to the method below
+	        return null;																					//returns a null string for JUNIT testing 
 	    }
-		
-		boolean success = userList.addUser(user);		//use the boolean in Userlist to check if the user was added to the array list 
 
-		if (!success) {									// if not successful 
-			FacesContext.getCurrentInstance().addMessage("registrationForm:emailInput", 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-							"Email address is already registered.", null)
-					);
-			return null; 								// Stay on the registration page so they can fix the issue 
-		}
+	    boolean success = userList.addUser(user);
 
-		//if it is successful then the user was in the boolean userList.addUser(user) so we don't need to do anything else 
+	    if (!success) {
+	        addFacesMessage("registrationForm:emailInput", "Email address is already registered.");			//same here, message goes to addFaces Message s
+	        return null;																					//validation has failed, returns null for JUNIT purposes. 
+	    }
 
-		user = new User(); 		
-		// reset the form to allow for the next registration, clears any data stored in the system 
-		confirmPassword = null;
-		return "login?faces-redirect=true";  // redirects to the index page 
-		
-		
+	    user = new User();
+	    confirmPassword = null;
+	    return "login?faces-redirect=true";
+	}
+
+	// small private helper — avoids repeating the null-check twice											//this is a manual test on the registration dashboard.
+	private void addFacesMessage(String clientId, String summary) {
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    if (context != null) {
+	        context.addMessage(clientId, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+	    }
 	}
 
 	public String reset() {
