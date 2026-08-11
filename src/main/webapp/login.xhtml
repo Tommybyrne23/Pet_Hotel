@@ -51,6 +51,14 @@
 
 
 		</h:form>
+<!--  Login error message from faces -->
+<h:panelGroup rendered="#{not empty facesContext.messageList}">
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", function() {
+            alert("#{facesContext.messageList[0].summary}");
+        });
+    </script>
+</h:panelGroup>
 
 	</h:body>
 </f:view>
