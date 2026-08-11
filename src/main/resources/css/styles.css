@@ -1,49 +1,73 @@
 body {
 	background-color: beige;
 	font-family: Arial, sans-serif;
+	color: #4E342E;
 }
 /*Align headings in the center and add a line beneath it*/
 h1 {
 	text-align:center;
 	border-bottom: 4px solid #6D4C41;
 }
-
+ 
 /*Align subheadings in the center and add a line beneath it*/
 h2 {
 	text-align:center;
     border-bottom: 2px solid #6D4C41;
 }
-
-
+ 
+ 
+.commandButton {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+}
+ 
 /*Add colour and border to the buttons*/
-button {
+.button {
     background-color: #C96C4A;
     border-radius: 12px;
     color: white;
 }
-
-button:hover {
+ 
+.button:hover {
     background-color: #A65237;
 }
-
+ 
 /*Make contact information be centered*/
 .contact {
     text-align: center;
 }
-
+ 
+.account {
+    width: 90%;
+    max-width: 350px;
+    margin: 40px auto;
+}
+ 
+ 
 .service-left,
 .service-right {
     display: flex; /*Make images and text appear side by side*/
+     margin: 5px;
+        border-radius: 10px;
     align-items: flex-start; /*Test aligns with the top of the image*/
     gap: 30px; /*Space between image and text*/
     margin: 40px auto; /*Vertical spacing*/
     width: 90%; /*Keep content from the edges of the page*/
+    line-height: 1.5;
 }
-
+ 
 .service-right {
     flex-direction: row-reverse; /*Force content to the right of the page*/
+	background-color: tan;
 }
-
+ 
 /*Make images one uniform size, doesn't stretch images but crops them
 so best if images are a correct ratio size*/
 .service-left img,
@@ -53,8 +77,90 @@ so best if images are a correct ratio size*/
     border-radius: 10px;
     object-fit: cover;
 }
+ 
+/*class for intro color scheme*/
+.intro {
+ 
+    text-align: center;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #4E342E;
+    
+}
+ 
+.dashboard-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	max-width: 900px;
+	margin-top: 20px;
+}
+ 
+.dashboard-card {
+	aspect-ratio: 1 / 1;
+	border: 2px solid #333333;
+	border-radius: 8px;
+	padding: 20px;
+	background-color: #f9f9f9;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+ 
+.dashboard-card p {
+	margin: 0 0 15px 0;
+	font-size: 14px;
+	color: #555555;
+	line-height: 1.4;
+}
+ 
+.dashboard-card input[type="submit"] {
+	width: 90%;
+	padding: 10px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	background-color: #ffffff;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+ 
+.dashboard-card input[type="submit"]:hover {
+	background-color: #333333;
+	color: #ffffff;
+}
+ 
+/* Optional modifier class for logout/danger cards */
+.card-logout {
+	border-color: #d9534f;
+}
+ 
+.card-logout input[type="submit"] {
+	border-color: #d9534f;
+	color: #d9534f;
+}
+ 
+.card-logout input[type="submit"]:hover {
+	background-color: #d9534f;
+	color: #ffffff;
+}
+.error-messages {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
 
-/*Keeps text to the left size of the page*/
-.service-text {
-    flex: 1;
+.success-messages {
+    background-color: #27ae60;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 10px;
 }
