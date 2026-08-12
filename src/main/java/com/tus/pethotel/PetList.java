@@ -4,6 +4,8 @@ package com.tus.pethotel;
 import com.tus.Services.Species;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
@@ -22,6 +24,16 @@ public class PetList implements Serializable {
         this.pets = new ArrayList<>();
     }
 
+    //adding pets to the PetList for demonstration and testing, these will appear on the Customer User 
+    @PostConstruct
+    public void init() {
+        if (pets.isEmpty()) {
+            // User ID 3 corresponds to "Customer User" (user@3apets.ie)
+            addPet(new Pet(3, "Buddy", Species.DOG, "Golden Retriever", "3", "Requires morning medication."));
+            addPet(new Pet(3, "Luna", Species.CAT, "Siamese", "2", "Needs a quiet room away from dogs."));
+            addPet(new Pet(3, "Max", Species.DOG, "Beagle", "4", "Loves extra outdoor walks."));
+        }
+    }
 
     // How many pets are registered
     public int getNumberOfPets() {
