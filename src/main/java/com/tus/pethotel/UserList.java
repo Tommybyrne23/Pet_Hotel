@@ -87,4 +87,16 @@ public class UserList implements Serializable{
 	        return Role.values();
 	    }
 	    
+	    //function for getting user details from the UserID  information. 
+	    public User findByUserID(int userID) {
+	        for (User u : users) {
+	            if (u.getUserID() == userID) {
+	                return u;
+	            }
+	        }
+	        return null;
+	    }
+
+	    
+	    
 }
