@@ -2,7 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:pt="jakarta.faces.passthrough">
+
+
+<f:metadata>
+	<!-- Only logged-in users can make a booking -->
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
@@ -23,7 +30,7 @@
 					infoClass="success-messages" />
 			</h:panelGroup>
 
-			<!-- AC4: If user has no pets, show message -->
+			<!-- If user has no pets, show message -->
 			<h:panelGroup rendered="#{!BookingBean.hasPets}">
 				<p style="font-size: 16px; color: #721c24;
 					background-color: #f8d7da; padding: 15px;
@@ -34,7 +41,7 @@
 					style="font-size: 16px; font-weight: bold;" />
 			</h:panelGroup>
 
-			<!-- AC1: Booking form - only shown if user has pets -->
+			<!-- Booking form - only shown if user has pets -->
 			<h:panelGroup rendered="#{BookingBean.hasPets}">
 
 				<!-- Select Pet (dropdown of registered pets) -->
@@ -45,8 +52,11 @@
 						itemValue="0" />
 					<f:selectItems value="#{BookingBean.userPets}"
 						var="pet"
-						itemLabel="#{pet.name} (#{pet.species} - #{pet.breed})"
+						itemLabel="#{pet.name} (#{pet.species.label} - #{pet.breed})"
 						itemValue="#{pet.petID}" />
+					<f:ajax execute="@this"
+					listener="#{BookingBean.petChanged}"
+					render="serviceArea" />
 				</h:selectOneMenu>
 
 				<br />
@@ -69,29 +79,47 @@
 
 				<br />
 
-				<!-- AC1: Services selection -->
-				<h:outputText value="Extra Services:"
-					style="font-weight: bold;" />
+				<!-- POD AND EXTRAS - both depend on the selected pet -->
+				<h:panelGroup id="serviceArea" layout="block">
 
-				<h:panelGroup layout="block" style="margin: 8px 0;">
-					<h:selectBooleanCheckbox id="groomingCheck"
-						value="#{BookingBean.grooming}" />
-					<h:outputLabel for="groomingCheck"
-						value=" Grooming (+&#8364;15/night)" />
-				</h:panelGroup>
+					<h:panelGroup rendered="#{empty BookingBean.availablePods}"
+						layout="block" style="margin: 10px 0; color: #666;">
+						Select a pet to see the pods and services available.
+					</h:panelGroup>
 
-				<h:panelGroup layout="block" style="margin: 8px 0;">
-					<h:selectBooleanCheckbox id="walksCheck"
-						value="#{BookingBean.walks}" />
-					<h:outputLabel for="walksCheck"
-						value=" Daily Walks (+&#8364;10/night)" />
-				</h:panelGroup>
+					<h:panelGroup rendered="#{not empty BookingBean.availablePods}"
+						layout="block">
 
-				<h:panelGroup layout="block" style="margin: 8px 0;">
-					<h:selectBooleanCheckbox id="premiumFoodCheck"
-						value="#{BookingBean.premiumFood}" />
-					<h:outputLabel for="premiumFoodCheck"
-						value=" Premium Food (+&#8364;8/night)" />
+						<!-- A booking must have exactly one pod -->
+						<h:outputLabel value="Select Pod:" />
+						<h:selectOneMenu id="podSelect"
+							value="#{BookingBean.selectedPodID}">
+
+							<f:selectItem itemLabel="-- Select a Pod --" itemValue="0" />
+
+							<f:selectItems value="#{BookingBean.availablePods}" var="pod"
+								itemLabel="#{pod.name} - &#8364;#{pod.price} per night"
+								itemValue="#{pod.serviceID}" />
+
+						</h:selectOneMenu>
+
+						<br />
+
+						<!-- Any number of extras, including none -->
+						<h:outputText value="Extra Services:" style="font-weight: bold;" />
+
+						<h:selectManyCheckbox id="extrasSelect"
+							value="#{BookingBean.selectedExtraIDs}"
+							layout="pageDirection" style="margin: 8px 0;">
+
+							<f:selectItems value="#{BookingBean.availableExtras}" var="extra"
+								itemLabel="#{extra.name} (+&#8364;#{extra.price} #{extra.chargeType.label})"
+								itemValue="#{extra.serviceID}" />
+
+						</h:selectManyCheckbox>
+
+					</h:panelGroup>
+
 				</h:panelGroup>
 
 				<br />
