@@ -57,7 +57,7 @@
 
 		<!-- PRICE -->
 		<div class="form-field">
-			<h:outputLabel for="priceInput" value="Price (&#8364; per night):" />
+			<h:outputLabel for="priceInput" value="Price (&#8364;):" />
 			<h:inputText id="priceInput" value="#{ServiceBean.editPrice}"
 				required="true"
 				requiredMessage="Please add a price for our little boarders."
@@ -84,6 +84,18 @@
 			<h:message for="categoryInput" errorClass="field-error" />
 		</div>
 
+		<!-- CHARGE TYPE - per night for the whole stay, or a single charge.
+		     Ignored for pods, which are always per night. -->
+		<div class="form-field">
+			<h:outputLabel for="chargeTypeInput" value="How is this charged?" />
+			<h:selectOneRadio id="chargeTypeInput"
+				value="#{ServiceBean.editChargeType}" layout="lineDirection"
+				required="true" requiredMessage="Choose how this service is charged.">
+				<f:selectItems value="#{ServiceBean.chargeTypeOptions}" var="ct"
+					itemLabel="#{ct.label}" itemValue="#{ct}" />
+			</h:selectOneRadio>
+			<h:message for="chargeTypeInput" errorClass="field-error" />
+		</div>
 
 		<!-- SPECIES - leaving this blank means the service suits every pet -->
 		<div class="form-field">
@@ -140,6 +152,11 @@
 				#{service.description}
 			</h:column>
 
+			<h:column>
+				<f:facet name="header">Charged</f:facet>
+				#{service.chargeType.label}
+			</h:column>
+			
 			<h:column>
 				<f:facet name="header">Price</f:facet>
 				<h:outputText value="#{service.price}">
