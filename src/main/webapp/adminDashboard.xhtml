@@ -31,48 +31,55 @@
 			<div class="dashboard-card">
 				<p>Manage user accounts, account types, and profile settings.</p>
 				<h:commandButton value="View all users"
-					action="/admin/userList?faces-redirect=true" />
+				 				 class="btn-green50"	
+								 action="/admin/userList?faces-redirect=true"/>
 			</div>
 			<!-- SCRUM-138: View Pods and Rooms -->
 			<div class="dashboard-card">
 				<p>Review and manage registered pets on our system</p>
-				<h:commandButton value="View All Pets"
-					action="/admin/petManagement?faces-redirect=true" />
+				<h:commandButton value="View All Pets" 
+							     class="btn-green50" 
+							     action="/admin/petManagement?faces-redirect=true"/>
 			</div>
 
 			<!-- SCRUM-135: View all confirmed reservations -->
 			<div class="dashboard-card">
 				<p>Review and confirm current customer reservations.</p>
-				<h:commandButton value="View all bookings"
-					action="/admin/viewBookings?faces-redirect=true" />
+				<h:commandButton value="View all bookings" 
+								 class="btn-green50"
+								 action="/admin/viewBookings?faces-redirect=true"/>
 			</div>
 
 			<!-- SCRUM-137: View All listings -->
 			<div class="dashboard-card">
 				<p>Manage, add, or update service and product listings.</p>
-				<h:commandButton value="View all listings"
-					action="/admin/manageServices?faces-redirect=true" />
+				<h:commandButton value="Add/Edit Services"
+								class="btn-green50"
+								action="/admin/manageServices?faces-redirect=true"/>
 			</div>
 
 			<!-- SCRUM-138: View Pods and Rooms -->
 			<div class="dashboard-card">
 				<p>Inspect facility occupancy, pod allocations, and rooms.</p>
 				<h:commandButton value="View Pods/Rooms"
-					action="/admin/viewPodsRooms?faces-redirect=true" />
+								 class="btn-green50" 
+					 			 action="/admin/viewPodsRooms?faces-redirect=true"/>
 			</div>
 
 			<!-- View Contact form Submissions -->
 			<div class="dashboard-card">
 				<p>Read customer messages submitted through the contact form.</p>
 				<h:commandButton value="View messages"
-					action="/admin/viewContactForm?faces-redirect=true" />
+							     class="btn-green50"
+								 action="/admin/viewContactForm?faces-redirect=true"/>
 			</div>
 
 			<!-- Logout button -->
 			<div class="dashboard-card card-logout">
 				<p>End the current session and exit securely.</p>
 				<h:commandButton value="Logout"
-					action="#{LoginBean.logout}" />
+					 			 class="btn-green50"
+								 action="#{LoginBean.logout}"/>
 			</div>
 
 		</div>
