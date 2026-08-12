@@ -123,4 +123,27 @@ public class ServiceList implements Serializable {
 	public ArrayList<Service> getServices() {
 		return services;
 	}
+	
+	public List<Service> getServicesForSpecies(String species) {
+
+	    List<Service> matchingServices = new ArrayList<>();
+
+	    for (Service service : services) {
+
+	        // No species means the service is available to every pet type
+	        if (service.getApplicableSpecies() == null
+	                || service.getApplicableSpecies().isEmpty()) {
+
+	            matchingServices.add(service);
+	            continue;
+	        }
+
+	        // Add the service if it applies to this species
+	        if (service.getApplicableSpecies().contains(species)) {
+	            matchingServices.add(service);
+	        }
+	    }
+
+	    return matchingServices;
+	}
 }

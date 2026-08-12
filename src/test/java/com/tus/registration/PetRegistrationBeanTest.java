@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.PetList;
-import com.tus.pethotel.Species;
+import com.tus.Services.Species;
 import com.tus.pethotel.User;
 
 import jakarta.faces.model.SelectItem;
