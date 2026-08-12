@@ -371,4 +371,75 @@ class PetRegistrationBeanTest {
         assertNull(bean.getPet().getAge());
         assertNull(bean.getPet().getRequirements());
     }
+    
+    @Test
+    @DisplayName("Test: Special requirements are stored correctly")
+    void testSpecialRequirements() {
+
+        User user = new User(
+                "Mary",
+                "mary@gmail.com",
+                "pass123"
+        );
+
+        loginBean.setLoggedInUser(user);
+
+        bean.getPet().setName("Buddy");
+        bean.getPet().setSpecies(Species.DOG);
+        bean.getPet().setBreed("Labrador");
+        bean.getPet().setAge("1–3 years");
+        bean.getPet().setRequirements(
+                "Needs medication with food and should be kept away from other dogs."
+        );
+
+        String outcome = bean.register();
+
+        assertEquals(
+                "userDashboard?faces-redirect=true",
+                outcome
+        );
+
+        assertEquals(1, petList.getNumberOfPets());
+
+        Pet registeredPet = petList.getPets().get(0);
+
+        assertEquals(
+                "Needs medication with food and should be kept away from other dogs.",
+                registeredPet.getRequirements()
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: Special requirements over 200 characters are rejected")
+    void testSpecialRequirementsOverMaximumLength() {
+
+        User user = new User(
+                "Mary",
+                "mary@gmail.com",
+                "pass123"
+        );
+
+        loginBean.setLoggedInUser(user);
+
+        bean.getPet().setName("Buddy");
+        bean.getPet().setSpecies(Species.DOG);
+        bean.getPet().setBreed("Labrador");
+        bean.getPet().setAge("1–3 years");
+
+        String requirements = "a".repeat(201);
+
+        bean.getPet().setRequirements(requirements);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bean.register()
+        );
+
+        assertEquals(
+                0,
+                petList.getNumberOfPets(),
+                "Pet should not be added when requirements exceed 200 characters"
+        );
+    }
 }
