@@ -15,6 +15,7 @@
 </h:head>
 
 <h:body>
+	<div class="dashboard-wrapper">  <!-- makes the page width slightly narrower, tables look better -->
     <h1>Confirmed Bookings</h1>
 
     <div class="card-container">
@@ -32,7 +33,7 @@
             </div>
         </h:link>
 
-        <h:link outcome="pastbookings.xhtml" styleClass="card-link">
+        <h:link outcome="pastBookings.xhtml" styleClass="card-link">
             <div class="stat-card">
                 <div class="stat-title">Past Bookings</div>
                 <div class="stat-number">#{reservationList.pastReservations.size()}</div>
@@ -76,7 +77,7 @@
         </h:form>
     </center>
     
-    <div class="dashboard-grid"></div>
+</div>
     <br />
 </h:body>
 </html>
