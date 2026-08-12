@@ -46,16 +46,70 @@ public class ReservationList implements Serializable {
         return reservations.size();
     }
     
-    public ArrayList<Reservation> getPastReservations(String checkOutDate){
+    
+    //filter previous booking 
+    public ArrayList<Reservation> getPastReservations(){
     	ArrayList<Reservation> pastReservations = new ArrayList<>();
-    	LocalDate Today = LocalDate.now(); 			//set the date to today for check in 
-    	LocalDate checkOut = LocalDate.parse(checkOutDate);
+    	LocalDate today = LocalDate.now(); 			//set the date to today for check in 
+
     	for (Reservation r : reservations) {
-    		if (checkOut.isBefore(Today)) {
-    			pastReservations.add(r);
+    		if (r != null && r.getCheckOutDate() != null && !r.getCheckOutDate().isBlank()) {
+    			try {
+    				LocalDate checkoutDate = LocalDate.parse(r.getCheckOutDate().trim());
+    				if (checkoutDate.isBefore(today)) {
+    					pastReservations.add(r);
+    				}
+    			} catch (DateTimeParseException e) {
+    		
+    			}
     		}
     	}
     	return pastReservations;
     }
+
+    //filter bookings in the future 
     
+    public ArrayList<Reservation> getFutureReservations(){
+    	ArrayList<Reservation> upcomingReservations = new ArrayList<>();
+    	LocalDate today = LocalDate.now(); 	
+    	
+    	   for (Reservation r : reservations) {
+    	        if (r != null && r.getCheckInDate() != null && !r.getCheckInDate().isBlank()) {
+    	            try {
+    	                LocalDate checkInDate = LocalDate.parse(r.getCheckInDate().trim());
+    	                if (checkInDate.isAfter(today)) {
+    	                    upcomingReservations.add(r);
+    	                }
+    	            } catch (DateTimeParseException e) {
+    	            
+    	            }
+    	        }
+    	    }
+    	    return upcomingReservations;
+    	}
+    
+    //filter bookings currently on site  
+    
+    public ArrayList<Reservation> getActiveBookings(){
+    	ArrayList<Reservation> reservationOnSiteToday= new ArrayList<>();
+    	LocalDate today = LocalDate.now(); 	
+    	
+
+    	for (Reservation r : reservations) {
+    		if (r != null && r.getCheckInDate() != null && !r.getCheckInDate().isBlank()
+    				&& r.getCheckOutDate() != null && !r.getCheckOutDate().isBlank()) {
+    			try {
+    				LocalDate checkIn = LocalDate.parse(r.getCheckInDate().trim());
+    				LocalDate checkOut = LocalDate.parse(r.getCheckOutDate().trim());
+
+    				if (!checkIn.isAfter(today) && !checkOut.isBefore(today)) {
+    					reservationOnSiteToday.add(r);
+    				}
+    			} catch (DateTimeParseException e) {
+    				
+    			}
+    		}
+    	}
+    	return reservationOnSiteToday;
+    }   
 }
