@@ -17,17 +17,17 @@ public class Service implements Serializable {
 	private ServiceCategory category = ServiceCategory.EXTRA;
 
 	public Service() {
-		uuID++;
-		serviceID = uuID;
+	    
 	}
 
 	public Service(String name, String description, double price,
-			ServiceCategory category) {
-		this();
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.category = category;
+	        ServiceCategory category) {
+	    uuID++;
+	    this.serviceID = uuID;
+	    this.name = name;
+	    this.description = description;
+	    this.price = price;
+	    this.category = category;
 	}
 
 	private List<String> applicableSpecies = new ArrayList<>();
