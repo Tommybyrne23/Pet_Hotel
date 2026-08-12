@@ -22,30 +22,30 @@ class PetListTest {
         petList = new PetList();
 
         pet1 = new Pet(
-                1,
-                "Buddy",
-                Species.DOG,
-                "Labrador",
-                "1-3 years",
-                ""
+                1,					//customers userID
+                "Buddy",			//Pet
+                Species.DOG,		//Species
+                "Labrador",			//
+                "1-3 years",		//Age 
+                ""					//Special Requirements 
         );
 
         pet2 = new Pet(
-                1,
-                "Milo",
-                Species.CAT,
-                "Siamese",
-                "4-7 years",
-                ""
+                1,					//customers userID
+                "Milo",				//Pet name 
+                Species.CAT,		//Species 
+                "Siamese",			//species type
+                "4-7 years",		//age
+                ""					//special requirements
         );
 
         pet3 = new Pet(
-                2,
-                "Charlie",
-                Species.BIRD,
-                "Budgie",
-                "1-5 years",
-                ""
+                2,					//customer user ID
+                "Charlie",			//Pet name 
+                Species.BIRD,		//Species type 
+                "Budgie",			//Type of species
+                "1-5 years",		//age
+                ""					//species requirement
         );
     }
 
