@@ -26,16 +26,17 @@ public class ServiceBean implements Serializable {
 	private String editDescription;
 	private Double editPrice;					// object, not primitive - see note below
 	private ServiceCategory editCategory;
+	private ChargeType editChargeType = ChargeType.PER_NIGHT; // defaults to per night so the radio always has a selection
 	private List<String> editSpecies = new ArrayList<>();
 
 	@Inject
 	private ServiceList serviceList;
 
 
-	// AC1: create the service
+	//  create the service
 	public String addNewService() {
 
-		// AC4 backstop: the page marks these required, this catches anything
+		//  the page marks these required, this catches anything
 		// that gets past the view layer
 		if (editName == null || editName.trim().isEmpty()) {
 			addError("nameInput", "A service name is required.");
@@ -51,6 +52,11 @@ public class ServiceBean implements Serializable {
 			addError("categoryInput", "Choose whether this is a pod or an extra.");
 			return null;
 		}
+		
+		// A pod is the nightly boarding rate, so it is always per night
+		if (editCategory == ServiceCategory.POD) {
+			editChargeType = ChargeType.PER_NIGHT;
+			}
 
 		// Build the service only once the input is known to be good
 		Service newService = new Service(
