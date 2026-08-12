@@ -50,9 +50,9 @@ public class BookingBean implements Serializable {
     @Inject
     private ReservationList reservationList;
 
-    /**
-     * AC1: Get the logged-in user's registered pets for the dropdown.
-     */
+    
+    // Get the logged-in user's registered pets for the dropdown.
+    
     public ArrayList<Pet> getUserPets() {
         User user = loginBean.getLoggedInUser();
         if (user != null) {
@@ -61,16 +61,14 @@ public class BookingBean implements Serializable {
         return new ArrayList<>();
     }
 
-    /**
-     * AC4: Check if the user has any registered pets.
-     */
+    // Check if the user has any registered pets.
+    
     public boolean isHasPets() {
         return !getUserPets().isEmpty();
     }
 
-    /**
-     * Get all bookings for the logged-in user (for viewBookings page).
-     */
+    // Get all bookings for the logged-in user (for viewBookings page).
+    
     public ArrayList<Reservation> getUserBookings() {
         User user = loginBean.getLoggedInUser();
         if (user != null) {
@@ -79,9 +77,8 @@ public class BookingBean implements Serializable {
         return new ArrayList<>();
     }
 
-    /**
-     * AC2: Calculate the total price based on dates and services.
-     */
+    // Calculate the total price based on dates and services.
+    
     public String calculatePrice() {
 
         FacesContext context = FacesContext.getCurrentInstance();
