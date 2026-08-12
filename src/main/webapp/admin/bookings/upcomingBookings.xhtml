@@ -12,11 +12,11 @@
 <h:head>
     <h:outputStylesheet library="css" name="styles.css" />
     <title>Pet Hotel - Upcoming Bookings</title>
-
+</h:head>
 <h:body>
 <ui:include src="/WEB-INF/includes/header.xhtml" />
    <div class="dashboard-wrapper">
-    <h1>Upcoming Bookings</h1>
+    <div class="dashboard-title">Upcoming Bookings</div>
 
     <!-- Card Navigation Strip -->
     <div class="card-container">
@@ -45,7 +45,7 @@
         </h:link>
 
         <!-- Total Bookings -->
-        <h:link outcome="viewBookings.xhtml" styleClass="card-link">
+        <h:link outcome="viewAllBookings.xhtml" styleClass="card-link">
             <div class="stat-card">
                 <div class="stat-title">Total Bookings</div>
                 <div class="stat-number">#{reservationList.numberOfReservations}</div>

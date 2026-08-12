@@ -16,7 +16,7 @@
 <h:body>
 <ui:include src="/WEB-INF/includes/header.xhtml" />
 <div class="dashboard-wrapper">
-    <h1>Who's Aboard</h1>
+    <div class="dashboard-title">Who's Aboard</div>
 
     <div class="card-container">
         <h:link outcome="onsite.xhtml" styleClass="card-link">
@@ -40,7 +40,7 @@
             </div>
         </h:link>
 
-        <h:link outcome="viewBookings.xhtml" styleClass="card-link">
+        <h:link outcome="viewAllBookings.xhtml" styleClass="card-link">
             <div class="stat-card">
                 <div class="stat-title">Total Bookings</div>
                 <div class="stat-number">#{reservationList.numberOfReservations}</div>

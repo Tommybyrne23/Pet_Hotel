@@ -17,14 +17,13 @@
 
 <h:body>
 <ui:include src="/WEB-INF/includes/header.xhtml" />
+<div class="dashboard-wrapper">
 	<!-- TODO ONCE BOOKINGS HAVE BEEN MADE 
 	table created for the dashboard view  
 	This page has been made as a placeholder
 	-->
-    <h1>View all products and services</h1>
-
-    <center>
-        <!-- Table displaying services -->
+    <div class="dashboard-title">View all pods and rooms</div>
+          <!-- Table displaying services -->
         <h:dataTable value="#{confirmBookings.bookings}" var="booking" styleClass="productTable"
                      headerClass="productTableHeader"
                      rowClasses="productTableOddRow, productTableEvenRow">
@@ -55,12 +54,9 @@
                              action="/adminDashboard?faces-redirect=true" 
                              class="btn-green50"/>
         </h:form>
-    </center>
 
-	<div class="dashboard-grid">
-	
-	</div>
-    <br />
+
+</div>
     
 </h:body>
 </html>
