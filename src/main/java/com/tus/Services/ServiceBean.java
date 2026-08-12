@@ -66,7 +66,9 @@ public class ServiceBean implements Serializable {
 				editCategory);
 
 		newService.setApplicableSpecies(new ArrayList<>(editSpecies));
-
+		
+		newService.setChargeType(editChargeType);
+		
 		boolean added = serviceList.addService(newService);
 
 		if (!added) {
@@ -87,6 +89,7 @@ public class ServiceBean implements Serializable {
 		editDescription = null;
 		editPrice = null;
 		editCategory = null;
+		editChargeType = ChargeType.PER_NIGHT;
 		editSpecies = new ArrayList<>();
 
 		return "manageServices?faces-redirect=true";
@@ -174,4 +177,17 @@ public class ServiceBean implements Serializable {
 	public void setServiceList(ServiceList serviceList) {
 		this.serviceList = serviceList;
 	}
+	
+	public ChargeType getEditChargeType() {
+		return editChargeType;
+	}
+
+	public void setEditChargeType(ChargeType editChargeType) {
+		this.editChargeType = editChargeType;
+	}
+	
+	// Fills the per night / one-off radio buttons
+		public ChargeType[] getChargeTypeOptions() {
+			return ChargeType.values();
+		}
 }
