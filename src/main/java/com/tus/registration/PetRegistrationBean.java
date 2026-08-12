@@ -1,8 +1,6 @@
-
 package com.tus.registration;
 
 import java.io.Serializable;
-
 import jakarta.faces.model.SelectItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,94 +19,38 @@ public class PetRegistrationBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
     // The pet currently being registered
     private Pet pet;
-
 
     // Pet list containing all registered pets
     @Inject
     private PetList petList;
 
-
     // Login bean containing the currently logged-in user
     @Inject
     private LoginBean loginBean;
+    
+    public void setPetList(PetList petList) {
+        this.petList = petList;
+    }
 
+    public void setLoginBean(LoginBean loginBean) {
+        this.loginBean = loginBean;
+    }
 
     @PostConstruct
     public void init() {
         pet = new Pet();
     }
 
-
-    // Allows Jakarta Faces to access the current pet
     public Pet getPet() {
         return pet;
     }
 
-
-    // Allows Jakarta Faces to update the current pet
     public void setPet(Pet pet) {
         this.pet = pet;
     }
-    
-    public List<SelectItem> getBreeds() {
 
-        List<SelectItem> breeds = new ArrayList<>();
-
-        if (pet.getSpecies() == null) {
-            return breeds;
-        }
-
-        switch (pet.getSpecies()) {
-
-            case "Dog":
-                breeds.add(new SelectItem("Labrador", "Labrador"));
-                breeds.add(new SelectItem("German Shepherd", "German Shepherd"));
-                breeds.add(new SelectItem("Poodle", "Poodle"));
-                breeds.add(new SelectItem("Golden Retriever", "Golden Retriever"));
-                breeds.add(new SelectItem("Bulldog", "Bulldog"));
-                breeds.add(new SelectItem("Other", "Other"));
-                break;
-
-            case "Cat":
-                breeds.add(new SelectItem("Siamese", "Siamese"));
-                breeds.add(new SelectItem("Persian", "Persian"));
-                breeds.add(new SelectItem("Maine Coon", "Maine Coon"));
-                breeds.add(new SelectItem("British Shorthair", "British Shorthair"));
-                breeds.add(new SelectItem("Bengal", "Bengal"));
-                breeds.add(new SelectItem("Other", "Other"));
-                break;
-
-            case "Bird":
-                breeds.add(new SelectItem("Budgie", "Budgie"));
-                breeds.add(new SelectItem("Canary", "Canary"));
-                breeds.add(new SelectItem("Parrot", "Parrot"));
-                breeds.add(new SelectItem("Cockatiel", "Cockatiel"));
-                breeds.add(new SelectItem("Other", "Other"));
-                break;
-
-            case "Reptile":
-                breeds.add(new SelectItem("Bearded Dragon", "Bearded Dragon"));
-                breeds.add(new SelectItem("Gecko", "Gecko"));
-                breeds.add(new SelectItem("Corn Snake", "Corn Snake"));
-                breeds.add(new SelectItem("Tortoise", "Tortoise"));
-                breeds.add(new SelectItem("Other", "Other"));
-                break;
-
-            case "Fish":
-                breeds.add(new SelectItem("Goldfish", "Goldfish"));
-                breeds.add(new SelectItem("Betta", "Betta"));
-                breeds.add(new SelectItem("Guppy", "Guppy"));
-                breeds.add(new SelectItem("Tetra", "Tetra"));
-                breeds.add(new SelectItem("Other", "Other"));
-                break;
-        }
-
-        return breeds;
-    }
-    
     public List<SelectItem> getAgeRanges() {
 
         List<SelectItem> ages = new ArrayList<>();
@@ -119,7 +61,7 @@ public class PetRegistrationBean implements Serializable {
 
         switch (pet.getSpecies()) {
 
-            case "Dog":
+            case DOG:
                 ages.add(new SelectItem("Less than 1 year", "Less than 1 year"));
                 ages.add(new SelectItem("1–3 years", "1–3 years"));
                 ages.add(new SelectItem("4–7 years", "4–7 years"));
@@ -127,7 +69,7 @@ public class PetRegistrationBean implements Serializable {
                 ages.add(new SelectItem("13+ years", "13+ years"));
                 break;
 
-            case "Cat":
+            case CAT:
                 ages.add(new SelectItem("Less than 1 year", "Less than 1 year"));
                 ages.add(new SelectItem("1–3 years", "1–3 years"));
                 ages.add(new SelectItem("4–7 years", "4–7 years"));
@@ -135,7 +77,7 @@ public class PetRegistrationBean implements Serializable {
                 ages.add(new SelectItem("13+ years", "13+ years"));
                 break;
 
-            case "Bird":
+            case BIRD:
                 ages.add(new SelectItem("Less than 1 year", "Less than 1 year"));
                 ages.add(new SelectItem("1–5 years", "1–5 years"));
                 ages.add(new SelectItem("6–10 years", "6–10 years"));
@@ -143,7 +85,7 @@ public class PetRegistrationBean implements Serializable {
                 ages.add(new SelectItem("21+ years", "21+ years"));
                 break;
 
-            case "Reptile":
+            case REPTILE:
                 ages.add(new SelectItem("Less than 1 year", "Less than 1 year"));
                 ages.add(new SelectItem("1–3 years", "1–3 years"));
                 ages.add(new SelectItem("4–7 years", "4–7 years"));
@@ -151,7 +93,7 @@ public class PetRegistrationBean implements Serializable {
                 ages.add(new SelectItem("16+ years", "16+ years"));
                 break;
 
-            case "Fish":
+            case FISH:
                 ages.add(new SelectItem("Less than 1 year", "Less than 1 year"));
                 ages.add(new SelectItem("1–2 years", "1–2 years"));
                 ages.add(new SelectItem("3–5 years", "3–5 years"));
@@ -161,20 +103,17 @@ public class PetRegistrationBean implements Serializable {
 
         return ages;
     }
-    
+
     public void speciesChanged() {
         pet.setBreed(null);
         pet.setAge(null);
     }
 
-
     // Register the pet
     public String register() {
 
-        // Get the currently logged-in user
         int userID = loginBean.getLoggedInUser().getUserID();
 
-        // Create the pet using the logged-in user's ID
         Pet newPet = new Pet(
                 userID,
                 pet.getName(),
@@ -184,16 +123,12 @@ public class PetRegistrationBean implements Serializable {
                 pet.getRequirements()
         );
 
-        // Add the pet to the PetList
         petList.addPet(newPet);
 
-        // Reset the form
         pet = new Pet();
 
-        // Return to the user's dashboard
         return "userDashboard?faces-redirect=true";
     }
-
 
     // Reset the registration form
     public String reset() {
@@ -203,5 +138,4 @@ public class PetRegistrationBean implements Serializable {
         return "addPet?faces-redirect=true";
     }
 }
-
 

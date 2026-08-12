@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
 
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
@@ -9,71 +11,88 @@
 </f:metadata>
 
 <h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
-	<title>Pet Hotel - Registered Users</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Confirmed Bookings</title>
 </h:head>
 
 <h:body>
-	<!--  TODO ONCE BOOKINGS HAVE BEEN MADE 
-	table created for the dashboard view  
-	This page has been made as a placeholder
-	-->
-	<h1>Confirmed bookings</h1>
+    <h1>Confirmed Bookings</h1>
 
-	<!-- Display total number of registered users -->
-	<center>
-		<p>
-			Number of confirmed bookings: <strong>#{confirmedBookings.numberOfBookings}</strong>
-		</p>
+    <center>
+        <!-- Display total number of confirmed bookings -->
+        <p>
+            Number of confirmed bookings: <strong>#{reservationList.numberOfReservations}</strong>
+        </p>
 
-
-		<!-- Table displaying all users stored in the ApplicationScoped list -->
-
-		<h:dataTable value="#{confirmBookings.bookings}" var="booking"
-			styleClass="productTable" headerClass="productTableHeader"
-			rowClasses="productTableOddRow, productTableEvenRow">
-			<h:column>
-				<f:facet name="header">Booking Number</f:facet>
-            #{booking.userID}
-        </h:column>
+        <!-- Table displaying all reservations stored in ApplicationScoped list -->
+        <h:dataTable value="#{reservationList.reservations}" var="booking"
+                     rendered="#{not empty reservationList.reservations}"
+                     styleClass="productTable" headerClass="productTableHeader"
+                     rowClasses="productTableOddRow, productTableEvenRow">
+            
+            <h:column>
+                <f:facet name="header">Booking Number</f:facet>
+                #{booking.reservationID}
+            </h:column>
 
 			<h:column>
 				<f:facet name="header">Name</f:facet>
-            #{booking.name}
-        </h:column>
+ 			   #{userList.findByUserID(booking.userID).name}
+			</h:column>
 
 			<h:column>
 				<f:facet name="header">Email</f:facet>
-            #{booking.email}
-        </h:column>
+    			#{userList.findByUserID(booking.userID).email}
+				</h:column>
+
+
 			<h:column>
-				<f:facet name="header">Date from </f:facet>
-            #{booking.dateFrom}
-        </h:column>
-			<h:column>
-				<f:facet name="header">Date to </f:facet>
-            #{booking.dateTo}
-        </h:column>
-			<h:column>
-				<f:facet name="header">Pets </f:facet>
-            #{booking.petType}
-        </h:column>
-			<h:column>
-				<f:facet name="header">Requirement </f:facet>
-				<!-- Fixed EL space issue to match standard Java field getters -->
-            #{booking.petSpecialRequirements}
-        </h:column>
-       
-       <br />
-		</h:dataTable>
-		 <h:form id="navigationForm">
+                <f:facet name="header">Check in</f:facet>
+                #{booking.checkInDate}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Check Out</f:facet>
+                #{booking.checkOutDate}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Pets</f:facet>
+                #{booking.petName}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Services</f:facet>
+                <h:outputText value="Grooming " rendered="#{booking.grooming}" />
+                <h:outputText value="Walks " rendered="#{booking.walks}" />
+                <h:outputText value="Premium Food " rendered="#{booking.premiumFood}" />
+                <h:outputText value="Base only"
+                              rendered="#{!booking.grooming and !booking.walks and !booking.premiumFood}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+             <h:outputText value="€ #{booking.totalPrice}">
+                    <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Status</f:facet>
+                <h:outputText value="#{booking.status}"
+                              styleClass="#{booking.status == 'Confirmed' ? 'status-confirmed' : 'status-pending'}" />
+            </h:column>
+
+        </h:dataTable>
+
+        <h:form id="navigationForm">
             <h:commandButton value="Back to Dashboard"
                              action="/adminDashboard?faces-redirect=true" 
-                             class="btn-green50"/>
+                             styleClass="btn-green50"/>
         </h:form>
-	</center>
-	<div class="dashboard-grid"></div>
-	<br />
-
+    </center>
+    
+    <div class="dashboard-grid"></div>
+    <br />
 </h:body>
 </html>
