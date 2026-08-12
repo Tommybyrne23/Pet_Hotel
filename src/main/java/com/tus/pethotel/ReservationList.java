@@ -1,6 +1,8 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -43,4 +45,17 @@ public class ReservationList implements Serializable {
     public int getNumberOfReservations() {
         return reservations.size();
     }
+    
+    public ArrayList<Reservation> getPastReservations(String checkOutDate){
+    	ArrayList<Reservation> pastReservations = new ArrayList<>();
+    	LocalDate Today = LocalDate.now(); 			//set the date to today for check in 
+    	LocalDate checkOut = LocalDate.parse(checkOutDate);
+    	for (Reservation r : reservations) {
+    		if (checkOut.isBefore(Today)) {
+    			pastReservations.add(r);
+    		}
+    	}
+    	return pastReservations;
+    }
+    
 }

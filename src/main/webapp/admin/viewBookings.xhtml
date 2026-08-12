@@ -72,8 +72,8 @@
 
             <h:column>
                 <f:facet name="header">Price</f:facet>
-             <h:outputText value="€ #{booking.totalPrice}">
-                    <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+             <h:outputText value="€#{booking.totalPrice}">
+                    <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="3" />
                 </h:outputText>
             </h:column>
 
