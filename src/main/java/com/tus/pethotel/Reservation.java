@@ -1,6 +1,8 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reservation implements Serializable {
 
@@ -14,11 +16,14 @@ public class Reservation implements Serializable {
     private String petName;      // pet name for easy display
     private String checkInDate;  // format: yyyy-MM-dd
     private String checkOutDate; // format: yyyy-MM-dd
-    private boolean grooming;    // optional service
-    private boolean walks;       // optional service
-    private boolean premiumFood; // optional service
     private double totalPrice;   // calculated price
     private String status;       // "Pending", "Confirmed", "Cancelled"
+    private String podName;              // the pod booked, e.g. "Dog Boarding"
+    private double podPricePerNight;     // the rate at the time of booking
+
+    // extras chosen, stored as text so the booking still reads correctly
+    // if an admin later renames or reprices a service
+    private List<String> extras = new ArrayList<>();
 
     // Default constructor required by Jakarta Faces
     public Reservation() {
@@ -84,30 +89,6 @@ public class Reservation implements Serializable {
         this.checkOutDate = checkOutDate;
     }
 
-    public boolean isGrooming() {
-        return grooming;
-    }
-
-    public void setGrooming(boolean grooming) {
-        this.grooming = grooming;
-    }
-
-    public boolean isWalks() {
-        return walks;
-    }
-
-    public void setWalks(boolean walks) {
-        this.walks = walks;
-    }
-
-    public boolean isPremiumFood() {
-        return premiumFood;
-    }
-
-    public void setPremiumFood(boolean premiumFood) {
-        this.premiumFood = premiumFood;
-    }
-
     public double getTotalPrice() {
         return totalPrice;
     }
@@ -122,5 +103,29 @@ public class Reservation implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getPodName() {
+        return podName;
+    }
+
+    public void setPodName(String podName) {
+        this.podName = podName;
+    }
+
+    public double getPodPricePerNight() {
+        return podPricePerNight;
+    }
+
+    public void setPodPricePerNight(double podPricePerNight) {
+        this.podPricePerNight = podPricePerNight;
+    }
+
+    public List<String> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<String> extras) {
+        this.extras = extras;
     }
 }

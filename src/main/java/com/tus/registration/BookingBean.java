@@ -6,7 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.tus.Services.ChargeType;
+import com.tus.Services.Service;
+import com.tus.Services.ServiceList;
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.PetList;
 import com.tus.pethotel.Reservation;
@@ -23,32 +27,22 @@ import jakarta.inject.Named;
 @SessionScoped
 public class BookingBean implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    // Form fields
-    private int selectedPetID;
-    private String checkInDate;   // yyyy-MM-dd
-    private String checkOutDate;  // yyyy-MM-dd
-    private boolean grooming;
-    private boolean walks;
-    private boolean premiumFood;
-    private double totalPrice;
-    private boolean priceCalculated;
+	private int selectedPetID;
+	private int selectedPodID;
+	private Integer[] selectedExtraIDs = new Integer[0];  
+	private String checkInDate;   // yyyy-MM-dd
+	private String checkOutDate;  // yyyy-MM-dd
+	private double totalPrice;
+	private boolean priceCalculated;
 
-    // Pricing constants (per night)
-    private static final double BASE_RATE = 35.00;
-    private static final double GROOMING_RATE = 15.00;
-    private static final double WALKS_RATE = 10.00;
-    private static final double PREMIUM_FOOD_RATE = 8.00;
+	@Inject private LoginBean loginBean;
+	@Inject private PetList petList;
+	@Inject private ReservationList reservationList;
+	@Inject private ServiceList serviceList;
 
-    @Inject
-    private LoginBean loginBean;
 
-    @Inject
-    private PetList petList;
-
-    @Inject
-    private ReservationList reservationList;
 
     
     // Get the logged-in user's registered pets for the dropdown.
@@ -60,6 +54,8 @@ public class BookingBean implements Serializable {
         }
         return new ArrayList<>();
     }
+
+
 
     // Check if the user has any registered pets.
     
@@ -79,180 +75,206 @@ public class BookingBean implements Serializable {
 
     // Calculate the total price based on dates and services.
     
-    public String calculatePrice() {
+ 
 
-        FacesContext context = FacesContext.getCurrentInstance();
+	public Pet getSelectedPet() {
+		for (Pet pet : getUserPets()) {
+			if (pet.getPetID() == selectedPetID) {
+				return pet;
+			}
+		}
+		return null;
+	}
 
-        // Validate pet selected
-        if (selectedPetID == 0) {
-            context.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Please select a pet.", null));
-            priceCalculated = false;
-            return null;
-        }
 
-        // Validate dates are entered
-        if (checkInDate == null || checkInDate.trim().isEmpty()
-                || checkOutDate == null || checkOutDate.trim().isEmpty()) {
-            context.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Please enter both check-in and check-out dates.", null));
-            priceCalculated = false;
-            return null;
-        }
+	// Pods and extras that suit the chosen pet. Empty until a pet is picked.
+	public List<Service> getAvailablePods() {
+		Pet pet = getSelectedPet();
+		return pet == null ? new ArrayList<>()
+				: serviceList.getPodsForSpecies(pet.getSpecies().getLabel());
+	}
 
-        // Parse and validate dates
-        try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate checkIn = LocalDate.parse(checkInDate.trim(), fmt);
-            LocalDate checkOut = LocalDate.parse(checkOutDate.trim(), fmt);
+	public List<Service> getAvailableExtras() {
+		Pet pet = getSelectedPet();
+		return pet == null ? new ArrayList<>()
+				: serviceList.getExtrasForSpecies(pet.getSpecies().getLabel());
+	}
+	// A pod or extra chosen for a dog may not exist for a cat, so switching
+	// pet clears the selections
+	public void petChanged() {
+		selectedPodID = 0;
+		selectedExtraIDs = new Integer[0];
+		priceCalculated = false;
+	}
 
-            // Check-in must be today or later
-            if (checkIn.isBefore(LocalDate.now())) {
-                context.addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Check-in date cannot be in the past.", null));
-                priceCalculated = false;
-                return null;
-            }
+	// Turns the ticked checkbox ids back into Service objects
+	private List<Service> getSelectedExtras() {
 
-            // Check-out must be after check-in
-            if (!checkOut.isAfter(checkIn)) {
-                context.addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Check-out date must be after check-in date.", null));
-                priceCalculated = false;
-                return null;
-            }
+		List<Service> chosen = new ArrayList<>();
 
-            // Calculate number of nights
-            long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+		if (selectedExtraIDs != null) {
+			for (Integer id : selectedExtraIDs) {
+				chosen.add(serviceList.findByID(id));
+			}
+		}
+		return chosen;
+	}
 
-            // Calculate nightly rate (base + selected services)
-            double nightlyRate = BASE_RATE;
-            if (grooming)    { nightlyRate += GROOMING_RATE; }
-            if (walks)       { nightlyRate += WALKS_RATE; }
-            if (premiumFood) { nightlyRate += PREMIUM_FOOD_RATE; }
 
-            // Total = nightly rate x number of nights
-            totalPrice = nightlyRate * nights;
+	public String calculatePrice() {
 
-            // Round to 2 decimal places
-            totalPrice = Math.round(totalPrice * 100.0) / 100.0;
+		if (selectedPetID == 0) {
+			return addError("Please select a pet.");
+		}
 
-            priceCalculated = true;
+		if (selectedPodID == 0) {
+			return addError("Please select a pod for your pet's stay.");
+		}
 
-        } catch (DateTimeParseException e) {
-            context.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Invalid date format. Please use the calendar to select dates.", null));
-            priceCalculated = false;
-        }
+		if (checkInDate == null || checkInDate.trim().isEmpty()
+				|| checkOutDate == null || checkOutDate.trim().isEmpty()) {
+			return addError("Please enter both check-in and check-out dates.");
+		}
 
-        return null;
-    }
+		try {
+			DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate checkIn = LocalDate.parse(checkInDate.trim(), fmt);
+			LocalDate checkOut = LocalDate.parse(checkOutDate.trim(), fmt);
 
-    /**
-     * AC3: Confirm the booking.
-     */
-    public String confirmBooking() {
+			if (checkIn.isBefore(LocalDate.now())) {
+				return addError("Check-in date cannot be in the past.");
+			}
 
-        FacesContext context = FacesContext.getCurrentInstance();
+			if (!checkOut.isAfter(checkIn)) {
+				return addError("Check-out date must be after check-in date.");
+			}
 
-        // Make sure price was calculated first
-        if (!priceCalculated) {
-            context.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Please calculate the price before confirming.", null));
-            return null;
-        }
+			long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
 
-        // Find the pet name for the reservation record
-        String petName = "";
-        for (Pet pet : getUserPets()) {
-            if (pet.getPetID() == selectedPetID) {
-                petName = pet.getName();
-                break;
-            }
-        }
+			// The pod is always charged per night
+			double total = serviceList.findByID(selectedPodID).getPrice() * nights;
 
-        // Create the reservation
-        User user = loginBean.getLoggedInUser();
-        Reservation reservation = new Reservation(
-            user.getUserID(),
-            selectedPetID,
-            petName,
-            checkInDate,
-            checkOutDate
-        );
-        reservation.setGrooming(grooming);
-        reservation.setWalks(walks);
-        reservation.setPremiumFood(premiumFood);
-        reservation.setTotalPrice(totalPrice);
-        reservation.setStatus("Confirmed");
+			// Each extra is charged either per night or once for the whole stay
+			for (Service extra : getSelectedExtras()) {
+				total += extra.getChargeType() == ChargeType.ONE_OFF
+						? extra.getPrice()
+								: extra.getPrice() * nights;
+			}
 
-        // Save it
-        reservationList.addReservation(reservation);
+			totalPrice = Math.round(total * 100.0) / 100.0;
+			priceCalculated = true;
 
-        // Format the price for the message
-        String formattedPrice = String.format("%.2f", totalPrice);
+		} catch (DateTimeParseException e) {
+			return addError("Invalid date format. Please use the calendar to select dates.");
+		}
+		return null;
+	}
 
-        // Success message
-        context.addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_INFO,
-                "Booking confirmed! Your reservation for " + petName
-                + " has been saved. Total: \u20AC" + formattedPrice, null));
 
-        // Reset the form
-        resetForm();
+	public String confirmBooking() {
 
-        return null;
-    }
+		if (!priceCalculated) {
+			return addError("Please calculate the price before confirming.");
+		}
 
-    /**
-     * Reset all form fields.
-     */
-    public void resetForm() {
-        selectedPetID = 0;
-        checkInDate = null;
-        checkOutDate = null;
-        grooming = false;
-        walks = false;
-        premiumFood = false;
-        totalPrice = 0;
-        priceCalculated = false;
-    }
+		Pet pet = getSelectedPet();
+		Service pod = serviceList.findByID(selectedPodID);
+		User user = loginBean.getLoggedInUser();
 
-    /**
-     * Go back to dashboard.
-     */
-    public String cancel() {
-        resetForm();
-        return "/userDashboard?faces-redirect=true";
-    }
+		Reservation reservation = new Reservation(user.getUserID(), selectedPetID,
+				pet.getName(), checkInDate, checkOutDate);
 
-    // --- GETTERS AND SETTERS ---
+		reservation.setPodName(pod.getName());
+		reservation.setPodPricePerNight(pod.getPrice());
 
-    public int getSelectedPetID() { return selectedPetID; }
-    public void setSelectedPetID(int selectedPetID) { this.selectedPetID = selectedPetID; }
+		// Record the extras as text, so the booking still reads correctly even
+		// if an admin later renames or reprices the service
+		List<String> extraLabels = new ArrayList<>();
 
-    public String getCheckInDate() { return checkInDate; }
-    public void setCheckInDate(String checkInDate) { this.checkInDate = checkInDate; }
+		for (Service extra : getSelectedExtras()) {
+			String charge = extra.getChargeType() == ChargeType.ONE_OFF ? "one-off" : "per night";
+			extraLabels.add(extra.getName() + " (€"
+					+ String.format("%.2f", extra.getPrice()) + " " + charge + ")");
+		}
 
-    public String getCheckOutDate() { return checkOutDate; }
-    public void setCheckOutDate(String checkOutDate) { this.checkOutDate = checkOutDate; }
+		reservation.setExtras(extraLabels);
+		reservation.setTotalPrice(totalPrice);
+		reservation.setStatus("Confirmed");
 
-    public boolean isGrooming() { return grooming; }
-    public void setGrooming(boolean grooming) { this.grooming = grooming; }
+		reservationList.addReservation(reservation);
 
-    public boolean isWalks() { return walks; }
-    public void setWalks(boolean walks) { this.walks = walks; }
+		addMessage(FacesMessage.SEVERITY_INFO, "Booking confirmed! Your reservation for "
+				+ pet.getName() + " has been saved. Total: \u20AC"
+				+ String.format("%.2f", totalPrice));
+		resetForm();
+		return null;
+	}
 
-    public boolean isPremiumFood() { return premiumFood; }
-    public void setPremiumFood(boolean premiumFood) { this.premiumFood = premiumFood; }
 
-    public double getTotalPrice() { return totalPrice; }
+	public void resetForm() {
+		selectedPetID = 0;
+		selectedPodID = 0;
+		selectedExtraIDs = new Integer[0];
+		checkInDate = null;
+		checkOutDate = null;
+		totalPrice = 0;
+		priceCalculated = false;
+	}
 
-    public boolean isPriceCalculated() { return priceCalculated; }
+	public String cancel() {
+		resetForm();
+		return "/userDashboard?faces-redirect=true";
+	}
+
+	// returns null so callers can write "return addError(...)"
+	private String addError(String summary) {
+		priceCalculated = false;
+		addMessage(FacesMessage.SEVERITY_ERROR, summary);
+		return null;
+	}
+
+	private void addMessage(FacesMessage.Severity severity, String summary) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null) {
+			context.addMessage(null, new FacesMessage(severity, summary, null));
+		}
+	}
+
+	public int getSelectedPetID() { 
+		return selectedPetID; 
+	}
+	public void setSelectedPetID(int selectedPetID) { 
+		this.selectedPetID = selectedPetID; 
+	}
+
+	public int getSelectedPodID() {
+		return selectedPodID; 
+	}
+	public void setSelectedPodID(int selectedPodID) {
+		this.selectedPodID = selectedPodID; 
+	}
+	public Integer[] getSelectedExtraIDs() {
+		return selectedExtraIDs; 
+	}
+	public void setSelectedExtraIDs(Integer[] selectedExtraIDs) {
+		this.selectedExtraIDs = selectedExtraIDs; 
+	}
+	public String getCheckInDate() {
+		return checkInDate; 
+	}
+	public void setCheckInDate(String checkInDate) {
+		this.checkInDate = checkInDate; 
+	}
+	public String getCheckOutDate() {
+		return checkOutDate; 
+	}
+	public void setCheckOutDate(String checkOutDate) {
+		this.checkOutDate = checkOutDate; 
+	}
+	public double getTotalPrice() {
+		return totalPrice; 
+	}
+	public boolean isPriceCalculated() {
+		return priceCalculated; 
+	}
 }
