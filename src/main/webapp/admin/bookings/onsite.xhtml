@@ -14,6 +14,7 @@
 </h:head>
 
 <h:body>
+<div class="dashboard-wrapper">
     <h1>Who's Aboard</h1>
 
     <div class="card-container">
@@ -31,7 +32,7 @@
             </div>
         </h:link>
 
-        <h:link outcome="pastbookings.xhtml" styleClass="card-link">
+        <h:link outcome="pastBookings.xhtml" styleClass="card-link">
             <div class="stat-card">
                 <div class="stat-title">Past Bookings</div>
                 <div class="stat-number">#{reservationList.pastReservations.size()}</div>
@@ -73,7 +74,7 @@
         </h:form>
     </center>
     
-    <div class="dashboard-grid"></div>
+</div>
     <br />
 </h:body>
 </html>
