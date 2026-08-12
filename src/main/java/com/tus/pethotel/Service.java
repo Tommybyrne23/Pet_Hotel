@@ -1,6 +1,8 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Service implements Serializable {
 
@@ -28,6 +30,15 @@ public class Service implements Serializable {
 		this.category = category;
 	}
 
+	private List<String> applicableSpecies = new ArrayList<>();
+
+	public List<String> getApplicableSpecies() {
+	    return applicableSpecies;
+	}
+
+	public void setApplicableSpecies(List<String> applicableSpecies) {
+	    this.applicableSpecies = applicableSpecies;
+	}
 	// GETTERS AND SETTERS
 
 	public int getServiceID() {
