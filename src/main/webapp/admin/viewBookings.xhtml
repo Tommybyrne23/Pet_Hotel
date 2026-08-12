@@ -25,49 +25,45 @@
         </p>
 
         <!-- Table displaying all reservations stored in ApplicationScoped list -->
-        <h:dataTable value="#{reservationList.reservations}" var="booking"
+        <h:dataTable value="#{reservationList.futurereservations}" var="r"
                      rendered="#{not empty reservationList.reservations}"
                      styleClass="productTable" headerClass="productTableHeader"
                      rowClasses="productTableOddRow, productTableEvenRow">
             
             <h:column>
                 <f:facet name="header">Booking Number</f:facet>
-                #{booking.reservationID}
+                #{r.reservationID}
             </h:column>
 
 			<h:column>
 				<f:facet name="header">Name</f:facet>
- 			   #{userList.findByUserID(booking.userID).name}
+ 			   #{userList.findByUserID(r.userID).name}
 			</h:column>
 
 			<h:column>
 				<f:facet name="header">Email</f:facet>
-    			#{userList.findByUserID(booking.userID).email}
+    			#{userList.findByUserID(r.userID).email}
 				</h:column>
 
 
 			<h:column>
                 <f:facet name="header">Check in</f:facet>
-                #{booking.checkInDate}
+                #{r.checkInDate}
             </h:column>
 
             <h:column>
                 <f:facet name="header">Check Out</f:facet>
-                #{booking.checkOutDate}
+                #{r.checkOutDate}
             </h:column>
 
             <h:column>
                 <f:facet name="header">Pets</f:facet>
-                #{booking.petName}
+                #{r.petName}
             </h:column>
 
             <h:column>
                 <f:facet name="header">Services</f:facet>
-                <h:outputText value="Grooming " rendered="#{booking.grooming}" />
-                <h:outputText value="Walks " rendered="#{booking.walks}" />
-                <h:outputText value="Premium Food " rendered="#{booking.premiumFood}" />
-                <h:outputText value="Base only"
-                              rendered="#{!booking.grooming and !booking.walks and !booking.premiumFood}" />
+               #{r.services}
             </h:column>
 
             <h:column>
