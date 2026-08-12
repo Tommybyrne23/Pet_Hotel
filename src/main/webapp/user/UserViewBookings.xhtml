@@ -101,7 +101,7 @@
 			<h:panelGroup rendered="#{empty BookingBean.userBookings}"
 				layout="block" styleClass="no-bookings">
 				<p>You have no bookings yet.</p>
-				<h:link outcome="makeBooking" value="Make a Booking"
+				<h:link outcome="/user/makeBooking" value="Make a Booking"
 					style="font-size: 16px; font-weight: bold;" />
 			</h:panelGroup>
 
@@ -159,7 +159,7 @@
 
 			<!-- Back to Dashboard button -->
 			<h:commandButton value="Back to Dashboard"
-				action="userDashboard?faces-redirect=true"
+				action="/userDashboard?faces-redirect=true"
 				styleClass="back-btn" />
 
 		</h:form>

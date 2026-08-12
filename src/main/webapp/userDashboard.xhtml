@@ -1,75 +1,64 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
 	xmlns:f="jakarta.faces.core">
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
-	<link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
+	<link rel="icon" type="image/png"
+		href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
 	<title>User Dashboard</title>
 </h:head>
 
 <h:body>
 
 	<h1>User Dashboard</h1>
-	<!-- Welcome message showing the logged in user name -->
+
 	<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
-		style="font-size: 18px; font-weight: bold;" />
+		style="font-size: 18px; font-weight: bold; display: block;
+			margin-bottom: 10px;" />
 
 	<h:form styleClass="account">
 		<div class="dashboard-grid">
-			<br />
-			<div class="dashboard-card">
 
-				<p>View my user account and make changes to my profile</p>
-				<!-- SCRUM-130: Button for customer profile management view -->
+			<div class="dashboard-card">
+				<p>View my user account and make changes to my profile.</p>
 				<h:commandButton value="My Profile"
-					action="manageProfile?faces-redirect=true" />
+					action="user/manageProfile?faces-redirect=true" />
 			</div>
 
 			<div class="dashboard-card">
-
-				<p>Add a pet to your account</p>
-				<!-- SCRUM-131: Button to add pets -->
+				<p>Add a pet to your account.</p>
 				<h:commandButton value="Add a Pet"
 					action="addPet?faces-redirect=true" />
 			</div>
 
-
 			<div class="dashboard-card">
-
-				<p>Make a new booking</p>
-				<!-- SCRUM-132: Button to make a booking -->
+				<p>Make a new booking for your pet.</p>
 				<h:commandButton value="Make a Booking"
-					action="makeBooking?faces-redirect=true" />
+					action="user/makeBooking?faces-redirect=true" />
 			</div>
 
 			<div class="dashboard-card">
-
-				<p>View all your confirmed bookings</p>
-				<!-- SCRUM-133: Button to view bookings -->
+				<p>View all your confirmed bookings.</p>
 				<h:commandButton value="View Bookings"
-					action="UserViewBookings?faces-redirect=true" />
+					action="user/UserViewBookings?faces-redirect=true" />
 			</div>
 
-
-
-			<!-- View Services on the homepage -->
-			<h:commandButton value="View Services"
-				action="index?faces-redirect=true" />
-
-				<!-- View Services on the homepage -->
+			<div class="dashboard-card">
+				<p>Browse all services offered by 3A Pet Hotel.</p>
 				<h:commandButton value="View Services"
-					action="userHomepage.xhtml?faces-redirect=true" />
+					action="index?faces-redirect=true" />
+			</div>
 
-			<br />
-
-			<!-- Logout button -->
 			<div class="dashboard-card card-logout">
 				<p>End the current session and exit securely.</p>
-				<h:commandButton value="Logout" action="#{LoginBean.logout}" />
+				<h:commandButton value="Logout"
+					action="#{LoginBean.logout}" />
 			</div>
-		</div>
 
+		</div>
 	</h:form>
+
 </h:body>
 </html>

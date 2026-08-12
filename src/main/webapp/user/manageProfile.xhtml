@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>My Profile</title>
+</h:head>
+
+<h:body>
+
+	<!-- Load user details when the page opens -->
+	<f:metadata>
+		<f:event type="preRenderView"
+			listener="#{ProfileBean.loadProfile}" />
+	</f:metadata>
+
+	<h1>My Profile</h1>
+
+	<h:form id="profileForm" styleClass="account">
+		<h:panelGrid columns="1" styleClass="account">
+
+			<!-- Global message box - uses existing CSS classes -->
+			<h:panelGroup layout="block" styleClass="message-box">
+				<h:messages globalOnly="true"
+					errorClass="error-messages"
+					infoClass="success-messages" />
+			</h:panelGroup>
+
+			<!-- ====== SECTION 1: Profile Details ====== -->
+			<h:outputText value="Profile Details"
+				style="font-size: 18px; font-weight: bold;
+					border-bottom: 2px solid #6D4C41;
+					display: block; padding-bottom: 5px;
+					margin-bottom: 10px;" />
+
+			<!-- Name field -->
+			<h:outputLabel value="Name:" />
+			<h:inputText id="nameInput"
+				value="#{ProfileBean.editName}"
+				required="true"
+				requiredMessage="Name is required." />
+			<h:message for="nameInput" styleClass="error-messages" />
+
+			<!-- Email field -->
+			<h:outputLabel value="Email:" />
+			<h:inputText id="emailInput"
+				value="#{ProfileBean.editEmail}"
+				required="true"
+				requiredMessage="Email is required." />
+			<h:message for="emailInput" styleClass="error-messages" />
+
+			<!-- Save Profile button -->
+			<h:commandButton value="Save Profile"
+				action="#{ProfileBean.saveProfile}" />
+
+			<br />
+
+			<!-- ====== SECTION 2: Change Password ====== -->
+			<h:outputText value="Change Password"
+				style="font-size: 18px; font-weight: bold;
+					border-bottom: 2px solid #6D4C41;
+					display: block; padding-bottom: 5px;
+					margin-bottom: 10px;" />
+
+			<!-- Old Password -->
+			<h:outputLabel value="Current Password:" />
+			<h:inputSecret id="oldPasswordInput"
+				value="#{ProfileBean.oldPassword}"
+				redisplay="true" />
+			<h:message for="oldPasswordInput"
+				styleClass="error-messages" />
+
+			<!-- New Password -->
+			<h:outputLabel value="New Password:" />
+			<h:inputSecret id="newPasswordInput"
+				value="#{ProfileBean.newPassword}"
+				redisplay="true" />
+			<h:message for="newPasswordInput"
+				styleClass="error-messages" />
+
+			<!-- Confirm New Password -->
+			<h:outputLabel value="Confirm New Password:" />
+			<h:inputSecret id="confirmPasswordInput"
+				value="#{ProfileBean.confirmPassword}"
+				redisplay="true" />
+			<h:message for="confirmPasswordInput"
+				styleClass="error-messages" />
+
+			<!-- Change Password button -->
+			<h:commandButton value="Change Password"
+				action="#{ProfileBean.changePassword}" />
+
+			<br />
+
+			<!-- Cancel button -->
+			<h:commandButton value="Cancel" immediate="true"
+				action="#{ProfileBean.cancel}" />
+
+			<h:panelGroup styleClass="login-prompt">
+				<h:link outcome="/userDashboard"
+					value="Back to Dashboard" />
+			</h:panelGroup>
+
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>

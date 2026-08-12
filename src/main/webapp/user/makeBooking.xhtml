@@ -30,7 +30,7 @@
 					border-radius: 6px;">
 					You need to register a pet before making a booking.
 				</p>
-				<h:link outcome="addPet" value="Register a Pet"
+				<h:link outcome="/addPet" value="Register a Pet"
 					style="font-size: 16px; font-weight: bold;" />
 			</h:panelGroup>
 
@@ -130,7 +130,7 @@
 				action="#{BookingBean.cancel}" />
 
 			<h:panelGroup styleClass="login-prompt">
-				<h:link outcome="userDashboard"
+				<h:link outcome="/userDashboard"
 					value="Back to Dashboard" />
 			</h:panelGroup>
 

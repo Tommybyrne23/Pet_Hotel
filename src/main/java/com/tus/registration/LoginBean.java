@@ -41,7 +41,7 @@ public class LoginBean implements Serializable {
                 if (user.getRole().equals(Role.ADMIN)) {
                     return "adminDashboard?faces-redirect=true";
                 } else if (user.getRole().equals(Role.CUSTOMER)) {
-                    return "userDashboard?faces-redirect=true";
+                    return "/userDashboard?faces-redirect=true";
                 } else {
                     return "petAttendantDashboard?faces-redirect=true";
                 }

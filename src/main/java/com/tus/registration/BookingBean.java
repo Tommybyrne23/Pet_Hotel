@@ -232,7 +232,7 @@ public class BookingBean implements Serializable {
      */
     public String cancel() {
         resetForm();
-        return "userDashboard?faces-redirect=true";
+        return "/userDashboard?faces-redirect=true";
     }
 
     // --- GETTERS AND SETTERS ---
