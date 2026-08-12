@@ -82,7 +82,7 @@ class RegistrationBeanTest {
 	@DisplayName("Test: Blank Email Field")
 	void testBlankEmailField() {
 		bean.getUser().setName("Thiago");				
-		bean.getUser().setEmail("");							//THIS SHOULD FAIL BUT IS CURRENTLY ALLOWING SIGNUP
+		bean.getUser().setEmail("");							
 		bean.getUser().setPassword("pass123");				
 		bean.setConfirmPassword("pass123");	
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
@@ -94,7 +94,7 @@ class RegistrationBeanTest {
 	@DisplayName("Test: Text in Email Field but no @")
 	void testEmailHasTextNoAT() {
 		bean.getUser().setName("Thiago");				
-		bean.getUser().setEmail("thiago.tus.ie");							//THIS SHOULD FAIL BUT IS CURRENTLY ALLOWING SIGNUP
+		bean.getUser().setEmail("thiago.tus.ie");						
 		bean.getUser().setPassword("pass123");				
 		bean.setConfirmPassword("pass123");	
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
