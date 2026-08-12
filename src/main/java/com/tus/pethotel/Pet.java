@@ -11,7 +11,7 @@ public class Pet implements Serializable {
     private int petID;
     private int userID;
     private String name;
-    private String species;
+    private Species species;
     private String breed;
     private String age;
     private String requirements;
@@ -23,8 +23,31 @@ public class Pet implements Serializable {
 
 
     // Constructor for creating a new pet
-    public Pet(int userID, String name, String species, String breed,
+    public Pet(int userID, String name, Species species, String breed,
             String age, String requirements) {
+    	
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Pet name is required.");
+        }
+
+        if (species == null) {
+            throw new IllegalArgumentException("Species is required.");
+        }
+
+        if (breed == null || breed.trim().isEmpty()) {
+            throw new IllegalArgumentException("Breed is required.");
+        }
+
+        if (age == null || age.trim().isEmpty()) {
+            throw new IllegalArgumentException("Age is required.");
+        }
+
+        if (requirements != null && requirements.length() > 200) {
+            throw new IllegalArgumentException(
+                "Requirements must be 200 characters or fewer."
+            );
+        }
 
      uuID++;
      petID = uuID;
@@ -60,12 +83,12 @@ public class Pet implements Serializable {
     }
 
 
-    public String getSpecies() {
+    public Species getSpecies() {
         return species;
     }
 
 
-    public void setSpecies(String species) {
+    public void setSpecies(Species species) {
         this.species = species;
     }
 
