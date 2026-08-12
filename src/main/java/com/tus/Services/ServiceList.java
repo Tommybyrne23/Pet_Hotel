@@ -43,8 +43,6 @@ public class ServiceList implements Serializable {
 
 		// EXTRAS - a booking can have any number of these, including none.
 		// Rates match the constants currently in BookingBean.
-		seed("Grooming", "Full grooming session during your pet's stay.",
-				15.00, ServiceCategory.EXTRA, "Dog", "Cat");
 
 		seed("Daily Walks", "Daily supervised walks with an experienced attendant.",
 				10.00, ServiceCategory.EXTRA, "Dog");
@@ -52,6 +50,17 @@ public class ServiceList implements Serializable {
 		// no species listed = available to every pet type
 		seed("Premium Food", "Upgraded meals tailored to your pet's dietary needs.",
 				8.00, ServiceCategory.EXTRA);
+		
+		// One-off services are charged once for the whole stay, not per night
+		Service grooming = seed("Grooming",
+				"Full grooming session during your pet's stay.",
+				15.00, ServiceCategory.EXTRA, "Dog", "Cat");
+		grooming.setChargeType(ChargeType.ONE_OFF);
+
+		Service dayOut = seed("Doggie Day Out",
+				"A half-day trip out with one of our attendants.",
+				45.00, ServiceCategory.EXTRA, "Dog");
+		dayOut.setChargeType(ChargeType.ONE_OFF);
 	}
 
 
