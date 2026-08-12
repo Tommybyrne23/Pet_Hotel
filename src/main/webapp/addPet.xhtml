@@ -4,10 +4,12 @@
       xmlns:f="jakarta.faces.core">
 
 <h:head>
-    <h:outputStylesheet library="css" name="styles.css" />
+    <h:outputStylesheet library="css" name="registration.css" />
+    <link rel="icon"
+          type="image/png"
+          href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
     <title>Pet Registration</title>
 
-    <!-- Script to limit characters in special requirements textbox -->
     <script>
         function updateCharacterCount(textarea) {
             if (textarea.value.length > 200) {
@@ -20,128 +22,220 @@
     </script>
 </h:head>
 
-<h:body>
+<h:body styleClass="reg-page">
 
-    <h1>Register a Pet</h1>
+    <div class="reg-split">
 
-    <h:form id="registrationForm" styleClass="account">
+        <!-- PET REGISTRATION FORM -->
+        <div class="reg-panel"
+             style="flex: 1; width: 100%;">
 
-        <h:panelGrid columns="1" styleClass="account">
+            <h:form id="registrationForm"
+                    styleClass="reg-form"
+                    style="max-width: 500px; margin: 0 auto;">
 
-            <!-- PET NAME -->
+                <h1 class="reg-brand">3A Pet Hotel</h1>
 
-            <h:outputLabel value="Pet Name:" />
+                <h2 class="reg-welcome">
+                    Register your pet for their stay.
+                </h2>
 
-            <h:inputText id="petNameInput"
-                         value="#{petRegistrationBean.pet.name}"
-                         required="true"
-                         requiredMessage="Name is required." />
+                <!-- MESSAGES -->
 
+                <h:panelGroup layout="block"
+                              styleClass="message-box">
 
-            <!-- SPECIES -->
+                    <h:messages
+                        errorClass="error-messages"
+                        infoClass="success-messages" />
 
-            <h:outputLabel value="Species:" />
-
-            <h:selectOneMenu id="speciesInput"
-                             value="#{petRegistrationBean.pet.species}"
-                             required="true"
-                             requiredMessage="Species is required.">
-
-                <f:selectItem itemLabel="-- Select Species --"
-                              itemValue=""
-                              noSelectionOption="true" />
-
-                <f:selectItem itemLabel="Dog" itemValue="DOG" />
-                <f:selectItem itemLabel="Cat" itemValue="CAT" />
-                <f:selectItem itemLabel="Bird" itemValue="BIRD" />
-                <f:selectItem itemLabel="Reptile" itemValue="REPTILE" />
-                <f:selectItem itemLabel="Fish" itemValue="FISH" />
-
-                <f:ajax execute="@this"
-                        listener="#{petRegistrationBean.speciesChanged}"
-                        render="ageInput" />
-
-            </h:selectOneMenu>
+                </h:panelGroup>
 
 
-            <!-- BREED -->
+                <!-- PET NAME -->
 
-            <h:outputLabel value="Breed:" />
+                <div class="form-field">
 
-            <h:inputText id="breedInput"
-                         value="#{petRegistrationBean.pet.breed}"
-                         required="true"
-                         requiredMessage="Breed is required." />
+                    <h:outputLabel
+                        for="petNameInput"
+                        value="Pet Name" />
 
+                    <h:inputText
+                        id="petNameInput"
+                        value="#{petRegistrationBean.pet.name}"
+                        required="true"
+                        requiredMessage="Name is required." />
 
-            <!-- AGE -->
+                    <h:message
+                        for="petNameInput"
+                        errorClass="field-error" />
 
-            <h:outputLabel value="Age:" />
-
-            <h:selectOneMenu id="ageInput"
-                             value="#{petRegistrationBean.pet.age}"
-                             required="true"
-                             requiredMessage="Age is required.">
-
-                <f:selectItem itemLabel="-- Select Age --"
-                              itemValue=""
-                              noSelectionOption="true" />
-
-                <f:selectItems value="#{petRegistrationBean.ageRanges}" />
-
-            </h:selectOneMenu>
+                </div>
 
 
-            <!-- OPTIONAL REQUIREMENTS -->
+                <!-- SPECIES -->
 
-            <h:outputLabel value="Additional Requirements:" />
+                <div class="form-field">
 
-            <h:panelGroup id="requirementsGroup">
+                    <h:outputLabel
+                        for="speciesInput"
+                        value="Species" />
 
-                <h:inputTextarea id="requirementsInput"
-                                 value="#{petRegistrationBean.pet.requirements}"
-                                 rows="5"
-                                 cols="40"
-                                 maxlength="200"
-                                 onkeyup="updateCharacterCount(this)" />
+                    <h:selectOneMenu
+                        id="speciesInput"
+                        value="#{petRegistrationBean.pet.species}"
+                        required="true"
+                        requiredMessage="Species is required.">
 
-                <br />
+                        <f:selectItem
+                            itemLabel="-- Select Species --"
+                            itemValue=""
+                            noSelectionOption="true" />
 
-                <span id="requirementsCounter">
-                    0 / 200 characters
-                </span>
+                        <f:selectItem
+                            itemLabel="Dog"
+                            itemValue="DOG" />
 
-            </h:panelGroup>
+                        <f:selectItem
+                            itemLabel="Cat"
+                            itemValue="CAT" />
+
+                        <f:selectItem
+                            itemLabel="Bird"
+                            itemValue="BIRD" />
+
+                        <f:selectItem
+                            itemLabel="Reptile"
+                            itemValue="REPTILE" />
+
+                        <f:selectItem
+                            itemLabel="Fish"
+                            itemValue="FISH" />
+
+                        <f:ajax
+                            execute="@this"
+                            listener="#{petRegistrationBean.speciesChanged}"
+                            render="ageInput" />
+
+                    </h:selectOneMenu>
+
+                    <h:message
+                        for="speciesInput"
+                        errorClass="field-error" />
+
+                </div>
 
 
-            <!-- BUTTONS -->
+                <!-- BREED -->
 
-            <h:panelGroup styleClass="button-row">
+                <div class="form-field">
 
-                <h:commandButton value="Register"
-                                 action="#{petRegistrationBean.register}" />
+                    <h:outputLabel
+                        for="breedInput"
+                        value="Breed" />
 
-                <h:commandButton value="Reset"
-                                 immediate="true"
-                                 action="#{petRegistrationBean.reset}" />
+                    <h:inputText
+                        id="breedInput"
+                        value="#{petRegistrationBean.pet.breed}"
+                        required="true"
+                        requiredMessage="Breed is required." />
 
-            </h:panelGroup>
+                    <h:message
+                        for="breedInput"
+                        errorClass="field-error" />
+
+                </div>
 
 
-            <!-- RETURN TO DASHBOARD -->
+                <!-- AGE -->
 
-            <h:panelGroup styleClass="login-prompt">
+                <div class="form-field">
 
-                <h:link outcome="userDashboard"
-                        value="Return to Dashboard." />
+                    <h:outputLabel
+                        for="ageInput"
+                        value="Age" />
 
-            </h:panelGroup>
+                    <h:selectOneMenu
+                        id="ageInput"
+                        value="#{petRegistrationBean.pet.age}"
+                        required="true"
+                        requiredMessage="Age is required.">
 
-        </h:panelGrid>
+                        <f:selectItem
+                            itemLabel="-- Select Age --"
+                            itemValue=""
+                            noSelectionOption="true" />
 
-        <h:messages />
+                        <f:selectItems
+                            value="#{petRegistrationBean.ageRanges}" />
 
-    </h:form>
+                    </h:selectOneMenu>
+
+                    <h:message
+                        for="ageInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- ADDITIONAL REQUIREMENTS -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="requirementsInput"
+                        value="Additional Requirements" />
+
+                    <h:inputTextarea
+                        id="requirementsInput"
+                        value="#{petRegistrationBean.pet.requirements}"
+                        rows="5"
+                        cols="40"
+                        maxlength="200"
+                        onkeyup="updateCharacterCount(this)" />
+
+                    <span id="requirementsCounter">
+                        0 / 200 characters
+                    </span>
+
+                    <h:message
+                        for="requirementsInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <h:commandButton
+                    value="Register"
+                    styleClass="btn-green"
+                    action="#{petRegistrationBean.register}" />
+
+                <h:commandButton
+                    value="Reset"
+                    styleClass="btn-green-outline"
+                    immediate="true"
+                    action="#{petRegistrationBean.reset}" />
+
+
+                <div class="reg-divider">
+                    or
+                </div>
+
+
+                <!-- RETURN TO DASHBOARD -->
+
+                <h:button
+                    outcome="userDashboard"
+                    value="Return to Dashboard"
+                    styleClass="btn-green" />
+
+            </h:form>
+
+        </div>
+
+    </div>
 
 </h:body>
 </html>

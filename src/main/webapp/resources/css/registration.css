@@ -267,4 +267,19 @@
 	.reg-brand {
 		font-size: 32px;
 	}
+	
+	/* Centre the pet registration form */
+	.pet-reg-page .reg-split {
+	    justify-content: center;
+	}
+	
+	.pet-reg-page .reg-panel {
+	    flex: 0 0 600px;
+	    max-width: 600px;
+	    min-height: 100vh;
+	}
+	
+	.pet-reg-page .reg-form {
+	    max-width: 500px;
+	}
 }
