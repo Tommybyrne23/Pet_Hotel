@@ -15,6 +15,7 @@ public class Service implements Serializable {
 	private String description;
 	private double price;
 	private ServiceCategory category = ServiceCategory.EXTRA;
+	private ChargeType chargeType = ChargeType.PER_NIGHT;
 
 	public Service() {
 	    
@@ -75,5 +76,13 @@ public class Service implements Serializable {
 
 	public void setCategory(ServiceCategory category) {
 		this.category = category;
+	}
+
+	public ChargeType getChargeType() {
+		return chargeType;
+	}
+
+	public void setChargeType(ChargeType chargeType) {
+		this.chargeType = chargeType;
 	}
 }

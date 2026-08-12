@@ -57,12 +57,14 @@ public class ServiceList implements Serializable {
 
 	// Builds a starting service and adds it. The "..." lets me pass no species,
 	// one species, or several, without writing a list at every call.
-	private void seed(String name, String description, double price,
+	private Service seed(String name, String description, double price,
 			ServiceCategory category, String... species) {
 
 		Service service = new Service(name, description, price, category);
 		service.setApplicableSpecies(new ArrayList<>(Arrays.asList(species)));
 		services.add(service);
+
+		return service;			// so the caller can tag it if it isn't per-night
 	}
 
 
