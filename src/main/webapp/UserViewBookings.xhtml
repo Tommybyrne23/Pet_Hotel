@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>My Bookings</title>
+	<style>
+		.bookings-container {
+			max-width: 950px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		.booking-count {
+			text-align: center;
+			font-size: 16px;
+			margin-bottom: 15px;
+			color: #4E342E;
+		}
+
+		.bookings-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 0 auto 20px auto;
+			border: 1px solid #999;
+		}
+
+		.bookings-table th {
+			background-color: #cccccc;
+			color: #333333;
+			font-weight: bold;
+			padding: 10px 12px;
+			border: 1px solid #999;
+			text-align: center;
+			font-size: 14px;
+		}
+
+		.bookings-table td {
+			padding: 8px 12px;
+			border: 1px solid #999;
+			text-align: center;
+			font-size: 14px;
+			background-color: #ffffff;
+		}
+
+		.no-bookings {
+			text-align: center;
+			padding: 30px;
+			font-size: 16px;
+			color: #666;
+		}
+
+		.back-btn {
+			display: block;
+			width: 250px;
+			margin: 20px auto;
+			padding: 12px;
+			background-color: #e74c3c;
+			color: #ffffff;
+			border: none;
+			border-radius: 6px;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+			text-align: center;
+		}
+
+		.back-btn:hover {
+			background-color: #c0392b;
+		}
+
+		.status-confirmed {
+			color: #27ae60;
+			font-weight: bold;
+		}
+
+		.status-pending {
+			color: #e67e22;
+			font-weight: bold;
+		}
+	</style>
+</h:head>
+
+<h:body>
+
+	<h1>Confirmed Bookings</h1>
+
+	<div class="bookings-container">
+
+		<h:form>
+
+			<!-- Booking count -->
+			<h:panelGroup layout="block" styleClass="booking-count">
+				<h:outputText value="Number of confirmed bookings: #{BookingBean.userBookings.size()}" />
+			</h:panelGroup>
+
+			<!-- If user has no bookings -->
+			<h:panelGroup rendered="#{empty BookingBean.userBookings}"
+				layout="block" styleClass="no-bookings">
+				<p>You have no bookings yet.</p>
+				<h:link outcome="makeBooking" value="Make a Booking"
+					style="font-size: 16px; font-weight: bold;" />
+			</h:panelGroup>
+
+			<!-- Bookings table -->
+			<h:dataTable value="#{BookingBean.userBookings}"
+				var="booking"
+				rendered="#{not empty BookingBean.userBookings}"
+				styleClass="bookings-table">
+
+				<h:column>
+					<f:facet name="header">Booking Number</f:facet>
+					<h:outputText value="#{booking.reservationID}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Pet</f:facet>
+					<h:outputText value="#{booking.petName}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Date From</f:facet>
+					<h:outputText value="#{booking.checkInDate}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Date To</f:facet>
+					<h:outputText value="#{booking.checkOutDate}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Services</f:facet>
+					<h:outputText value="Grooming " rendered="#{booking.grooming}" />
+					<h:outputText value="Walks " rendered="#{booking.walks}" />
+					<h:outputText value="Premium Food " rendered="#{booking.premiumFood}" />
+					<h:outputText value="Base only"
+						rendered="#{!booking.grooming and !booking.walks and !booking.premiumFood}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Price</f:facet>
+					&#8364;<h:outputText value="#{booking.totalPrice}">
+						<f:convertNumber type="number"
+							minFractionDigits="2"
+							maxFractionDigits="2" />
+					</h:outputText>
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">Status</f:facet>
+					<h:outputText value="#{booking.status}"
+						styleClass="#{booking.status == 'Confirmed' ? 'status-confirmed' : 'status-pending'}" />
+				</h:column>
+
+			</h:dataTable>
+
+			<!-- Back to Dashboard button -->
+			<h:commandButton value="Back to Dashboard"
+				action="userDashboard?faces-redirect=true"
+				styleClass="back-btn" />
+
+		</h:form>
+
+	</div>
+
+</h:body>
+</html>
