@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,40 +27,55 @@ public class ReservationList implements Serializable {
         if (reservations.isEmpty()) {
             // 1. Past Booking (Checkout before current date)
             Reservation r1 = new Reservation(6, 1, "Buddy", "2026-08-01", "2026-08-07");
-            r1.setGrooming(true);
-            r1.setWalks(true);
-            r1.setTotalPrice(360.00);
+            r1.setPodName("Dog Boarding");
+            r1.setPodPricePerNight(35.00);
+            r1.setExtras(new ArrayList<>(List.of(
+                    "Daily Walks (€10.00 per night)",
+                    "Grooming (€15.00 one-off)")));
+            r1.setTotalPrice(285.00);          
             r1.setStatus("Confirmed");
             addReservation(r1);
 
+
             // 2. Past Booking
             Reservation r2 = new Reservation(6, 2, "Luna", "2026-08-03", "2026-08-08");
-            r2.setPremiumFood(true);
-            r2.setTotalPrice(215.00);
+            r2.setPodName("Cat Boarding");
+            r2.setPodPricePerNight(30.00);
+            r2.setExtras(new ArrayList<>(List.of(
+                    "Premium Food (€8.00 per night)")));
+            r2.setTotalPrice(190.00); 
             r2.setStatus("Confirmed");
             addReservation(r2);
 
             // 3. Currently On-Site (Active through Thursday)
             Reservation r3 = new Reservation(6, 1, "Buddy", "2026-08-10", "2026-08-16");
-            r3.setWalks(true);
-            r3.setPremiumFood(true);
+            r3.setPodName("Dog Boarding");
+            r3.setPodPricePerNight(35.00);
+            r3.setExtras(new ArrayList<>(List.of(
+                    "Daily Walks (€10.00 per night)",
+                    "Premium Food (€8.00 per night)")));
             r3.setTotalPrice(318.00);
             r3.setStatus("Confirmed");
             addReservation(r3);
 
             // 4. Currently On-Site (Active through Thursday)
             Reservation r4 = new Reservation(6, 3, "Max", "2026-08-12", "2026-08-15");
-            r4.setGrooming(true);
-            r4.setTotalPrice(150.00);
+            r4.setPodName("Dog Boarding");
+            r4.setPodPricePerNight(35.00);
+            r4.setExtras(new ArrayList<>(List.of(
+                    "Grooming (€15.00 one-off)")));
+            r4.setTotalPrice(120.00); 
             r4.setStatus("Confirmed");
             addReservation(r4);
 
             // 5. Upcoming Booking (Check-in after Thursday)
             Reservation r5 = new Reservation(6, 2, "Luna", "2026-08-18", "2026-08-22");
-            r5.setGrooming(true);
-            r5.setWalks(true);
-            r5.setPremiumFood(true);
-            r5.setTotalPrice(272.00);
+            r5.setPodName("Cat Boarding");
+            r5.setPodPricePerNight(30.00);
+            r5.setExtras(new ArrayList<>(List.of(
+                    "Premium Food (€8.00 per night)",
+                    "Grooming (€15.00 one-off)")));
+            r5.setTotalPrice(167.00); 
             r5.setStatus("Confirmed");
             addReservation(r5);
         }
