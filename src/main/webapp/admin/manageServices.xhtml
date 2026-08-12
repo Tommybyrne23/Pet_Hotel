@@ -4,149 +4,183 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:p="http://primefaces.org/ui">
+
 <f:metadata>
-    <!-- Checks the user is an admin before the view is rendered -->
-    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+	<!-- Checks the user is an admin before the view is rendered -->
+	<f:viewAction action="#{LoginBean.checkAdminAccess}" />
 </f:metadata>
+
 <h:head>
-    <h:outputStylesheet library="css" name="styles.css" />
-    <title>Pet Hotel - ADMIN MANAGE SERVICES</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<link rel="icon" type="image/png"
+		href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+	<title>Pet Hotel - ADMIN MANAGE SERVICES</title>
 </h:head>
 
 <h:body>
-	<!--  Section One add new services  -->
+
+	<h1>Manage Services</h1>
+
+
+	<!-- ===== SECTION 1: ADD A NEW SERVICE ===== -->
+
 	<h2>Add a service</h2>
-	
+
 	<h:form id="adminAddService" styleClass="admin-form-panel">
 
-		<!-- Display current name of service -->
-		
+		<!-- Success and duplicate-name messages appear here -->
+		<h:panelGroup layout="block" styleClass="message-box">
+			<h:messages globalOnly="true" errorClass="error-messages"
+				infoClass="success-messages" />
+		</h:panelGroup>
+
+
+		<!-- SERVICE NAME -->
 		<div class="form-field">
-		<h:outputLabel value="Name of service:" />
-		<h:inputText id="nameInput" value="#{Services.editName}"
-			required="true" requiredMessage="Name is required." />
+			<h:outputLabel for="nameInput" value="Name of service:" />
+			<h:inputText id="nameInput" value="#{ServiceBean.editName}"
+				required="true" requiredMessage="Name is required." />
+			<h:message for="nameInput" errorClass="field-error" />
 		</div>
 
-		<!-- Display current Description -->
+
+		<!-- DESCRIPTION -->
 		<div class="form-field">
-		<h:outputLabel value="Description" />
-		<h:inputText id="description" value="#{Services.editDescription}"
-			required="true"
-			requiredMessage="Add a description for the service being offered" />
+			<h:outputLabel for="descriptionInput" value="Description:" />
+			<h:inputTextarea id="descriptionInput"
+				value="#{ServiceBean.editDescription}" rows="3" cols="40"
+				required="true"
+				requiredMessage="Add a description for the service being offered." />
+			<h:message for="descriptionInput" errorClass="field-error" />
 		</div>
 
-		<!-- Price - need to add pricing  -->
+
+		<!-- PRICE -->
 		<div class="form-field">
-		<h:outputLabel value="Price" />
-		<h:inputText id="price" value="#{Services.editPrice}" required="true"
-			requiredMessage="Please add a price for our little boarders." redisplay="true" />
+			<h:outputLabel for="priceInput" value="Price (&#8364; per night):" />
+			<h:inputText id="priceInput" value="#{ServiceBean.editPrice}"
+				required="true"
+				requiredMessage="Please add a price for our little boarders."
+				converterMessage="Price must be a number, for example 25.00.">
+				<f:validateDoubleRange minimum="0.01" maximum="1000.00" />
+			</h:inputText>
+			<h:message for="priceInput" errorClass="field-error" />
 		</div>
 
-		<!--  How is this service charged-->
 
+		<!-- SERVICE TYPE - decides whether this shows as a pod or an extra -->
 		<div class="form-field">
-		<h:outputLabel value="Service Charge Type:" />
+			<h:outputLabel for="categoryInput" value="Service Type:" />
+			<h:selectOneMenu id="categoryInput" value="#{ServiceBean.editCategory}"
+				required="true" requiredMessage="Choose a service type.">
 
-		<h:selectOneRadio id="chargeTypeInput"
-			value="#{Services.editChargeType}" required="true"
-			requiredMessage="PLease select one." layout="lineDirection">	<!-- change to lineDirection for horizontal layout page direction for vertical -->
+				<f:selectItem itemLabel="-- Select Type --" itemValue=""
+					noSelectionOption="true" />
 
-			<f:selectItem itemLabel="Per Stay" itemValue="Per Stay" />
-			<f:selectItem itemLabel="Per Night" itemValue="Per Night" />
-			<f:selectItem itemLabel="Per Week" itemValue="Per Week" />
+				<f:selectItems value="#{ServiceBean.categoryOptions}" var="c"
+					itemLabel="#{c.label}" itemValue="#{c}" />
 
-		</h:selectOneRadio>
+			</h:selectOneMenu>
+			<h:message for="categoryInput" errorClass="field-error" />
 		</div>
-		<!-- Service Linked to pet type -->
+
+
+		<!-- SPECIES - leaving this blank means the service suits every pet -->
 		<div class="form-field">
-			<h:outputLabel value="Select Animals:" />
+			<h:outputLabel for="petTypeInput"
+				value="Suitable for (leave blank for all pets):" />
 			<h:selectManyCheckbox id="petTypeInput"
-				value="#{Services.applicableSpecies}" required="true"
-				requiredMessage="Select at least one animal type."
-				layout="lineDirection">
-				<f:selectItems value="#{Services.speciesOptions}" />
+				value="#{ServiceBean.editSpecies}" layout="lineDirection">
+				<f:selectItems value="#{serviceList.speciesOptions}" />
 			</h:selectManyCheckbox>
+			<h:message for="petTypeInput" errorClass="field-error" />
 		</div>
-		<!-- Save and Cancel buttons -->
-			
-			<!-- end the 2 column form grid -->
- 				
-			<h:panelGroup styleClass="button-row">
-				<h:commandButton value="Add Service"
-								 class="btn-green50"
-								 action="#{Services.addNewService}" />
-								 
-				<h:commandButton value="Reset" 
-								 class="btn-green50"
-								 immediate="true"
-								 action="#{ServicesBean.reset}" />
-			</h:panelGroup>
-			
-			
-			<!-- Removing back to dashboard as there is an admin dashobard further down  	
-			<h:panelGroup styleClass="login-prompt">
-				<h:link outcome="userDashboard" value="Back to Dashboard" />
-			</h:panelGroup> -->
-			
-			
-			<!-- Message box for errors and success -->
-			<h:panelGroup layout="block" styleClass="message-box">
-				<h:messages errorClass="error-messages" infoClass="success-messages" />
-			</h:panelGroup>
-		
+
+
+		<!-- BUTTONS -->
+		<h:panelGroup styleClass="button-row">
+
+			<h:commandButton value="Add Service" styleClass="commandButton"
+				action="#{ServiceBean.addNewService}" />
+
+			<h:commandButton value="Reset" styleClass="commandButton"
+				immediate="true" action="#{ServiceBean.reset}" />
+
+		</h:panelGroup>
+
+	</h:form>
+
+
+	<!-- ===== SECTION 2: VIEW CURRENT SERVICES ===== -->
+
+	<h2>Current services</h2>
+
+	<center>
+
+		<p>
+			Total services: <strong>#{serviceList.numberOfServices}</strong>
+		</p>
+
+		<h:dataTable value="#{serviceList.services}" var="service"
+			styleClass="productTable" headerClass="productTableHeader"
+			rowClasses="productTableOddRow, productTableEvenRow">
+
+			<h:column>
+				<f:facet name="header">ID</f:facet>
+				#{service.serviceID}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Service Name</f:facet>
+				#{service.name}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Description</f:facet>
+				#{service.description}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Price</f:facet>
+				<h:outputText value="#{service.price}">
+					<f:convertNumber type="currency" currencySymbol="&#8364;"
+						minFractionDigits="2" maxFractionDigits="2" />
+				</h:outputText>
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Type</f:facet>
+				#{service.category.label}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Suitable For</f:facet>
+
+				<!-- An empty species list means the service suits any pet -->
+				<h:panelGroup rendered="#{empty service.applicableSpecies}">
+					All pets
+				</h:panelGroup>
+
+				<ui:repeat value="#{service.applicableSpecies}" var="s"
+					varStatus="status">
+					#{s}#{status.last ? '' : ', '}
+				</ui:repeat>
+
+			</h:column>
+
+		</h:dataTable>
+
+		<br />
+
+		<!-- Wrapped in h:form so action navigation works properly -->
+		<h:form id="navigationForm">
+			<h:commandButton value="Back to Dashboard" styleClass="commandButton"
+				action="/adminDashboard?faces-redirect=true" />
 		</h:form>
-		
-		
-	
-	<!--  SECTION 2 - view / edit services  -->
-	
-    <h1>View all products and services</h1>
 
-    <center>
-        <!-- Table displaying services -->
-        <h:dataTable value="#{ServuiceList.services}" var="services" styleClass="productTable"
-                     headerClass="productTableHeader"
-                     rowClasses="productTableOddRow, productTableEvenRow">
-            <h:column>
-                <f:facet name="header">Service Name</f:facet>
-                #{services.names}
-            </h:column>
+	</center>
 
-            <h:column>
-                <f:facet name="header">Description</f:facet>
-                #{services.description}
-            </h:column>
+	<br />
 
-            <h:column>
-                <f:facet name="header">Price</f:facet>
-                #{services.price}
-            </h:column>
-
-            <h:column>
-                <f:facet name="header">Price Type</f:facet>
-                #{services.price}
-            </h:column>
-
-
-            <h:column>
-                <f:facet name="header">Animal Type</f:facet>
-                #{services.imagelink}
-            </h:column>
-        </h:dataTable>
-        
-        <!-- Wrapped in h:form so action navigation works properly -->
-        <br />
-        <h:form id="navigationForm">
-            <h:commandButton value="Back to Dashboard"
-                             action="/adminDashboard?faces-redirect=true" 
-                             class="btn-green50"/>
-        </h:form>
-    </center>
-
-	<div class="dashboard-grid">
-	
-	</div>
-    <br />
-    
 </h:body>
 </html>
