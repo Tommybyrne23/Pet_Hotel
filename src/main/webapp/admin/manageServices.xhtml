@@ -17,53 +17,60 @@
 	<!--  Section One add new services  -->
 	<h2>Add a service</h2>
 	
-	<h:form id="adminAddService">
-	 <h:panelGrid columns="2" styleClass="form-grid">
+	<h:form id="adminAddService" styleClass="admin-form-panel">
+
 		<!-- Display current name of service -->
+		
+		<div class="form-field">
 		<h:outputLabel value="Name of service:" />
 		<h:inputText id="nameInput" value="#{Services.editName}"
 			required="true" requiredMessage="Name is required." />
-
+		</div>
 
 		<!-- Display current Description -->
+		<div class="form-field">
 		<h:outputLabel value="Description" />
 		<h:inputText id="description" value="#{Services.editDescription}"
 			required="true"
 			requiredMessage="Add a description for the service being offered" />
-
+		</div>
 
 		<!-- Price - need to add pricing  -->
+		<div class="form-field">
 		<h:outputLabel value="Price" />
 		<h:inputText id="price" value="#{Services.editPrice}" required="true"
-			requiredMessage="Password is required." redisplay="true" />
-
+			requiredMessage="Please add a price for our little boarders." redisplay="true" />
+		</div>
 
 		<!--  How is this service charged-->
 
+		<div class="form-field">
 		<h:outputLabel value="Service Charge Type:" />
 
 		<h:selectOneRadio id="chargeTypeInput"
 			value="#{Services.editChargeType}" required="true"
-			requiredMessage="Please select a charge type." layout="lineDirection">	<!-- change to lineDirection for horizontal layout page direction for vertical -->
+			requiredMessage="PLease select one." layout="lineDirection">	<!-- change to lineDirection for horizontal layout page direction for vertical -->
 
 			<f:selectItem itemLabel="Per Stay" itemValue="Per Stay" />
 			<f:selectItem itemLabel="Per Night" itemValue="Per Night" />
 			<f:selectItem itemLabel="Per Week" itemValue="Per Week" />
 
 		</h:selectOneRadio>
-
+		</div>
 		<!-- Service Linked to pet type -->
-				
-			
-			<h:outputLabel value="Pet Type" />
-			<h:inputText id="pet" value="#{Services.petType }"
-				required="true" requiredMessage="Password is required."
-				redisplay="true" />
-			<!-- Save and Cancel buttons -->
+		<div class="form-field">
+			<h:outputLabel value="Select Animals:" />
+			<h:selectManyCheckbox id="petTypeInput"
+				value="#{Services.applicableSpecies}" required="true"
+				requiredMessage="Select at least one animal type."
+				layout="lineDirection">
+				<f:selectItems value="#{Services.speciesOptions}" />
+			</h:selectManyCheckbox>
+		</div>
+		<!-- Save and Cancel buttons -->
 			
 			<!-- end the 2 column form grid -->
- 		</h:panelGrid>
-			
+ 				
 			<h:panelGroup styleClass="button-row">
 				<h:commandButton value="Add Service"
 								 class="btn-green50"

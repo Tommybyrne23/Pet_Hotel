@@ -72,6 +72,97 @@ h2 {
     background-color: #A65237;
 }
 
+/* ---- SHARED FORM FIELD STYLE (adapted from login.css) ---- */
+
+.form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 20px;
+	max-width: 400px;
+}
+
+.form-field label {
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 0.02em;
+	color: #4E342E;
+}
+
+.form-field input[type="text"],
+.form-field textarea,
+.form-field select {
+	padding: 12px 14px;
+	font-size: 15px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input[type="text"]:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+	outline: none;
+	border-color: #2C5F2D;
+	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
+}
+
+/* ties radio buttons and checkboxes into the same green accent */
+input[type="radio"],
+input[type="checkbox"] {
+	accent-color: #2C5F2D;
+}
+
+/* ---- UNIFIED MESSAGE BOX (replaces old duplicate rules) ---- */
+
+.message-box {
+	margin-bottom: 20px;
+}
+
+.message-box ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.error-messages {
+	display: block;
+	background-color: #fdecea;
+	border-left: 4px solid #c0392b;
+	color: #922b21;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+.success-messages {
+	display: block;
+	background-color: #eaf6ec;
+	border-left: 4px solid #27804a;
+	color: #1d6138;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+/* ---- OPTIONAL: lifts admin forms off the beige background ---- */
+
+.admin-form-panel {
+	background-color: #ffffff;
+	border-radius: 10px;
+	padding: 30px 35px;
+	max-width: 500px;
+	margin: 0 auto 30px auto;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+
 /*---------------------------------------*/
 
 /*Make contact information be centered*/
@@ -184,34 +275,8 @@ so best if images are a correct ratio size*/
 	color: #ffffff;
 }
 
-.error-messages {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 6px;
-}
 
-.success-messages {
-    background-color: #27ae60;
-    color: #ffffff;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 6px;
-}
-.message-box {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.message-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* imported from week five */
+/* imported from week five FOR TABLES */
 
 .productTable {
     border-collapse: collapse;
