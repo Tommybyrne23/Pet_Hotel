@@ -146,4 +146,32 @@ public class ServiceList implements Serializable {
 
 	    return matchingServices;
 	}
+
+	// the booking page needs pods and extras separately, and only the
+	// ones that suit the pet being booked
+	public List<Service> getPodsForSpecies(String species) {
+		return findByCategoryAndSpecies(ServiceCategory.POD, species);
+	}
+
+	public List<Service> getExtrasForSpecies(String species) {
+		return findByCategoryAndSpecies(ServiceCategory.EXTRA, species);
+	}
+
+	private List<Service> findByCategoryAndSpecies(ServiceCategory category, String species) {
+
+		List<Service> matches = new ArrayList<>();
+
+		for (Service service : services) {
+
+			// an empty species list means the service suits every pet
+			boolean speciesOk = service.getApplicableSpecies() == null
+					|| service.getApplicableSpecies().isEmpty()
+					|| service.getApplicableSpecies().contains(species);
+
+			if (service.getCategory() == category && speciesOk) {
+				matches.add(service);
+			}
+		}
+		return matches;
+	}
 }
