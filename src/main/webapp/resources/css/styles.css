@@ -15,6 +15,37 @@ h2 {
     border-bottom: 2px solid #6D4C41;
 }
 
+/*--------------------------------------------
+		Buttons 
+----------------------------------------------*/
+
+
+.btn-green50 {
+	display: block;
+	width: 50%;				/*same as btn green on login but width set to 50%*/ 
+	padding: 13px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #2C5F2D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.2s ease;
+}
+
+.btn-green50:hover {
+	background-color: #234A24;
+}
+
+.btn-green50:active {
+	background-color: #1C3B1D;
+}
+
+
 
 .commandButton {
   background-color: #538f3b;
@@ -40,6 +71,8 @@ h2 {
 .button:hover {
     background-color: #A65237;
 }
+
+/*---------------------------------------*/
 
 /*Make contact information be centered*/
 .contact {
