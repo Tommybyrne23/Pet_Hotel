@@ -2,6 +2,8 @@ package com.tus.pethotel;
 
 import java.io.Serializable;
 
+import com.tus.Services.Species;
+
 public class Pet implements Serializable {
 
     private static final long serialVersionUID = 1L;
