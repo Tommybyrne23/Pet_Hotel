@@ -104,4 +104,28 @@ public class Reservation implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public String getPodName() {
+        return podName;
+    }
+
+    public void setPodName(String podName) {
+        this.podName = podName;
+    }
+
+    public double getPodPricePerNight() {
+        return podPricePerNight;
+    }
+
+    public void setPodPricePerNight(double podPricePerNight) {
+        this.podPricePerNight = podPricePerNight;
+    }
+
+    public List<String> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<String> extras) {
+        this.extras = extras;
+    }
 }
