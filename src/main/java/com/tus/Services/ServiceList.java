@@ -174,4 +174,14 @@ public class ServiceList implements Serializable {
 		}
 		return matches;
 	}
+	
+	public Service findByID(int serviceID) {
+
+		for (Service service : services) {
+			if (service.getServiceID() == serviceID) {
+				return service;
+			}
+		}
+		return null;
+	}
 }
