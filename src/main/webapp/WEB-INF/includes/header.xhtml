@@ -20,8 +20,9 @@
 				<!-- Signed-in customers -->
 				<ui:fragment rendered="#{LoginBean.loggedIn and not LoginBean.admin}">
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/userDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/manageProfile" value="Manage Profile" /></li>
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/makeBooking" value="New Booking" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/myBookings" value="My Bookings" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/UserViewBookings" value="My Bookings" /></li>
 				</ui:fragment>
 
 				<!-- Administrators -->
