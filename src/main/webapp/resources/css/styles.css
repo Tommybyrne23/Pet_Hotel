@@ -1,28 +1,27 @@
+
 body {
 	background-color: beige;
 	font-family: Arial, sans-serif;
 	color: #4E342E;
+	margin: 0;
+	padding: 0;
 }
-/*Align headings in the center and add a line beneath it*/
+
+/* Center headings and add a bottom accent line */
 h1 {
-	text-align:center;
+	text-align: center;
 	border-bottom: 4px solid #6D4C41;
 }
 
-/*Align subheadings in the center and add a line beneath it*/
 h2 {
-	text-align:center;
-    border-bottom: 2px solid #6D4C41;
+	text-align: center;
+	border-bottom: 2px solid #6D4C41;
 }
 
-/*--------------------------------------------
-		Buttons 
-----------------------------------------------*/
-
-
+/* Buttons and controls */
 .btn-green50 {
 	display: block;
-	width: 50%;				/*same as btn green on login but width set to 50%*/ 
+	width: 50%;
 	padding: 13px;
 	margin-bottom: 12px;
 	font-size: 15px;
@@ -37,15 +36,57 @@ h2 {
 	transition: background-color 0.2s ease;
 }
 
+.btn-green,								/* only difference will be the width on btn-green50 (50%)*/
+.btn-green50 {
+	display: block;
+	padding: 13px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #2C5F2D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.2s ease;
+}
+.btn-green50{
+	width:50%;
+}
+.btn-green{
+	width:100%;
+}
+
+.btn-green:hover,
 .btn-green50:hover {
 	background-color: #234A24;
 }
-
+.btngreen:active,
 .btn-green50:active {
 	background-color: #1C3B1D;
 }
 
+.button {
+	background-color: #C96C4A;
+	border-radius: 12px;
+	color: white;
+	padding: 10px 18px;
+	border: none;
+	cursor: pointer;
+}
 
+.button:hover {
+	background-color: #A65237;
+}
+
+/* 
+	COMMAND BUTTON
+	This was used in the old admin dashboard, 
+	keeping it so we have it at least for reference
+	on the other dashbaords 
+*/
 
 .commandButton {
   background-color: #538f3b;
@@ -61,19 +102,8 @@ h2 {
 }
  
 
-/*Add colour and border to the buttons*/
-.button {
-    background-color: #C96C4A;
-    border-radius: 12px;
-    color: white;
-}
 
-.button:hover {
-    background-color: #A65237;
-}
-
-/* ---- SHARED FORM FIELD STYLE (adapted from login.css) ---- */
-
+/* Form inputs and message boxes */
 .form-field {
 	display: flex;
 	flex-direction: column;
@@ -111,13 +141,11 @@ h2 {
 	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
 }
 
-/* ties radio buttons and checkboxes into the same green accent */
+/* Custom green accent for radio buttons and checkboxes */
 input[type="radio"],
 input[type="checkbox"] {
 	accent-color: #2C5F2D;
 }
-
-/* ---- UNIFIED MESSAGE BOX (replaces old duplicate rules) ---- */
 
 .message-box {
 	margin-bottom: 20px;
@@ -129,6 +157,7 @@ input[type="checkbox"] {
 	padding: 0;
 }
 
+/* Alert boxes for form feedback */
 .error-messages {
 	display: block;
 	background-color: #fdecea;
@@ -151,8 +180,7 @@ input[type="checkbox"] {
 	font-size: 14px;
 }
 
-/* ---- OPTIONAL: lifts admin forms off the beige background ---- */
-
+/* Form container panel */
 .form-panel {
 	background-color: #ffffff;
 	border-radius: 10px;
@@ -163,145 +191,368 @@ input[type="checkbox"] {
 }
 
 
-/*---------------------------------------*/
-
-/*Make contact information be centered*/
-.contact {
-    text-align: center;
+/* 	-----------------------------------------
+		Stat cards navigation strip for 
+		OnSite, Past, and Upcoming pages    
+	-----------------------------------------*/
+	
+.card-container {
+	display: flex;
+	gap: 15px;
+	justify-content: space-between;
+	max-width: 1000px;
+	margin: 20px auto;
 }
 
-.account {
-    width: 90%;
-    max-width: 350px;
-    margin: 40px auto;
+.card-link {
+	flex: 1;
+	text-decoration: none;
 }
 
-
-.service-left,
-.service-right {
-    display: flex; /*Make images and text appear side by side*/
-     margin: 5px;
-        border-radius: 10px;
-    align-items: flex-start; /*Test aligns with the top of the image*/
-    gap: 30px; /*Space between image and text*/
-    margin: 40px auto; /*Vertical spacing*/
-    width: 90%; /*Keep content from the edges of the page*/
-    line-height: 1.5;
+.stat-card {
+	background-color: #27ae60;
+	color: #ffffff;
+	padding: 18px 12px;
+	border-radius: 8px;
+	text-align: center;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.service-right {
-    flex-direction: row-reverse; /*Force content to the right of the page*/
-	background-color: tan;
+.stat-card:hover {
+	transform: translateY(-4px);
+	background-color: #219150;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/*Make images one uniform size, doesn't stretch images but crops them
-so best if images are a correct ratio size*/
-.service-left img,
-.service-right img {
-    width: 250px;
-    height: 180px;
-    border-radius: 10px;
-    object-fit: cover;
+/* Highlights the current active page card */
+.stat-card.active {
+	background-color: #1e8449;
+	border: 2px solid #ffffff;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/*class for intro color scheme*/
-.intro {
-
-    text-align: center;
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: #4E342E;
-    
+.stat-title {
+	font-size: 13px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 6px;
+	color: #f4f9f5;
 }
 
-.dashboard-grid {
+.stat-number {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+/*	----------------------------------- 
+
+		Dashboard Layout Formatting   
+
+	-----------------------------------	*/
+.dashboard-wrapper {
+	max-width: 1100px;
+	margin: 30px auto;
+	padding: 0 20px;
+}
+
+/* Yellow gold accent lines under headings */
+.dashboard-title {
+	font-size: 36px;
+	font-weight: 800;
+	color: #2c3e50;
+	margin-bottom: 6px;
+	display: inline-block;
+	position: relative;
+}
+
+.dashboard-title::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 8px;
+	background-color: #f1c40f;
+	border-radius: 4px;
+	margin-top: -2px;
+}
+
+.dashboard-subtitle {
+	font-size: 16px;
+	color: #555555;
+	margin-bottom: 25px;
+}
+
+.section-title {
+	font-size: 24px;
+	font-weight: 700;
+	color: #2c3e50;
+	margin: 35px 0 15px 0;
+	display: inline-block;
+	position: relative;
+}
+
+.section-title::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 6px;
+	background-color: #f1c40f;
+	border-radius: 3px;
+	margin-top: -1px;
+}
+
+/* Dashboard metric summary row */
+
+.metrics-row {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 25px;
+	flex-wrap: wrap;
+}
+
+.metric-card {
+	flex: 1;
+	min-width: 130px;
+	background-color: #ffffff;
+	border-radius: 14px;
+	padding: 18px 12px;
+	text-align: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.metric-value {
+	font-size: 28px;
+	font-weight: 800;
+	color: #2c3e50;
+	line-height: 1.1;
+}
+
+.metric-label {
+	font-size: 13px;
+	color: #666666;
+	margin-top: 4px;
+	font-weight: 600;
+}
+
+/* Dashboard manage actions grid */
+
+.manage-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
-	max-width: 900px;
-	margin-top: 20px;
 }
 
-.dashboard-card {
-	aspect-ratio: 1 / 1;
-	border: 2px solid #333333;
-	border-radius: 8px;
-	padding: 20px;
-	background-color: #f9f9f9;
-	box-sizing: border-box;
+.manage-card {
+	background-color: #fcfbf7;
+	border-radius: 16px;
+	padding: 24px;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
+	justify-content: space-between;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	border: 1px solid #eae7dd;
+	min-height: 160px;
 }
 
-.dashboard-card p {
-	margin: 0 0 15px 0;
+.manage-card-title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1e5631;
+	margin-bottom: 10px;
+}
+
+.manage-card-desc {
 	font-size: 14px;
 	color: #555555;
 	line-height: 1.4;
+	margin-bottom: 20px;
 }
 
-.dashboard-card input[type="submit"] {
-	width: 90%;
-	padding: 10px;
+
+/* Action button styles */
+.btn-card-action {
+	background-color: #1e5631;
+	color: #ffffff;
+	border: none;
+	border-radius: 25px;
+	padding: 10px 22px;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: 700;
 	cursor: pointer;
-	border: 1px solid #333333;
-	border-radius: 4px;
+	align-self: flex-start;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-card-action:hover {
+	background-color: #143d22;
+	transform: translateY(-1px);
+}
+
+.btn-card-outline {
+	background-color: transparent;
+	color: #1e5631;
+	border: 2px solid #1e5631;
+	border-radius: 25px;
+	padding: 8px 20px;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	align-self: flex-start;
+	transition: all 0.2s ease;
+}
+
+.btn-card-outline:hover {
+	background-color: #1e5631;
+	color: #ffffff;
+}
+
+.btn-card-logout {
+	background-color: transparent;
+	color: #c0392b;
+	border: 2px solid #c0392b;
+	border-radius: 25px;
+	padding: 8px 20px;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	align-self: flex-start;
+	transition: all 0.2s ease;
+}
+
+.btn-card-logout:hover {
+	background-color: #c0392b;
+	color: #ffffff;
+}
+
+/* Modern data tables and pill status badges */
+.table-card {
 	background-color: #ffffff;
-	transition: background-color 0.2s ease, color 0.2s ease;
+	border-radius: 16px;
+	padding: 30px;
+	max-width: 1000px;
+	margin: 20px auto;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
-
-.dashboard-card input[type="submit"]:hover {
-	background-color: #333333;
-	color: #ffffff;
-}
-
-/* Optional modifier class for logout/danger cards */
-.card-logout {
-	border-color: #d9534f;
-}
-
-.card-logout input[type="submit"] {
-	border-color: #d9534f;
-	color: #d9534f;
-}
-
-.card-logout input[type="submit"]:hover {
-	background-color: #d9534f;
-	color: #ffffff;
-}
-
-
-/* imported from week five FOR TABLES */
 
 .productTable {
-    border-collapse: collapse;
-    border: 1px solid black;
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0 auto;
+	border: none;
+	background-color: #ffffff;
+	border-radius: 12px;
+	overflow: hidden;
 }
 
 .productTableHeader {
-    text-align: center;
-    background: #b5b5b5;
-    border-bottom: 1px solid black;
-    padding: 6px;
+	background-color: #f8f9fa;
+	color: #2c3e50;
+	font-weight: 700;
+	font-size: 14px;
+	text-align: left;
+	padding: 16px 20px;
+	border-bottom: 2px solid #e9ecef;
 }
 
-.productTableOddRow {
-    text-align: center;
-    background: #ffffff;
+.productTable tr {
+	transition: background-color 0.15s ease;
 }
 
+.productTable tr:hover {
+	background-color: #f8f9fa;
+}
+
+.productTableOddRow,
 .productTableEvenRow {
-    text-align: center;
-    background: #d3d3d3;
+	background-color: #ffffff;
 }
 
 .productTable td {
-    padding: 6px 12px;
-    border: 1px solid black;
+	padding: 16px 20px;
+	color: #333333;
+	font-size: 14px;
+	border: none;
+	border-bottom: 1px solid #f1f3f5;
+	text-align: left;
+	vertical-align: middle;
 }
 
+.productTable tr:last-child td {
+	border-bottom: none;
+}
+
+/* Status pill badges for bookings and pods */
+.status-confirmed,
+.status-available {
+	display: inline-block;
+	background-color: #d1e7dd;
+	color: #0f5132;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+.status-pending {
+	display: inline-block;
+	background-color: #fff3cd;
+	color: #664d03;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+.status-cancelled {
+	display: inline-block;
+	background-color: #f8d7da;
+	color: #842029;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+/* ---------------------------------
+
+	Page content and services layout 
+
+   --------------------------------- */
+.contact {
+	text-align: center;
+}
+
+.service-left,
+.service-right {
+	display: flex;
+	margin: 40px auto;
+	border-radius: 10px;
+	align-items: flex-start;
+	gap: 30px;
+	width: 90%;
+	line-height: 1.5;
+}
+
+.service-right {
+	flex-direction: row-reverse;
+	background-color: tan;
+}
+
+.service-left img,
+.service-right img {
+	width: 250px;
+	height: 180px;
+	border-radius: 10px;
+	object-fit: cover;
+}
+
+.intro {
+	text-align: center;
+	font-size: 1.1em;
+	line-height: 1.6;
+	color: #4E342E;
+}

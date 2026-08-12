@@ -1,89 +1,139 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:p="http://primefaces.org/ui">
-      
+
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
     <f:viewAction action="#{LoginBean.checkAdminAccess}" />
 </f:metadata>
 
 <h:head>	
-	<h:outputStylesheet library="css" name="styles.css" />
-	<link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
-	<title>Admin Dashboard</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
+    <title>Admin Dashboard</title>
 </h:head>
+
 <h:body>
 
-	<h1>ADMIN Dashboard</h1>
+    <div class="dashboard-wrapper">
 
-	<!-- Welcome message showing the logged in user name -->
-	<h:outputText value="Welcome back, #{LoginBean.loggedInUser.name}!"
-		style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 10px;" />
-		<p>Your Role: <strong>#{LoginBean.loggedInUser.role.label}</strong></p>
-		
+        <!-- Page Header -->
+        <div class="dashboard-title">Admin dashboard</div>
+        <div class="dashboard-subtitle">
+            A quick look at the hotel right now, <strong>#{LoginBean.loggedInUser.name}</strong> (#{LoginBean.loggedInUser.role.label}).
+        </div>
 
-	<h:form styleClass="account">
-		<div class="dashboard-grid">
+        <!-- Metric Cards Bar -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-value">#{reservationList.activeBookings.size()}</div>
+                <div class="metric-label">On site now</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{userList.numberOfUsers}</div>
+                <div class="metric-label">Customers</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{petList.numberOfPets}</div>
+                <div class="metric-label">Pets</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{reservationList.numberOfReservations}</div>
+                <div class="metric-label">Bookings</div>
+            </div>
+        </div>
 
-			<!-- SCRUM-134: View all users view -->
-			<div class="dashboard-card">
-				<p>Manage user accounts, account types, and profile settings.</p>
-				<h:commandButton value="View all users"
-				 				 class="btn-green50"	
-								 action="/admin/userList?faces-redirect=true"/>
-			</div>
-			<!-- SCRUM-138: View Pods and Rooms -->
-			<div class="dashboard-card">
-				<p>Review and manage registered pets on our system</p>
-				<h:commandButton value="View All Pets" 
-							     class="btn-green50" 
-							     action="/admin/petManagement?faces-redirect=true"/>
-			</div>
+        <!-- Manage Section Title -->
+        <div class="section-title">Manage</div>
 
-			<!-- SCRUM-135: View all confirmed reservations -->
-			<div class="dashboard-card">
-				<p>Review and confirm current customer reservations.</p>
-				<h:commandButton value="View all bookings" 
-								 class="btn-green50"
-								 action="/admin/viewBookings?faces-redirect=true"/>
-			</div>
+        <!-- Management Actions Grid -->
+        <h:form id="dashboardForm">
+            <div class="manage-grid">
 
-			<!-- SCRUM-137: View All listings -->
-			<div class="dashboard-card">
-				<p>Manage, add, or update service and product listings.</p>
-				<h:commandButton value="Add/Edit Services"
-								class="btn-green50"
-								action="/admin/manageServices?faces-redirect=true"/>
-			</div>
+                <!-- Customers & Accounts -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customers &amp; Users</div>
+                        <div class="manage-card-desc">Search customers, manage user accounts, roles, and profile settings.</div>
+                    </div>
+                    <h:commandButton value="Manage users"
+                                     styleClass="btn-card-action"
+                                     action="/admin/userList?faces-redirect=true"/>
+                </div>
 
-			<!-- SCRUM-138: View Pods and Rooms -->
-			<div class="dashboard-card">
-				<p>Inspect facility occupancy, pod allocations, and rooms.</p>
-				<h:commandButton value="View Pods/Rooms"
-								 class="btn-green50" 
-					 			 action="/admin/viewPodsRooms?faces-redirect=true"/>
-			</div>
+                <!-- On Site & Registered Pets -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Registered Pets</div>
+                        <div class="manage-card-desc">Review and manage registered pets and special requirements on our system.</div>
+                    </div>
+                    <h:commandButton value="View all pets" 
+                                     styleClass="btn-card-action" 
+                                     action="/admin/petManagement?faces-redirect=true"/>
+                </div>
 
-			<!-- View Contact form Submissions -->
-			<div class="dashboard-card">
-				<p>Read customer messages submitted through the contact form.</p>
-				<h:commandButton value="View messages"
-							     class="btn-green50"
-								 action="/admin/viewContactForm?faces-redirect=true"/>
-			</div>
+                <!-- Bookings & Reservations -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Reservations</div>
+                        <div class="manage-card-desc">Review and confirm current customer bookings and past stay histories.</div>
+                    </div>
+                    <h:commandButton value="View all bookings" 
+                                     styleClass="btn-card-action"
+                                     action="/admin/bookings/viewBookings?faces-redirect=true"/>
+                </div>
 
-			<!-- Logout button -->
-			<div class="dashboard-card card-logout">
-				<p>End the current session and exit securely.</p>
-				<h:commandButton value="Logout"
-					 			 class="btn-green50"
-								 action="#{LoginBean.logout}"/>
-			</div>
+                <!-- Listings & Prices -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Listings &amp; prices</div>
+                        <div class="manage-card-desc">Manage, add, or update extra service offerings and nightly rates.</div>
+                    </div>
+                    <h:commandButton value="Edit prices"
+                                     styleClass="btn-card-outline"
+                                     action="/admin/manageServices?faces-redirect=true"/>
+                </div>
 
-		</div>
-	</h:form>
+                <!-- Facility Capacity (Pods/Rooms) -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Pods &amp; rooms</div>
+                        <div class="manage-card-desc">Inspect facility occupancy, pod allocations, and room inventory.</div>
+                    </div>
+                    <h:commandButton value="Manage capacity"
+                                     styleClass="btn-card-action" 
+                                     action="/admin/viewPodsRooms?faces-redirect=true"/>
+                </div>
+
+                <!-- Contact Messages -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customer Messages</div>
+                        <div class="manage-card-desc">Read customer inquiries submitted through the website contact form.</div>
+                    </div>
+                    <h:commandButton value="View messages"
+                                     styleClass="btn-card-action"
+                                     action="/admin/viewContactForm?faces-redirect=true"/>
+                </div>
+
+                <!-- Logout Card -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title" style="color: #c0392b;">Session</div>
+                        <div class="manage-card-desc">End the current administrative session and exit securely.</div>
+                    </div>
+                    <h:commandButton value="Logout"
+                                     styleClass="btn-card-logout"
+                                     action="#{LoginBean.logout}"/>
+                </div>
+
+            </div>
+        </h:form>
+
+    </div>
 
 </h:body>
 </html>

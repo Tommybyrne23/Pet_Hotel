@@ -1,49 +1,79 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core" 
-	xmlns:ui="jakarta.faces.facelets" >
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core" 
+      xmlns:ui="jakarta.faces.facelets">
 
 <f:metadata>
-    <!-- Checks the user is an admin before the view is rendered -->
     <f:viewAction action="#{LoginBean.checkAdminAccess}" />
 </f:metadata>
 
 <h:head>
-	<h:outputStylesheet library="css" name="styles.css" />
-	<title>Pet Hotel - Registered Users</title>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Past Bookings</title>
 </h:head>
 
 <h:body>
+    <h1>Past Bookings</h1>
 
-	<h1>Past Bookings</h1>
-	<center>
-		<p> Pets who've been aboard  </p>
-		
-		<h:dataTable value="#{reservationList.pastReservations}" var="booking"
-                             rendered="#{not empty reservationList.pastReservations}"
-                             styleClass="productTable" headerClass="productTableHeader"
-                             rowClasses="productTableOddRow, productTableEvenRow">
-                    <h:column><f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
-                    <h:column><f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
-                    <h:column><f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
-                    <h:column><f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
-                    <h:column><f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
-                    <h:column><f:facet name="header">Status</f:facet>#{booking.status}</h:column>
-                </h:dataTable>
-                <h:outputText value="No past bookings found. " rendered="#{empty reservationList.pastReservations}" />
-		
-			
-		<br />
+    <div class="card-container">
+        <h:link outcome="onsite.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Pets On Site</div>
+                <div class="stat-number">#{reservationList.activeBookings.size()}</div>
+            </div>
+        </h:link>
 
-			<!-- Wrapped in h:form so action navigation works properly --><br />
-			<h:form id="navigationForm">
-				<h:commandButton value="Back to Dashboard"
-					action="/adminDashboard?faces-redirect=true" class="btn-green50" />
-			</h:form>
-		
-	</center>
-	<div class="dashboard-grid"></div>
-	<br />
+        <h:link outcome="upcomingBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Upcoming</div>
+                <div class="stat-number">#{reservationList.futureReservations.size()}</div>
+            </div>
+        </h:link>
 
+        <h:link outcome="pastbookings.xhtml" styleClass="card-link">
+            <div class="stat-card active">
+                <div class="stat-title">Past Bookings</div>
+                <div class="stat-number">#{reservationList.pastReservations.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="viewBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Total Bookings</div>
+                <div class="stat-number">#{reservationList.numberOfReservations}</div>
+            </div>
+        </h:link>
+    </div>
+
+    <center>
+        <p>Pets who've been aboard</p>
+        
+        <h:dataTable value="#{reservationList.pastReservations}" var="booking"
+                     rendered="#{not empty reservationList.pastReservations}"
+                     styleClass="productTable" headerClass="productTableHeader"
+                     rowClasses="productTableOddRow, productTableEvenRow">
+            <h:column><f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
+            <h:column><f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
+            <h:column><f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
+            <h:column><f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
+            <h:column><f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
+            <h:column><f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
+            <h:column><f:facet name="header">Status</f:facet>#{booking.status}</h:column>
+        </h:dataTable>
+
+        <h:outputText value="No past bookings found." rendered="#{empty reservationList.pastReservations}" />
+            
+        <br /><br />
+
+        <h:form id="navigationForm">
+            <h:commandButton value="Back to Dashboard"
+                             action="/adminDashboard?faces-redirect=true" 
+                             styleClass="btn-green50" />
+        </h:form>
+    </center>
+    
+    <div class="dashboard-grid"></div>
+    <br />
 </h:body>
 </html>
