@@ -27,7 +27,7 @@ class PetListTest {
                 Species.DOG,		//Species
                 "Labrador",			//
                 "1-3 years",		//Age 
-                ""					//Special Requirements 
+                "Needs medication with food."					//Special Requirements 
         );
 
         pet2 = new Pet(
@@ -175,5 +175,19 @@ class PetListTest {
         assertTrue(pets.contains(pet1));
         assertTrue(pets.contains(pet2));
         assertTrue(pets.contains(pet3));
+    }
+    
+    @Test
+    @DisplayName("Test: Pet requirements are stored when provided")
+    void testPetRequirements() {
+
+        petList.addPet(pet1);
+
+        Pet storedPet = petList.getPets().get(0);
+
+        assertEquals(
+                "Needs medication with food.",
+                storedPet.getRequirements()
+        );
     }
 }
