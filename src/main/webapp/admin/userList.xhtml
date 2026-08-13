@@ -24,6 +24,13 @@
 		<p>
 			Total Registered Users: <strong>#{userList.numberOfUsers}</strong>
 		</p>
+		
+		
+	<f:metadata>
+		<f:event type="preRenderView"
+			listener="#{ProfileBean.loadProfile}" />
+	</f:metadata>
+		
 	<h:form id="userTableForm">
 		<!-- Table displaying all users stored in the ApplicationScoped list -->
 		<h:dataTable value="#{userList.users}" var="u"
