@@ -69,6 +69,12 @@
             #{userList.getUserNameById(p.userID)}
         </h:column>
 
+  	 	<!-- Pet reqruiements to go in here -->
+        <h:column>
+            <f:facet name="header">Owner Name</f:facet>
+            #{p.requirements}
+        </h:column>
+
     </h:dataTable>
     <br />
     <!-- Wrapped in h:form so action navigation works properly -->
