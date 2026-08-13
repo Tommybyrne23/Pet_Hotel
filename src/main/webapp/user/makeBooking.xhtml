@@ -19,8 +19,11 @@
 </h:head>
 
 <h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
+	<div class="dashboard-title">Make a booking</div>
 
-	<h1>Make a Booking</h1>
+
 
 	<h:form id="bookingForm" styleClass="account">
 		<h:panelGrid columns="1" styleClass="account"
@@ -59,7 +62,7 @@
 				<h:inputText id="checkInDate" value="#{BookingBean.checkInDate}"
 					required="true" requiredMessage="Check-in date is required."
 					pt:type="date" />
-
+				
 				<!-- Check-out date with calendar picker -->
 				<h:outputLabel value="Check-out Date:" />
 				<h:inputText id="checkOutDate" value="#{BookingBean.checkOutDate}"
@@ -149,6 +152,7 @@
 
 		</h:panelGrid>
 	</h:form>
+</div>
 
 </h:body>
 </html>
