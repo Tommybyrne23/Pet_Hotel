@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:pt="jakarta.faces.passthrough">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:pt="jakarta.faces.passthrough">
 
 
 <f:metadata>
@@ -24,19 +22,14 @@
 		<h:panelGrid columns="1" styleClass="account"
 			style="max-width: 450px;">
 
-			<!-- Messages area -->
-			<h:panelGroup layout="block" styleClass="message-box">
-				<h:messages errorClass="error-messages"
-					infoClass="success-messages" />
-			</h:panelGroup>
+			<!-- Messages - plain text, no styled box -->
+			<h:messages />
 
 			<!-- If user has no pets, show message -->
 			<h:panelGroup rendered="#{!BookingBean.hasPets}">
-				<p style="font-size: 16px; color: #721c24;
-					background-color: #f8d7da; padding: 15px;
-					border-radius: 6px;">
-					You need to register a pet before making a booking.
-				</p>
+				<p
+					style="font-size: 16px; color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 6px;">
+					You need to register a pet before making a booking.</p>
 				<h:link outcome="/addPet" value="Register a Pet"
 					style="font-size: 16px; font-weight: bold;" />
 			</h:panelGroup>
@@ -46,35 +39,27 @@
 
 				<!-- Select Pet (dropdown of registered pets) -->
 				<h:outputLabel value="Select Pet:" />
-				<h:selectOneMenu id="petSelect"
-					value="#{BookingBean.selectedPetID}">
-					<f:selectItem itemLabel="-- Select a Pet --"
-						itemValue="0" />
-					<f:selectItems value="#{BookingBean.userPets}"
-						var="pet"
+				<h:selectOneMenu id="petSelect" value="#{BookingBean.selectedPetID}">
+					<f:selectItem itemLabel="-- Select a Pet --" itemValue="0" />
+					<f:selectItems value="#{BookingBean.userPets}" var="pet"
 						itemLabel="#{pet.name} (#{pet.species.label} - #{pet.breed})"
 						itemValue="#{pet.petID}" />
-					<f:ajax execute="@this"
-					listener="#{BookingBean.petChanged}"
-					render="serviceArea" />
+					<f:ajax execute="@this" listener="#{BookingBean.petChanged}"
+						render="serviceArea" />
 				</h:selectOneMenu>
 
 				<br />
 
 				<!-- Check-in date with calendar picker -->
 				<h:outputLabel value="Check-in Date:" />
-				<h:inputText id="checkInDate"
-					value="#{BookingBean.checkInDate}"
-					required="true"
-					requiredMessage="Check-in date is required."
+				<h:inputText id="checkInDate" value="#{BookingBean.checkInDate}"
+					required="true" requiredMessage="Check-in date is required."
 					pt:type="date" />
 
 				<!-- Check-out date with calendar picker -->
 				<h:outputLabel value="Check-out Date:" />
-				<h:inputText id="checkOutDate"
-					value="#{BookingBean.checkOutDate}"
-					required="true"
-					requiredMessage="Check-out date is required."
+				<h:inputText id="checkOutDate" value="#{BookingBean.checkOutDate}"
+					required="true" requiredMessage="Check-out date is required."
 					pt:type="date" />
 
 				<br />
@@ -109,8 +94,8 @@
 						<h:outputText value="Extra Services:" style="font-weight: bold;" />
 
 						<h:selectManyCheckbox id="extrasSelect"
-							value="#{BookingBean.selectedExtraIDs}"
-							layout="pageDirection" style="margin: 8px 0;">
+							value="#{BookingBean.selectedExtraIDs}" layout="pageDirection"
+							style="margin: 8px 0;">
 
 							<f:selectItems value="#{BookingBean.availableExtras}" var="extra"
 								itemLabel="#{extra.name} (+&#8364;#{extra.price} #{extra.chargeType.label})"
@@ -130,15 +115,12 @@
 
 				<!-- AC2: Show total price after calculation -->
 				<h:panelGroup rendered="#{BookingBean.priceCalculated}"
-					layout="block"
-					style="background-color: #d4edda; color: #155724;
-						padding: 15px; border-radius: 6px;
-						margin: 10px 0; font-size: 18px;
-						font-weight: bold;">
+					layout="block" styleClass="message-box">
+					<h:messages globalOnly="true" errorClass="error-messages"
+						infoClass="success-messages" />
 					Total Price: &#8364;
 					<h:outputText value="#{BookingBean.totalPrice}">
-						<f:convertNumber type="number"
-							minFractionDigits="2"
+						<f:convertNumber type="number" minFractionDigits="2"
 							maxFractionDigits="2" />
 					</h:outputText>
 				</h:panelGroup>
@@ -158,8 +140,7 @@
 				action="#{BookingBean.cancel}" />
 
 			<h:panelGroup styleClass="login-prompt">
-				<h:link outcome="/userDashboard"
-					value="Back to Dashboard" />
+				<h:link outcome="/userDashboard" value="Back to Dashboard" />
 			</h:panelGroup>
 
 		</h:panelGrid>
