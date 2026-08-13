@@ -17,7 +17,7 @@
 </h:head>
 
 <h:body>
-
+<ui:include src="/WEB-INF/includes/header.xhtml" />
     <div class="dashboard-wrapper">
 
         <!-- Page Header -->
@@ -83,7 +83,7 @@
                     </div>
                     <h:commandButton value="View all bookings" 
                                      styleClass="btn-card-action"
-                                     action="/admin/bookings/viewBookings?faces-redirect=true"/>
+                                     action="/admin/bookings/viewAllBookings?faces-redirect=true"/>
                 </div>
 
                 <!-- Listings & Prices -->
@@ -134,6 +134,6 @@
         </h:form>
 
     </div>
-
+<ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
 </html>

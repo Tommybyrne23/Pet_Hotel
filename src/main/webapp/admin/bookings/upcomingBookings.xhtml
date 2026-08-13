@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core" 
-      xmlns:ui="jakarta.faces.facelets">
-
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
     <f:viewAction action="#{LoginBean.checkAdminAccess}" />
@@ -12,10 +12,11 @@
 <h:head>
     <h:outputStylesheet library="css" name="styles.css" />
     <title>Pet Hotel - Upcoming Bookings</title>
-
+</h:head>
 <h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
    <div class="dashboard-wrapper">
-    <h1>Upcoming Bookings</h1>
+    <div class="dashboard-title">Upcoming Bookings</div>
 
     <!-- Card Navigation Strip -->
     <div class="card-container">
@@ -44,7 +45,7 @@
         </h:link>
 
         <!-- Total Bookings -->
-        <h:link outcome="viewBookings.xhtml" styleClass="card-link">
+        <h:link outcome="viewAllBookings.xhtml" styleClass="card-link">
             <div class="stat-card">
                 <div class="stat-title">Total Bookings</div>
                 <div class="stat-number">#{reservationList.numberOfReservations}</div>

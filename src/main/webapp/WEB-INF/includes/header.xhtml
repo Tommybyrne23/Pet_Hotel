@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+
+	<!-- Shared, role-aware navigation bar using custom CSS -->
+	<nav class="app-navbar">
+		<div class="navbar-container">
+
+			<!-- Brand logo and hotel name -->
+			<h:link styleClass="navbar-brand" outcome="/index">
+				<img src="#{request.contextPath}/images/logo.png" alt="3A Pet Hotel"
+				     onerror="this.style.display='none'" />
+				<span>Adam's Ark &amp; Avery</span>
+			</h:link>
+
+			<!-- Navigation Links -->
+			<ul class="navbar-menu">
+				<li class="nav-item"><h:link styleClass="nav-link" outcome="/index" value="Home" /></li>
+
+				<!-- Signed-in customers -->
+				<ui:fragment rendered="#{LoginBean.loggedIn and not LoginBean.admin}">
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/userDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/manageProfile" value="Manage Profile" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/makeBooking" value="New Booking" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/UserViewBookings" value="My Bookings" /></li>
+				</ui:fragment>
+
+				<!-- Administrators -->
+				<ui:fragment rendered="#{LoginBean.admin}">
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/adminDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/userList" value="Users" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/petManagement" value="Pets" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/bookings/onsite" value="On Site" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/viewPodsRooms" value="Pods &amp; Rooms" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/manageServices" value="Prices &amp; Services" /></li>
+				</ui:fragment>
+			</ul>
+
+			<!-- Right Section: Authentication status -->
+			<div class="navbar-user-section">
+				<!-- Signed-out visitors -->
+				<ui:fragment rendered="#{not LoginBean.loggedIn}">
+					<ul class="navbar-menu">
+						<li class="nav-item"><h:link styleClass="nav-link" outcome="/login" value="Login" /></li>
+						<li class="nav-item"><h:link styleClass="nav-link btn-nav-register" outcome="/registration" value="Register" /></li>
+					</ul>
+				</ui:fragment>
+
+				<!-- Signed-in user greeting + logout -->
+				<ui:fragment rendered="#{LoginBean.loggedIn}">
+					<h:form styleClass="navbar-logout-form">
+						<span class="navbar-text">Signed in as <strong>#{LoginBean.loggedInUser.name}</strong></span>
+						<h:commandLink styleClass="nav-link logout-link" action="#{LoginBean.logout}" value="Logout" />
+					</h:form>
+				</ui:fragment>
+			</div>
+
+		</div>
+	</nav>
+
+</ui:composition>

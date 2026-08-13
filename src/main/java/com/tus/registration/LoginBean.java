@@ -39,11 +39,11 @@ public class LoginBean implements Serializable {
                 loggedInUser = user;
 
                 if (user.getRole().equals(Role.ADMIN)) {
-                    return "adminDashboard?faces-redirect=true";
+                    return "/adminDashboard?faces-redirect=true";
                 } else if (user.getRole().equals(Role.CUSTOMER)) {
                     return "/userDashboard?faces-redirect=true";
                 } else {
-                    return "petAttendantDashboard?faces-redirect=true";
+                    return "/petAttendantDashboard?faces-redirect=true";
                 }
             }
         }
@@ -58,7 +58,7 @@ public class LoginBean implements Serializable {
             context.getExternalContext().invalidateSession();
         }
         loggedInUser = null; // explicitly clear state — see note below on why this matters
-        return "login?faces-redirect=true";
+        return "/index?faces-redirect=true";
     }
 
     private String handleUnauthorizedAccess(String messageText) {
@@ -67,7 +67,7 @@ public class LoginBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, messageText, null));
             context.getExternalContext().getFlash().setKeepMessages(true);
         }
-        return "login?faces-redirect=true";
+        return "/login?faces-redirect=true";
     }
     
 

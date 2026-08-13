@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
 
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
@@ -14,7 +16,10 @@
 </h:head>
 
 <h:body>
-    <h1>Registered Pets Directory</h1>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+    <div class="dashboard-wrapper">
+    
+    <div class="dashboard-title">Registered Pets Directory</div>
     <!-- Display total number of registered pets -->
     <center>
     <p>
@@ -73,6 +78,6 @@
 			</h:form>
 </center>
     <br />
-
+</div>
 </h:body>
 </html>

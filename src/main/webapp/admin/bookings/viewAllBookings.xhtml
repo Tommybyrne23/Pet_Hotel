@@ -15,8 +15,9 @@
 </h:head>
 
 <h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
 	<div class="dashboard-wrapper">  <!-- makes the page width slightly narrower, tables look better -->
-    <h1>Confirmed Bookings</h1>
+    <div class="dashboard-title">Confirmed Bookings</div>
 
     <div class="card-container">
         <h:link outcome="onsite.xhtml" styleClass="card-link">

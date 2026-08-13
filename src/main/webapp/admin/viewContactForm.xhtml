@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
-	xmlns:p="http://primefaces.org/ui">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
 <f:metadata>
     <!-- Checks the user is an admin before the view is rendered -->
     <f:viewAction action="#{LoginBean.checkAdminAccess}" />
@@ -14,14 +15,16 @@
 </h:head>
 
 <h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
 	<!--  TODO ONCE BOOKINGS HAVE BEEN MADE 
 	table created for the dashboard view  
 	This page has been made as a placeholder
 	-->
-	<h1>Contact Form Messages </h1>
+<div class="dashboard-wrapper">
+<div class="dashboard-title">Contact Form Messages </div>
 
 	<!-- Display total number of registered users -->
-	<center>
+
 		<p>
 			Number of messages: <strong>#{contactForm.numberOfMessages}</strong>
 		</p>
@@ -54,8 +57,8 @@
                              action="/adminDashboard?faces-redirect=true" 
                              class="btn-green50"/>
         </h:form>
-	</center>
-	<div class="dashboard-grid"></div>
+
+</div>
 	<br />
 
 </h:body>
