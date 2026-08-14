@@ -71,9 +71,10 @@
 					<h:outputLabel for="priceInput" value="Price (&#8364;):" />
 					<h:inputText id="priceInput" value="#{ServiceBean.editPrice}"
 						required="true"
-						requiredMessage="Please add a price for our little boarders."
-						converterMessage="Price must be a number, for example 25.00.">
-						<f:validateDoubleRange minimum="0.01" maximum="1000.00" />
+						requiredMessage="Please add a price."
+						converterMessage="Price must be a number, for example 25.00."
+						validatorMessage="Please enter a valid price between 0.01 and 10000.">
+						<f:validateDoubleRange minimum="0.01" maximum="10000.00" />
 					</h:inputText>
 					<h:message for="priceInput" errorClass="error-messages" />
 				</div>
