@@ -55,13 +55,24 @@
                      rendered="#{not empty reservationList.pastReservations}"
                      styleClass="productTable" headerClass="productTableHeader"
                      rowClasses="productTableOddRow, productTableEvenRow">
-            <h:column><f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
-            <h:column><f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
-            <h:column><f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
-            <h:column><f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
-            <h:column><f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
-            <h:column><f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
-            <h:column><f:facet name="header">Status</f:facet>#{booking.status}</h:column>
+       			    <h:column>
+						<f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
+					<h:column>
+						<f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
+					<h:column>
+						<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
+					<h:column>
+						<f:facet name="header">Pet</f:facet>#{booking.podName}</h:column>
+					<h:column>
+						<f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
+					<h:column>
+						<f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
+					<h:column>
+						<f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
+				<h:column>
+					<f:facet name="header">Pet Requirements</f:facet>#{petList.getRequirements(booking.petID)}</h:column>
+				<h:column>
+						<f:facet name="header">Status</f:facet>#{booking.status}</h:column>
         </h:dataTable>
 
         <h:outputText value="No past bookings found." rendered="#{empty reservationList.pastReservations}" />

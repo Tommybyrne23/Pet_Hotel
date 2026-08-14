@@ -16,6 +16,7 @@
 
 <h:body>
 <ui:include src="/WEB-INF/includes/header.xhtml" />
+
 	<div class="dashboard-wrapper">  <!-- makes the page width slightly narrower, tables look better -->
     <div class="dashboard-title">Confirmed Bookings</div>
 
@@ -53,30 +54,62 @@
         <p>
             Total system bookings: <strong>#{reservationList.numberOfReservations}</strong>
         </p>
+<!-- INSET FILTER LIST -->
 
-        <h:dataTable value="#{reservationList.reservations}" var="booking"
-                     rendered="#{not empty reservationList.reservations}"
-                     styleClass="productTable" headerClass="productTableHeader"
-                     rowClasses="productTableOddRow, productTableEvenRow">
-            <h:column><f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
-            <h:column><f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
-            <h:column><f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
-            <h:column><f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
-            <h:column><f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
-            <h:column><f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
-            <h:column><f:facet name="header">Status</f:facet>#{booking.status}</h:column>
-        </h:dataTable>
+			<!-- <h:panelGrid columns="3">
+				<h:form>
+					<div class="form-field">
+						<h:outputLabel for="iDInput" value="Name" />
+						<h:inputText id=iDInput value="#{searchBean.user.uID}">
+					</div>
 
-        <h:outputText value="No bookings found." rendered="#{empty reservationList.reservations}" />
+					<div class="form-field">
+						<h:outputLabel for="nameInput" value="Name" />
+						<h:inputText id="nameInput" value="#{RegistrationBean.user.name}"
+							required="true" requiredMessage="Name is required." />
+						<h:message for="nameInput" errorClass="field-error" />
+					</div>
 
-        <br /><br />
 
-        <h:form id="navigationForm">
-            <h:commandButton value="Back to Dashboard"
-                             action="/adminDashboard?faces-redirect=true" 
-                             styleClass="btn-green50"/>
-        </h:form>
-    </center>
+				</h:form>
+			</h:panelGrid> -->
+
+			<h:dataTable value="#{reservationList.reservations}" var="booking"
+					rendered="#{not empty reservationList.reservations}"
+					styleClass="productTable" headerClass="productTableHeader"
+					rowClasses="productTableOddRow, productTableEvenRow">
+					<h:column>
+						<f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
+					<h:column>
+						<f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
+					<h:column>
+						<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
+					<h:column>
+						<f:facet name="header">Pet</f:facet>#{booking.podName}</h:column>
+					<h:column>
+						<f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
+					<h:column>
+						<f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
+					<h:column>
+						<f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
+				<h:column>
+					<f:facet name="header">Pet Requirements</f:facet>#{petList.getRequirements(booking.petID)}</h:column>
+				<h:column>
+						<f:facet name="header">Status</f:facet>#{booking.status}</h:column>
+				</h:dataTable>
+
+				<h:outputText value="No bookings found."
+					rendered="#{empty reservationList.reservations}" />
+
+				<br />
+				<br />
+
+				<h:form id="navigationForm">
+					<h:commandButton value="Back to Dashboard"
+						action="/adminDashboard?faces-redirect=true"
+						styleClass="btn-green50" />
+				</h:form>
+		</center>
     
 </div>
     <br />
