@@ -31,7 +31,10 @@
 	
 		<!-- ===== SECTION 1: ADD A NEW SERVICE ===== -->
 
-		<div class="section-title">Add a service</div>
+		<div class="section-title">
+			<h:outputText value="Add a service" rendered="#{not ServiceBean.editing}" />
+			<h:outputText value="Edit service" rendered="#{ServiceBean.editing}" />
+		</div>
 
 		<div class="form-panel">
 			<h:form id="adminAddService">
@@ -68,16 +71,19 @@
 					<h:outputLabel for="priceInput" value="Price (&#8364;):" />
 					<h:inputText id="priceInput" value="#{ServiceBean.editPrice}"
 						required="true"
-						requiredMessage="Please add a price for our little boarders."
-						converterMessage="Price must be a number, for example 25.00.">
-						<f:validateDoubleRange minimum="0.01" maximum="1000.00" />
+						requiredMessage="Please add a price."
+						converterMessage="Price must be a number, for example 25.00."
+						validatorMessage="Please enter a valid price between 0.01 and 10000.">
+						<f:validateDoubleRange minimum="0.01" maximum="10000.00" />
 					</h:inputText>
 					<h:message for="priceInput" errorClass="error-messages" />
 				</div>
 
 
-				<!-- SERVICE TYPE - decides whether this shows as a pod or an extra -->
-				<div class="form-field">
+				<!-- SERVICE TYPE - fixed once the service exists, so it is
+				     shown read-only when editing -->
+				<h:panelGroup layout="block" styleClass="form-field"
+					rendered="#{not ServiceBean.editing}">
 					<h:outputLabel for="categoryInput" value="Service Type:" />
 					<h:selectOneMenu id="categoryInput" value="#{ServiceBean.editCategory}"
 						required="true" requiredMessage="Choose a service type.">
@@ -90,7 +96,13 @@
 
 					</h:selectOneMenu>
 					<h:message for="categoryInput" errorClass="error-messages" />
-				</div>
+				</h:panelGroup>
+
+				<h:panelGroup layout="block" styleClass="form-field"
+					rendered="#{ServiceBean.editing}">
+					<h:outputLabel value="Service Type:" />
+					<h:outputText value="#{ServiceBean.editCategory.label} (cannot be changed)" />
+				</h:panelGroup>
 
 				<!-- CHARGE TYPE - per night for the whole stay, or a single charge.
 				     Ignored for pods, which are always per night. -->
@@ -117,16 +129,20 @@
 				</div>
 
 
-				<!-- BUTTONS -->
-				<div style="display: flex; gap: 10px; margin-top: 15px;">
+				<h:commandButton value="Add Service" styleClass="btn-card-action"
+					rendered="#{not ServiceBean.editing}"
+					action="#{ServiceBean.addNewService}" />
 
-					<h:commandButton value="Add Service" styleClass="btn-card-action"
-						action="#{ServiceBean.addNewService}" />
+				<h:commandButton value="Save Changes" styleClass="btn-card-action"
+					rendered="#{ServiceBean.editing}" action="#{ServiceBean.saveEdit}" />
 
-					<h:commandButton value="Reset" styleClass="btn-card-outline"
-						immediate="true" action="#{ServiceBean.reset}" />
+				<h:commandButton value="Reset" styleClass="btn-card-outline"
+					rendered="#{not ServiceBean.editing}" immediate="true"
+					action="#{ServiceBean.reset}" />
 
-				</div>
+				<h:commandButton value="Cancel Edit" styleClass="btn-card-outline"
+					rendered="#{ServiceBean.editing}" immediate="true"
+					action="#{ServiceBean.reset}" />
 
 			</h:form>
 		</div>
@@ -137,6 +153,7 @@
 		<div class="section-title">Current services</div>
 
 		<div class="table-card">
+		<h:form id="serviceTableForm">
 
 			<p style="margin-top: 0; color: #555555;">
 				Total services: <strong>#{serviceList.numberOfServices}</strong>
@@ -193,9 +210,15 @@
 					</ui:repeat>
 
 				</h:column>
-
+				
+				<h:column>
+					<f:facet name="header">Actions</f:facet>
+					<h:commandButton value="Edit" styleClass="btn-card-outline"
+						action="#{ServiceBean.startEdit(service)}" />
+				</h:column>
+				
 			</h:dataTable>
-
+			</h:form>
 		</div>
 
 		<br />

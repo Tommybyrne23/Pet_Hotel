@@ -84,6 +84,64 @@ public class ServiceBean implements Serializable {
 		return reset();
 	}
 
+	public boolean isEditing() {
+		return editingServiceID > 0;
+	}
+
+
+	// Loads an existing service into the same form used for adding
+	public String startEdit(Service service) {
+
+		if (service == null) {
+			return null;
+		}
+
+		editingServiceID = service.getServiceID();
+		editName = service.getName();
+		editDescription = service.getDescription();
+		editPrice = service.getPrice();
+		editCategory = service.getCategory();
+		editChargeType = service.getChargeType();
+		editSpecies = new ArrayList<>(service.getApplicableSpecies());
+
+		return null;			// stay on the page, form now filled in
+	}
+
+
+	// Saves the admin's changes back to the service
+	public String saveEdit() {
+
+		if (!isEditing()) {
+			return null;
+		}
+
+		if (editName == null || editName.trim().isEmpty()) {
+			addError("nameInput", "A service name is required.");
+			return null;
+		}
+
+		if (editPrice == null || editPrice <= 0) {
+			addError("priceInput", "Enter a valid price greater than zero.");
+			return null;
+		}
+
+		// A pod is the nightly boarding rate, so it is always per night
+		if (editCategory == ServiceCategory.POD) {
+			editChargeType = ChargeType.PER_NIGHT;
+		}
+
+		boolean updated = serviceList.updateService(editingServiceID,
+				editName, editDescription, editPrice, editChargeType, editSpecies);
+
+		if (!updated) {
+			addError("nameInput", "A service with that name already exists.");
+			return null;
+		}
+
+		addSuccess(editName.trim() + " has been updated.");
+
+		return reset();
+	}
 
 	// Clears the form and reloads the page. The redirect matters - see notes.
 	public String reset() {
@@ -189,8 +247,12 @@ public class ServiceBean implements Serializable {
 		this.editChargeType = editChargeType;
 	}
 	
+	public int getEditingServiceID() {
+		return editingServiceID;
+	}
+	
 	// Fills the per night / one-off radio buttons
-		public ChargeType[] getChargeTypeOptions() {
-			return ChargeType.values();
-		}
+	public ChargeType[] getChargeTypeOptions() {
+		return ChargeType.values();
+	}
 }
