@@ -29,9 +29,9 @@ public class PetList implements Serializable {
 	public void init() {
 		if (pets.isEmpty()) {
 			// User ID 3 corresponds to "Customer User" (user@3apets.ie)
-			addPet(new Pet(3, "Buddy", Species.DOG, "Golden Retriever", "3", "Requires morning medication."));
-			addPet(new Pet(3, "Luna", Species.CAT, "Siamese", "2", "Needs a quiet room away from dogs."));
-			addPet(new Pet(3, "Max", Species.DOG, "Beagle", "4", "Loves extra outdoor walks."));
+			addPet(new Pet(3, "Buddy", Species.DOG, "Golden Retriever", "4–7 years", "Requires morning medication."));
+			addPet(new Pet(3, "Luna", Species.CAT, "Siamese", "8–12 years", "Needs a quiet room away from dogs."));
+			addPet(new Pet(3, "Max", Species.DOG, "Beagle", "1–3 years", "Loves extra outdoor walks."));
 		}
 	}
 
