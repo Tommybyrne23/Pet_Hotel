@@ -50,7 +50,7 @@ public class ServiceList implements Serializable {
 		// no species listed = available to every pet type
 		seed("Premium Food", "Upgraded meals tailored to your pet's dietary needs.",
 				8.00, ServiceCategory.EXTRA);
-		
+
 		// One-off services are charged once for the whole stay, not per night
 		Service grooming = seed("Grooming",
 				"Full grooming session during your pet's stay.",
@@ -83,30 +83,30 @@ public class ServiceList implements Serializable {
 
 
 	// A service name must be unique
-		public boolean isNameTaken(String name) {
-			return isNameTakenByAnother(name, 0);
-		}
+	public boolean isNameTaken(String name) {
+		return isNameTakenByAnother(name, 0);
+	}
 
-		// Same check, but skips one service. Used when editing, so a service
-		// does not clash with its own name.
-		public boolean isNameTakenByAnother(String name, int ignoreServiceID) {
+	// Same check, but skips one service. Used when editing, so a service
+	// does not clash with its own name.
+	public boolean isNameTakenByAnother(String name, int ignoreServiceID) {
 
-			if (name == null) {
-				return false;
-			}
-
-			for (Service existing : services) {
-
-				if (existing.getServiceID() == ignoreServiceID) {
-					continue;
-				}
-
-				if (name.trim().equalsIgnoreCase(existing.getName())) {
-					return true;
-				}
-			}
+		if (name == null) {
 			return false;
 		}
+
+		for (Service existing : services) {
+
+			if (existing.getServiceID() == ignoreServiceID) {
+				continue;
+			}
+
+			if (name.trim().equalsIgnoreCase(existing.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 	// adds the service only if it has a name and the name is free
@@ -125,6 +125,30 @@ public class ServiceList implements Serializable {
 		return true;
 	}
 
+	// Applies the admin's changes to an existing service.
+	// Pods cannot be changed to services or vice versa.
+	public boolean updateService(int serviceID, String name, String description,
+			double price, ChargeType chargeType, List<String> species) {
+
+		Service service = findByID(serviceID);
+
+		if (service == null || name == null || name.trim().isEmpty() || price <= 0) {
+			return false;
+		}
+
+		if (isNameTakenByAnother(name, serviceID)) {
+			return false;
+		}
+
+		service.setName(name.trim());
+		service.setDescription(description == null ? "" : description.trim());
+		service.setPrice(price);
+		service.setChargeType(chargeType);
+		service.setApplicableSpecies(species == null ? new ArrayList<>() : new ArrayList<>(species));
+
+		return true;
+	}
+
 	// for selectManyCheckbox on the admin form
 	public List<String> getSpeciesOptions() {
 		return SPECIES_OPTIONS;
@@ -134,28 +158,28 @@ public class ServiceList implements Serializable {
 	public ArrayList<Service> getServices() {
 		return services;
 	}
-	
+
 	public List<Service> getServicesForSpecies(String species) {
 
-	    List<Service> matchingServices = new ArrayList<>();
+		List<Service> matchingServices = new ArrayList<>();
 
-	    for (Service service : services) {
+		for (Service service : services) {
 
-	        // No species means the service is available to every pet type
-	        if (service.getApplicableSpecies() == null
-	                || service.getApplicableSpecies().isEmpty()) {
+			// No species means the service is available to every pet type
+			if (service.getApplicableSpecies() == null
+					|| service.getApplicableSpecies().isEmpty()) {
 
-	            matchingServices.add(service);
-	            continue;
-	        }
+				matchingServices.add(service);
+				continue;
+			}
 
-	        // Add the service if it applies to this species
-	        if (service.getApplicableSpecies().contains(species)) {
-	            matchingServices.add(service);
-	        }
-	    }
+			// Add the service if it applies to this species
+			if (service.getApplicableSpecies().contains(species)) {
+				matchingServices.add(service);
+			}
+		}
 
-	    return matchingServices;
+		return matchingServices;
 	}
 
 	// the booking page needs pods and extras separately, and only the
@@ -185,7 +209,7 @@ public class ServiceList implements Serializable {
 		}
 		return matches;
 	}
-	
+
 	public Service findByID(int serviceID) {
 
 		for (Service service : services) {
@@ -195,7 +219,7 @@ public class ServiceList implements Serializable {
 		}
 		return null;
 	}
-	
+
 	public Service findByName(String name) {
 
 		if (name == null) {
