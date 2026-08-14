@@ -702,4 +702,87 @@ input[type="checkbox"] {
 	margin-top: 4px;
 	font-size: 13px;
 }
-    
+
+
+/* -----------------------------------------------------------
+
+   SEARCH PANEL & FILTER INPUTS (Unified with login styling)
+
+   ----------------------------------------------------------- */
+
+.search-panel {
+	background-color: #ffffff;
+	border: 1px solid #eae7dd;
+	border-radius: 14px;
+	padding: 20px 25px;
+	max-width: 950px;
+	margin: 25px auto;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-panel label {
+	font-size: 14px;
+	font-weight: bold;
+	color: #4E342E;
+}
+
+/* Standard Text Inputs */
+.search-panel input[type="text"],
+.search-panel .ui-inputfield {
+	width: 100%;
+	padding: 10px 12px;
+	font-size: 14px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-panel input[type="text"]:focus,
+.search-panel .ui-inputfield.ui-state-focus {
+	outline: none;
+	border-color: #2C5F2D !important;
+	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15) !important;
+}
+
+/* --------------------------------------------------
+
+   	PRIMEFACES DATEPICKER OVERRIDES (Theme Matching) 
+   
+   -------------------------------------------------- */
+
+/* Recolor the calendar trigger button from blue to forest green */
+.search-panel .ui-datepicker-trigger.ui-button {
+	background-color: #2C5F2D !important;
+	border-color: #2C5F2D !important;
+	border-top-right-radius: 8px !important;
+	border-bottom-right-radius: 8px !important;
+}
+
+.search-panel .ui-datepicker-trigger.ui-button:hover {
+	background-color: #234A24 !important;
+	border-color: #234A24 !important;
+}
+
+/* Calendar Popup Colors */
+.ui-datepicker {
+	font-family: Arial, sans-serif !important;
+	border-radius: 8px !important;
+	border: 1px solid #cfc3ba !important;
+}
+
+.ui-datepicker .ui-datepicker-header {
+	background-color: #1e5631 !important;
+	color: #ffffff !important;
+	border: none !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar td a.ui-state-active,
+.ui-datepicker .ui-datepicker-calendar td a.ui-state-highlight {
+	background-color: #2C5F2D !important;
+	color: #ffffff !important;
+	border-radius: 4px;
+}    
