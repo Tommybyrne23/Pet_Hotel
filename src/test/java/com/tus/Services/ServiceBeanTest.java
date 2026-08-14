@@ -28,6 +28,8 @@ class ServiceBeanTest {
 		bean.setServiceList(serviceList);
 	}
 	
+	// Mirrors the input of a admin filling out a form on manageServices.xhtml. 
+	// Created to quickly set the fields for the bean for each test.
 	private void fillValidForm() {
 		bean.setEditName("Nail Clipping");
 		bean.setEditDescription("A quick nail trim during your pet's stay.");
