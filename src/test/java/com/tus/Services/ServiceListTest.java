@@ -43,6 +43,15 @@ class ServiceListTest {
 		return false;
 	}
 
+	private Service findInList(List<Service> services, String name) {
+		for (Service service : services) {
+			if (name.equals(service.getName())) {
+				return service;
+			}
+		}
+		return null;
+	}
+
 
 	// A NEW SERVICE APPEARS ON THE HOMEPAGE 
 
@@ -190,5 +199,157 @@ class ServiceListTest {
 		assertFalse(serviceList.addService(null));
 		assertFalse(serviceList.addService(new Service("   ", "No name", 10.00, ServiceCategory.EXTRA)));
 		assertEquals(before, serviceList.getNumberOfServices());
+	}
+
+	// UPDATING AN EXISTING SERVICE
+
+	@Test
+	@DisplayName("Test 14: an admin's changes are saved against the service")
+	void updateChangesTheDetails() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+
+		boolean updated = serviceList.updateService(service.getServiceID(),
+				"Nail Trimming", "A longer trim.", 15.00,
+				ChargeType.ONE_OFF, List.of("Dog", "Cat"));
+
+		assertTrue(updated);
+		assertEquals("Nail Trimming", service.getName());
+		assertEquals("A longer trim.", service.getDescription());
+		assertEquals(15.00, service.getPrice());
+		assertEquals(ChargeType.ONE_OFF, service.getChargeType());
+		assertEquals(List.of("Dog", "Cat"), service.getApplicableSpecies());
+	}
+
+	@Test
+	@DisplayName("Test 15: a price can be changed without changing the name")
+	void priceOnlyUpdateIsAllowed() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+		assertTrue(serviceList.updateService(service.getServiceID(), "Nail Clipping", "Test description", 20.00, ChargeType.PER_NIGHT, List.of("Dog")));
+		assertEquals(20.00, service.getPrice());
+		assertEquals("Nail Clipping", service.getName());
+	}
+
+	@Test
+	@DisplayName("Test 16: a service cannot be renamed to another service's name")
+	void renameToAnExistingNameIsBlocked() {
+
+		addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+		Service other = addService("Nail Filing", 9.00, ServiceCategory.EXTRA, "Dog");
+		assertFalse(serviceList.updateService(other.getServiceID(), "NAIL CLIPPING", "Test description", 9.00, ChargeType.PER_NIGHT, List.of("Dog")));
+		assertEquals("Nail Filing", other.getName());
+	}
+
+	@Test
+	@DisplayName("Test 17: an invalid price is rejected and nothing is changed")
+	void invalidPriceIsRejected() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+
+		assertFalse(serviceList.updateService(service.getServiceID(), "Nail Trimming", "Changed", -5.00, ChargeType.ONE_OFF, List.of("Cat")));
+
+		assertFalse(serviceList.updateService(service.getServiceID(), "Nail Trimming", "Changed", 0.00, ChargeType.ONE_OFF, List.of("Cat")));
+
+		// a rejected update must not leave the service half-changed
+		assertEquals("Nail Clipping", service.getName());
+		assertEquals(12.50, service.getPrice());
+		assertEquals("Test description", service.getDescription());
+	}
+
+	@Test
+	@DisplayName("Test 18: a service cannot be renamed to a blank name")
+	void blankNameUpdateIsRejected() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+
+		assertFalse(serviceList.updateService(service.getServiceID(), "   ",
+				"Test description", 12.50, ChargeType.PER_NIGHT, List.of("Dog")));
+
+		assertEquals("Nail Clipping", service.getName());
+	}
+
+	@Test
+	@DisplayName("Test 19: updating a service that does not exist changes nothing")
+	void unknownServiceIsNotUpdated() {
+
+		int before = serviceList.getNumberOfServices();
+
+		assertFalse(serviceList.updateService(-1, "Ghost Service", "Nothing here",
+				10.00, ChargeType.PER_NIGHT, List.of("Dog")));
+
+		assertEquals(before, serviceList.getNumberOfServices());
+	}
+
+	@Test
+	@DisplayName("Test 20: the updated service keeps its own copy of the species list")
+	void updatedSpeciesListIsCopied() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+		List<String> species = new ArrayList<>(List.of("Cat"));
+
+		serviceList.updateService(service.getServiceID(), "Nail Clipping",
+				"Test description", 12.50, ChargeType.PER_NIGHT, species);
+
+		// changing the list afterwards must not change the saved service
+		species.add("Bird");
+
+		assertEquals(List.of("Cat"), service.getApplicableSpecies());
+	}
+
+
+	// AC2 AND AC3: THE CHANGE REACHES THE HOMEPAGE AND THE BOOKING PAGE
+
+	@Test
+	@DisplayName("Test 21: AC2 - the homepage listing shows the updated price")
+	void homepageListingShowsTheNewPrice() {
+
+		Service service = addService("Reptile Handling", 18.00, ServiceCategory.EXTRA, "Reptile");
+
+		serviceList.updateService(service.getServiceID(), "Reptile Handling",
+				"Test description", 25.00, ChargeType.PER_NIGHT, List.of("Reptile"));
+
+		Service listed = findInList(serviceList.getServicesForSpecies("Reptile"), "Reptile Handling");
+
+		assertNotNull(listed);
+		assertEquals(25.00, listed.getPrice());
+	}
+
+	@Test
+	@DisplayName("Test 22: AC3 - the booking page offers the pod at its updated price")
+	void bookingPodShowsTheNewPrice() {
+
+		Service pod = addService("Small Mammal Boarding", 22.00, ServiceCategory.POD, "Dog");
+
+		serviceList.updateService(pod.getServiceID(), "Small Mammal Boarding",
+				"Test description", 28.00, ChargeType.PER_NIGHT, List.of("Dog"));
+
+		Service offered = findInList(serviceList.getPodsForSpecies("Dog"), "Small Mammal Boarding");
+
+		assertNotNull(offered);
+		assertEquals(28.00, offered.getPrice());
+	}
+
+	@Test
+	@DisplayName("Test 23: changing the species moves the service between listings")
+	void changingSpeciesMovesTheService() {
+
+		Service service = addService("Reptile Handling", 18.00, ServiceCategory.EXTRA, "Reptile");
+
+		serviceList.updateService(service.getServiceID(), "Reptile Handling",
+				"Test description", 18.00, ChargeType.PER_NIGHT, List.of("Bird"));
+
+		assertFalse(containsName(serviceList.getServicesForSpecies("Reptile"), "Reptile Handling"));
+		assertTrue(containsName(serviceList.getServicesForSpecies("Bird"), "Reptile Handling"));
+	}
+
+	@Test
+	@DisplayName("Test 24: the duplicate check ignores the service being edited")
+	void nameCheckSkipsTheServiceBeingEdited() {
+
+		Service service = addService("Nail Clipping", 12.50, ServiceCategory.EXTRA, "Dog");
+
+		assertFalse(serviceList.isNameTakenByAnother("Nail Clipping", service.getServiceID()));
+		assertTrue(serviceList.isNameTakenByAnother("Nail Clipping", 0));
 	}
 }
