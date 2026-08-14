@@ -18,6 +18,8 @@ class ServiceBeanTest {
 
 	private ServiceBean bean;
 	private ServiceList serviceList;
+	private Service service;
+	
 
 	@BeforeEach
 	void setUp() {
@@ -25,8 +27,7 @@ class ServiceBeanTest {
 		bean = new ServiceBean();
 		bean.setServiceList(serviceList);
 	}
-
-	/* Fills the form with details that should always be accepted. */
+	
 	private void fillValidForm() {
 		bean.setEditName("Nail Clipping");
 		bean.setEditDescription("A quick nail trim during your pet's stay.");
