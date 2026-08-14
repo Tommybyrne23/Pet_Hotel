@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
@@ -11,13 +11,16 @@
 </h:head>
 
 <h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
 
-	<h1>User Dashboard</h1>
-
-	<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
-		style="font-size: 18px; font-weight: bold; display: block;
-			margin-bottom: 10px;" />
-
+		<!-- Page Header -->
+		<div class="dashboard-title">User Dashboard</div>
+		<div class="dashboard-subtitle">
+			Ahoy there, <strong>#{LoginBean.loggedInUser.name}</strong>
+			(#{LoginBean.loggedInUser.role.label}).
+		</div>
+	
 	<h:form styleClass="account">
 		<div class="dashboard-grid">
 
@@ -65,6 +68,7 @@
 
 		</div>
 	</h:form>
-
+	</div>
+    <ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
 </html>

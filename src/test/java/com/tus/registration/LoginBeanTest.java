@@ -28,7 +28,7 @@ class LoginBeanTest {
 		loginBean.setEmail("a00347373@student.tus.ie");
 		loginBean.setPassword("password");
 		String outcome = loginBean.login();
-		assertEquals("userDashboard?faces-redirect=true", outcome);
+		assertEquals("/userDashboard?faces-redirect=true", outcome);
 		assertEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
 	}
 	
@@ -55,7 +55,7 @@ class LoginBeanTest {
 		loginBean.setEmail("admin@3apets.ie");
 		loginBean.setPassword("admin123");
 		String outcome = loginBean.login();
-		assertEquals("adminDashboard?faces-redirect=true", outcome);
+		assertEquals("/adminDashboard?faces-redirect=true", outcome);
 		boolean isAdmin = loginBean.isAdmin();
 		assertTrue(isAdmin);
 		boolean attendantCheck =loginBean.isAttendant();
@@ -70,7 +70,7 @@ class LoginBeanTest {
 		loginBean.setEmail("user@3apets.ie");
 		loginBean.setPassword("user123");
 		String outcome = loginBean.login();
-		assertEquals("userDashboard?faces-redirect=true", outcome);
+		assertEquals("/userDashboard?faces-redirect=true", outcome);
 		boolean loggedInCheck = loginBean.isLoggedIn();
 		boolean adminCheck = loginBean.isAdmin();
 		boolean attendantCheck =loginBean.isAttendant();
@@ -87,7 +87,7 @@ class LoginBeanTest {
 		loginBean.setEmail("attendant@3apets.ie");
 		loginBean.setPassword("attendant123");
 		String outcome = loginBean.login();
-		assertEquals("petAttendantDashboard?faces-redirect=true", outcome);
+		assertEquals("/attendantDashboard?faces-redirect=true", outcome);
 		boolean loggedInCheck = loginBean.isLoggedIn();
 		boolean adminCheck = loginBean.isAdmin();
 		boolean attendantCheck =loginBean.isAttendant();
@@ -107,7 +107,7 @@ class LoginBeanTest {
 	String outcome = loginBean.login();
 	
 	//confirm the user is logged in 
-	assertEquals("userDashboard?faces-redirect=true", outcome);
+	assertEquals("/userDashboard?faces-redirect=true", outcome);
 	boolean loggedInCheck = loginBean.isLoggedIn();
 	assertTrue(loggedInCheck);
 	
