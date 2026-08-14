@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core">
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<!-- Checks the user is an admin before the view is rendered -->
+	<f:viewAction action="#{LoginBean.checkAttendantAccess}" />
+</f:metadata>
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
@@ -8,22 +14,162 @@
 </h:head>
 
 <h:body>
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
 
-	<h1>Attendant Dashboard</h1>
+		<!-- Page Header -->
+		<div class="dashboard-title">Pet Attendant Dashboard</div>
+		<div class="dashboard-subtitle">
+			A quick look at the hotel right now, <strong>#{LoginBean.loggedInUser.name}</strong>
+			(#{LoginBean.loggedInUser.role.label}).
+		</div>
 
-	<h:form>
-		<h:panelGrid columns="1" styleClass="account">
-			<div class="dashboard-grid">
-
-				<!-- Welcome message showing the logged in user name -->
-				<h:outputText value="Welcome, #{LoginBean.loggedInUser.name}!"
-					style="font-size: 18px; font-weight: bold;" />
-
-				<!-- Logout button -->
-				<h:commandButton value="Logout" action="#{LoginBean.logout}" />
+		<!-- Metric Cards Bar -->
+		<div class="metrics-row">
+			<div class="metric-card">
+				<div class="metric-value">#{reservationList.activeBookings.size()}</div>
+				<div class="metric-label">On site now</div>
 			</div>
-		</h:panelGrid>
-	</h:form>
+			<div class="metric-card">
+				<div class="metric-value">#{userList.numberOfUsers}</div>
+				<div class="metric-label">Customers</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-value">#{petList.numberOfPets}</div>
+				<div class="metric-label">Pets</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-value">#{reservationList.numberOfReservations}</div>
+				<div class="metric-label">Bookings</div>
+			</div>
+		</div>
+
+		<!-- Updated the table from the reservation booking form used before, 
+			 commented out the items we don't need according to the user story  -->
+			 
+		<div class="section-title">Who's aboard</div>
+		<p>Pets currently boarding with us</p>
+
+		<h:dataTable value="#{reservationList.activeBookings}" var="booking"
+			rendered="#{not empty reservationList.activeBookings}"
+			styleClass="productTable" headerClass="productTableHeader"
+			rowClasses="productTableOddRow, productTableEvenRow">
+			<!-- <h:column>
+				<f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column> -->
+			<!-- <h:column>
+				<f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column> -->
+			<h:column>
+				<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
+			<h:column>
+				<f:facet name="header">Pod</f:facet>#{booking.podName}</h:column>
+			<h:column>
+				<f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
+			<h:column>
+				<f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
+<!-- 			<h:column>
+				<f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column> -->
+			<h:column>
+				<f:facet name="header">Pet Requirements</f:facet>#{petList.getRequirements(booking.petID)}</h:column>
+			<h:column>
+				<f:facet name="header">Extras</f:facet>#{booking.extras}</h:column> 
+		</h:dataTable>
+
+		<h:outputText value="No pets currently on-site."
+			rendered="#{empty reservationList.activeBookings}" />
+
+
+
+
+		<!-- Manage Section Title -->
+		<div class="section-title">Manage</div>
+
+		<!-- Management Actions Grid -->
+		<h:form id="dashboardForm">
+			<div class="manage-grid">
+					
+<!-- 
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customers &amp; Users</div>
+                        <div class="manage-card-desc">Search customers, manage user accounts, roles, and profile settings.</div>
+                    </div>
+                    <h:commandButton value="Manage users"
+                                     styleClass="btn-card-action"
+                                     action="/admin/userList?faces-redirect=true"/>
+                </div> 
+ -->
+				<!-- On Site & Registered Pets -->
+				<div class="manage-card">
+					<div>
+						<div class="manage-card-title">Registered Pets</div>
+						<div class="manage-card-desc">Review and manage registered
+							pets and special requirements on our system.</div>
+					</div>
+					<h:commandButton value="View all pets" styleClass="btn-card-action"
+						action="/admin/petManagement?faces-redirect=true" />
+				</div>
+
+				<!-- Bookings & Reservations -->
+				<div class="manage-card">
+					<div>
+						<div class="manage-card-title">Reservations</div>
+						<div class="manage-card-desc">Review and confirm current
+							customer bookings and past stay histories.</div>
+					</div>
+					<h:commandButton value="View all bookings"
+						styleClass="btn-card-action"
+						action="/admin/bookings/allBookings?faces-redirect=true" />
+				</div>
+				<!-- 
+                Listings & Prices
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Listings &amp; prices</div>
+                        <div class="manage-card-desc">Manage, add, or update extra service offerings and nightly rates.</div>
+                    </div>
+                    <h:commandButton value="Edit prices"
+                                     styleClass="btn-card-outline"
+                                     action="/admin/manageServices?faces-redirect=true"/>
+                </div>
+
+                Facility Capacity (Pods/Rooms)
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Pods &amp; rooms</div>
+                        <div class="manage-card-desc">Inspect facility occupancy, pod allocations, and room inventory.</div>
+                    </div>
+                    <h:commandButton value="Manage capacity"
+                                     styleClass="btn-card-action" 
+                                     action="/admin/viewPodsRooms?faces-redirect=true"/>
+                </div>
+
+                Contact Messages
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customer Messages</div>
+                        <div class="manage-card-desc">Read customer inquiries submitted through the website contact form.</div>
+                    </div>
+                    <h:commandButton value="View messages"
+                                     styleClass="btn-card-action"
+                                     action="/admin/viewContactForm?faces-redirect=true"/>
+                </div>
+ -->
+				<!-- Logout Card -->
+				<div class="manage-card">
+					<div>
+						<div class="manage-card-title" style="color: #c0392b;">Session</div>
+						<div class="manage-card-desc">End the current administrative
+							session and exit securely.</div>
+					</div>
+					<h:commandButton value="Logout" styleClass="btn-card-logout"
+						action="#{LoginBean.logout}" />
+				</div>
+
+			</div>
+		</h:form>
+
+	</div>
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
 
 </h:body>
 </html>

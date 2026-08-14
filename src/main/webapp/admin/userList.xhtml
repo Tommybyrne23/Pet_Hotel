@@ -78,10 +78,10 @@
 
         <br />
         <!-- Wrapped in h:form so action navigation works properly -->
-        <h:form id="navigationForm">
-            <h:commandButton value="Back to Dashboard"
-                action="/adminDashboard?faces-redirect=true" class="btn-green50" />
-        </h:form>
+      <h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
 
         <br />
     </div>

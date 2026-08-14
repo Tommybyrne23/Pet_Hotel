@@ -225,9 +225,9 @@
 
 		<!-- Wrapped in h:form so action navigation works properly -->
 		<center style="margin: 30px 0;">
-			<h:form id="navigationForm">
-				<h:commandButton value="Back to Dashboard" styleClass="btn-green50"
-					action="/adminDashboard?faces-redirect=true" />
+			<h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
 			</h:form>
 		</center>
 	<br />
