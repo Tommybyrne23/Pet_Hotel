@@ -30,7 +30,7 @@ public class PetList implements Serializable {
 		if (pets.isEmpty()) {
 			// User ID 3 corresponds to "Customer User" (user@3apets.ie)
 			addPet(new Pet(3, "Buddy", Species.DOG, "Golden Retriever", "4–7 years", "Requires morning medication."));
-			addPet(new Pet(3, "Luna", Species.CAT, "Siamese", "8–12 years", "Needs a quiet room away from dogs."));
+			addPet(new Pet(3, "Luna", Species.CAT, "Siamese", "8–12 years ", "Needs a quiet room away from dogs."));
 			addPet(new Pet(3, "Max", Species.DOG, "Beagle", "1–3 years", "Loves extra outdoor walks."));
 		}
 	}
@@ -44,6 +44,11 @@ public class PetList implements Serializable {
 	// Add a pet to the list
 	public void addPet(Pet pet) {
 		pets.add(pet);
+	}
+	
+	public void removePet(int petID) {
+
+	    pets.removeIf(pet -> pet.getPetID() == petID);
 	}
 
 
