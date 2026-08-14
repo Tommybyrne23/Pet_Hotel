@@ -179,15 +179,13 @@ public class PodList implements Serializable {
 		LocalDate checkIn = parseDate(checkInDate);
 		LocalDate checkOut = parseDate(checkOutDate);
 
-		if (pod == null || checkIn == null || checkOut == null
-				|| !checkOut.isAfter(checkIn) || pod.isOutOfService()) {
+		if (pod == null || checkIn == null || checkOut == null || !checkOut.isAfter(checkIn) || pod.isOutOfService()) {
 			return false;
 		}
 
 		for (Reservation reservation : reservationList.getReservations()) {
 
-			if (reservation.getPodID() != podID
-					|| !"Confirmed".equalsIgnoreCase(reservation.getStatus())) {
+			if (reservation.getPodID() != podID || !"Confirmed".equalsIgnoreCase(reservation.getStatus())) {
 				continue;
 			}
 
