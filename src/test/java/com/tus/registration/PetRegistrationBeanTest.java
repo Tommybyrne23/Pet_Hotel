@@ -58,6 +58,8 @@ class PetRegistrationBeanTest {
         );
 
         loginBean.setLoggedInUser(user);
+        
+        bean.setVaccinated(true);
 
         // Enter pet details
         bean.getPet().setName("Buddy");
@@ -102,6 +104,8 @@ class PetRegistrationBeanTest {
         );
 
         loginBean.setLoggedInUser(user);
+        
+        bean.setVaccinated(true);
 
         bean.getPet().setName("Buddy");
         bean.getPet().setSpecies(Species.DOG);
@@ -383,6 +387,8 @@ class PetRegistrationBeanTest {
         );
 
         loginBean.setLoggedInUser(user);
+        
+        bean.setVaccinated(true);
 
         bean.getPet().setName("Buddy");
         bean.getPet().setSpecies(Species.DOG);
@@ -421,6 +427,8 @@ class PetRegistrationBeanTest {
         );
 
         loginBean.setLoggedInUser(user);
+        
+        bean.setVaccinated(true);
 
         bean.getPet().setName("Buddy");
         bean.getPet().setSpecies(Species.DOG);
@@ -440,6 +448,37 @@ class PetRegistrationBeanTest {
                 0,
                 petList.getNumberOfPets(),
                 "Pet should not be added when requirements exceed 200 characters"
+        );
+    }
+    
+    @Test
+    @DisplayName("Test: pet cannot be registered if it is not vaccinated")
+    void testPetRegistrationWithoutVaccination() {
+
+        User user = new User(
+                "Mary",
+                "mary@gmail.com",
+                "pass123"
+        );
+
+        loginBean.setLoggedInUser(user);
+
+        bean.setVaccinated(false);
+
+        bean.getPet().setName("Buddy");
+        bean.getPet().setSpecies(Species.DOG);
+        bean.getPet().setBreed("Labrador");
+        bean.getPet().setAge("1–3 years");
+        bean.getPet().setRequirements("");
+
+        String outcome = bean.register();
+
+        assertNull(outcome);
+
+        assertEquals(
+                0,
+                petList.getNumberOfPets(),
+                "Pet should not be registered when it is not vaccinated"
         );
     }
 }

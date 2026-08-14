@@ -245,6 +245,23 @@
 	text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
 }
 
+/* Vaccination Checkbox */
+
+.vaccination-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.vaccination-option input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin: 0 0 0 5px;
+    border: none;
+    box-shadow: none;
+}
+
 
 /* RESPONSIVENESS */
 
@@ -282,4 +299,5 @@
 	.pet-reg-page .reg-form {
 	    max-width: 500px;
 	}
+	
 }

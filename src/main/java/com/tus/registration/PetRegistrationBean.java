@@ -1,6 +1,9 @@
 package com.tus.registration;
 
 import java.io.Serializable;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,8 @@ import jakarta.inject.Named;
 public class PetRegistrationBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    private boolean vaccinated;
 
     // The pet currently being registered
     private Pet pet;
@@ -49,6 +54,14 @@ public class PetRegistrationBean implements Serializable {
 
     public void setPet(Pet pet) {
         this.pet = pet;
+    }
+    
+    public boolean isVaccinated() {
+        return vaccinated;
+    }
+
+    public void setVaccinated(boolean vaccinated) {
+        this.vaccinated = vaccinated;
     }
 
     public List<SelectItem> getAgeRanges() {
@@ -111,6 +124,10 @@ public class PetRegistrationBean implements Serializable {
 
     // Register the pet
     public String register() {
+    	
+    	if (!vaccinated) {
+    	    return null;
+    	}
 
         int userID = loginBean.getLoggedInUser().getUserID();
 
