@@ -28,6 +28,9 @@ public class ServiceBean implements Serializable {
 	private ServiceCategory editCategory;
 	private ChargeType editChargeType = ChargeType.PER_NIGHT; // defaults to per night so the radio always has a selection
 	private List<String> editSpecies = new ArrayList<>();
+	
+	private int editingServiceID = 0;    // 0 means the form is in "add" mode. Anything else is the id of the
+										// service currently being edited.
 
 	@Inject
 	private ServiceList serviceList;
@@ -84,7 +87,7 @@ public class ServiceBean implements Serializable {
 
 	// Clears the form and reloads the page. The redirect matters - see notes.
 	public String reset() {
-
+		editingServiceID = 0;
 		editName = null;
 		editDescription = null;
 		editPrice = null;
