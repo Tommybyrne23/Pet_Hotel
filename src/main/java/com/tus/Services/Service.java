@@ -28,8 +28,7 @@ public class Service implements Serializable {
 	    this.name = name;
 	    this.description = description;
 	    this.price = price;
-	    this.category = category;
-	    this.chargeType= chargeType;
+	    this.category = category;    
 	}
 
 	private List<String> applicableSpecies = new ArrayList<>();

@@ -201,9 +201,36 @@
                     <h:message
                         for="requirementsInput"
                         errorClass="field-error" />
-
+                        
                 </div>
 
+				<!-- VACCINATION -->
+				
+				<div class="form-field">
+				
+				    <h:outputLabel
+				        for="vaccinatedInput"
+				        value="Vaccination Status" />
+				
+					<div class="vaccination-option">
+					
+					    <h:outputLabel
+					        for="vaccinatedInput"
+					        value="I confirm that my pet is vaccinated. (required)" />
+					
+					    <h:selectBooleanCheckbox
+					        id="vaccinatedInput"
+					        value="#{petRegistrationBean.vaccinated}"
+					        required="true"
+					        requiredMessage="Your pet must be vaccinated to register." />
+					
+					</div>
+				
+				    <h:message
+				        for="vaccinatedInput"
+				        errorClass="field-error" />
+				
+				</div>
 
                 <!-- BUTTONS -->
 

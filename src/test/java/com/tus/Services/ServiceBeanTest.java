@@ -27,10 +27,9 @@ class ServiceBeanTest {
 		bean = new ServiceBean();
 		bean.setServiceList(serviceList);
 	}
-
-	/* Fills the form with details that should always be accepted. */
-	Service s = new Service("Nail Clipping", "A quick nail trim during your pet's stay.",12.50, ServiceCategory.EXTRA,ChargeType.ONE_OFF ); 
 	
+	// Mirrors the input of a admin filling out a form on manageServices.xhtml. 
+	// Created to quickly set the fields for the bean for each test.
 	private void fillValidForm() {
 		bean.setEditName("Nail Clipping");
 		bean.setEditDescription("A quick nail trim during your pet's stay.");
@@ -38,16 +37,6 @@ class ServiceBeanTest {
 		bean.setEditCategory(ServiceCategory.EXTRA);
 		bean.setEditChargeType(ChargeType.ONE_OFF);
 	}
-
-	private Service findByName(String name) {
-		for (Service service : serviceList.getServices()) {
-			if (name.equals(service.getName())) {
-				return service;
-			}
-		}
-		return null;
-	}
-
 
 	// ADMINISTRATOR CREATES A NEW SERVICE ---
 
@@ -61,7 +50,7 @@ class ServiceBeanTest {
 		String outcome = bean.addNewService();
 
 		assertEquals(before + 1, serviceList.getNumberOfServices());
-		assertNotNull(findByName("Nail Clipping"));
+		assertNotNull(serviceList.findByName("Nail Clipping"));
 
 		// a non-null outcome means the page reloaded, which is the success path
 		assertEquals("manageServices?faces-redirect=true", outcome);
@@ -75,7 +64,7 @@ class ServiceBeanTest {
 		bean.setEditSpecies(new ArrayList<>(List.of("Dog", "Cat")));
 		bean.addNewService();
 
-		Service saved = findByName("Nail Clipping");
+		Service saved = serviceList.findByName("Nail Clipping");
 
 		assertNotNull(saved);
 		assertEquals("A quick nail trim during your pet's stay.", saved.getDescription());
@@ -108,7 +97,7 @@ class ServiceBeanTest {
 		bean.setEditName("   Nail Clipping   ");
 		bean.addNewService();
 
-		assertNotNull(findByName("Nail Clipping"));
+		assertNotNull(serviceList.findByName("Nail Clipping"));
 	}
 
 	@Test
@@ -121,7 +110,7 @@ class ServiceBeanTest {
 		bean.setEditChargeType(ChargeType.ONE_OFF);
 		bean.addNewService();
 
-		assertEquals(ChargeType.PER_NIGHT, findByName("Small Mammal Boarding").getChargeType());
+		assertEquals(ChargeType.PER_NIGHT, serviceList.findByName("Small Mammal Boarding").getChargeType());
 	}
 
 	@Test
@@ -137,7 +126,7 @@ class ServiceBeanTest {
 		// changing the list afterwards must not change the saved service
 		species.add("Cat");
 
-		assertEquals(List.of("Dog"), findByName("Nail Clipping").getApplicableSpecies());
+		assertEquals(List.of("Dog"), serviceList.findByName("Nail Clipping").getApplicableSpecies());
 	}
 
 

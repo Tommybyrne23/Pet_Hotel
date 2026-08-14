@@ -43,7 +43,7 @@ public class LoginBean implements Serializable {
                 } else if (user.getRole().equals(Role.CUSTOMER)) {
                     return "/userDashboard?faces-redirect=true";
                 } else {
-                    return "/attendantDashboard?faces-redirect=true";
+                    return "/petAttendantDashboard?faces-redirect=true";
                 }
             }
         }

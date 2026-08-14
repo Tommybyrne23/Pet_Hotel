@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Reservation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -128,4 +131,48 @@ public class Reservation implements Serializable {
     public void setExtras(List<String> extras) {
         this.extras = extras;
     }
+    
+/* -----------------------------------------
+ *
+ * Formatting for date and time so it is 
+ * displayed in the user pages
+ * in a clearer manner
+ * 
+ ------------------------------------------*/
+public String getFormattedCheckInDate() {
+    return formatFriendlyDate(this.checkInDate);
+}
+
+public String getFormattedCheckOutDate() {
+    return formatFriendlyDate(this.checkOutDate);
+}
+
+private String formatFriendlyDate(String dateStr) {
+    if (dateStr == null || dateStr.isBlank()) {
+        return "";
+    }
+    try {
+        LocalDate date = LocalDate.parse(dateStr.trim());
+        int day = date.getDayOfMonth();
+        String suffix = getOrdinalSuffix(day);
+        String monthYear = date.format(DateTimeFormatter.ofPattern("MMM yyyy"));
+        
+        return day + suffix + " " + monthYear; // Returns "12th Aug 2026"
+    } catch (Exception e) {
+        return dateStr; // Fallback to raw string if parsing fails
+    }
+}
+
+private String getOrdinalSuffix(int day) {
+    if (day >= 11 && day <= 13) {
+        return "th";
+    }
+    switch (day % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+    }
+}
+    
 }

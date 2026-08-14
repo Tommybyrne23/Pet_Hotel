@@ -83,19 +83,30 @@ public class ServiceList implements Serializable {
 
 
 	// A service name must be unique
-	public boolean isNameTaken(String name) {
+		public boolean isNameTaken(String name) {
+			return isNameTakenByAnother(name, 0);
+		}
 
-		if (name == null) {
+		// Same check, but skips one service. Used when editing, so a service
+		// does not clash with its own name.
+		public boolean isNameTakenByAnother(String name, int ignoreServiceID) {
+
+			if (name == null) {
+				return false;
+			}
+
+			for (Service existing : services) {
+
+				if (existing.getServiceID() == ignoreServiceID) {
+					continue;
+				}
+
+				if (name.trim().equalsIgnoreCase(existing.getName())) {
+					return true;
+				}
+			}
 			return false;
 		}
-
-		for (Service existing : services) {
-			if (name.trim().equalsIgnoreCase(existing.getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 
 	// adds the service only if it has a name and the name is free
@@ -179,6 +190,19 @@ public class ServiceList implements Serializable {
 
 		for (Service service : services) {
 			if (service.getServiceID() == serviceID) {
+				return service;
+			}
+		}
+		return null;
+	}
+	
+	public Service findByName(String name) {
+
+		if (name == null) {
+			return null;
+		}
+		for (Service service : services) {
+			if (name.trim().equalsIgnoreCase(service.getName())) {
 				return service;
 			}
 		}
