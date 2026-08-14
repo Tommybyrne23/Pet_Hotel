@@ -23,6 +23,7 @@ public class Reservation implements Serializable {
     private String status;       // "Pending", "Confirmed", "Cancelled"
     private String podName;              // the pod booked, e.g. "Dog Boarding"
     private double podPricePerNight;     // the rate at the time of booking
+    private int podID;          // the physical pod allocated to this stay
 
     // extras chosen, stored as text so the booking still reads correctly
     // if an admin later renames or reprices a service
@@ -130,6 +131,14 @@ public class Reservation implements Serializable {
 
     public void setExtras(List<String> extras) {
         this.extras = extras;
+    }
+    
+    public int getPodID() {
+        return podID;
+    }
+
+    public void setPodID(int podID) {
+        this.podID = podID;
     }
     
 /* -----------------------------------------
