@@ -184,4 +184,17 @@ public class ServiceList implements Serializable {
 		}
 		return null;
 	}
+	
+	public Service findByName(String name) {
+
+		if (name == null) {
+			return null;
+		}
+		for (Service service : services) {
+			if (name.trim().equalsIgnoreCase(service.getName())) {
+				return service;
+			}
+		}
+		return null;
+	}
 }

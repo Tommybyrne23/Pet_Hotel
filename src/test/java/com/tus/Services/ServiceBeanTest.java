@@ -35,16 +35,6 @@ class ServiceBeanTest {
 		bean.setEditChargeType(ChargeType.ONE_OFF);
 	}
 
-	private Service findByName(String name) {
-		for (Service service : serviceList.getServices()) {
-			if (name.equals(service.getName())) {
-				return service;
-			}
-		}
-		return null;
-	}
-
-
 	// ADMINISTRATOR CREATES A NEW SERVICE ---
 
 	@Test
@@ -57,7 +47,7 @@ class ServiceBeanTest {
 		String outcome = bean.addNewService();
 
 		assertEquals(before + 1, serviceList.getNumberOfServices());
-		assertNotNull(findByName("Nail Clipping"));
+		assertNotNull(serviceList.findByName("Nail Clipping"));
 
 		// a non-null outcome means the page reloaded, which is the success path
 		assertEquals("manageServices?faces-redirect=true", outcome);
@@ -71,7 +61,7 @@ class ServiceBeanTest {
 		bean.setEditSpecies(new ArrayList<>(List.of("Dog", "Cat")));
 		bean.addNewService();
 
-		Service saved = findByName("Nail Clipping");
+		Service saved = serviceList.findByName("Nail Clipping");
 
 		assertNotNull(saved);
 		assertEquals("A quick nail trim during your pet's stay.", saved.getDescription());
@@ -104,7 +94,7 @@ class ServiceBeanTest {
 		bean.setEditName("   Nail Clipping   ");
 		bean.addNewService();
 
-		assertNotNull(findByName("Nail Clipping"));
+		assertNotNull(serviceList.findByName("Nail Clipping"));
 	}
 
 	@Test
@@ -117,7 +107,7 @@ class ServiceBeanTest {
 		bean.setEditChargeType(ChargeType.ONE_OFF);
 		bean.addNewService();
 
-		assertEquals(ChargeType.PER_NIGHT, findByName("Small Mammal Boarding").getChargeType());
+		assertEquals(ChargeType.PER_NIGHT, serviceList.findByName("Small Mammal Boarding").getChargeType());
 	}
 
 	@Test
@@ -133,7 +123,7 @@ class ServiceBeanTest {
 		// changing the list afterwards must not change the saved service
 		species.add("Cat");
 
-		assertEquals(List.of("Dog"), findByName("Nail Clipping").getApplicableSpecies());
+		assertEquals(List.of("Dog"), serviceList.findByName("Nail Clipping").getApplicableSpecies());
 	}
 
 
