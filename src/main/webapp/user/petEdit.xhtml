@@ -7,12 +7,6 @@
 
 	<h:outputStylesheet library="css" name="registration.css" />
 	
-	
-    <style>
-        .reg-page {
-            background-color: red !important;
-        }
-    </style>
 
     <link rel="icon"
           type="image/png"
@@ -119,11 +113,6 @@
                             required="true"
                             requiredMessage="Please select a pet.">
 
-                            <f:selectItem
-                                itemLabel="-- Select Pet --"
-                                itemValue="0"
-                                noSelectionOption="true" />
-
                             <f:selectItems
                                 value="#{PetEditBean.userPets}"
                                 var="pet"
@@ -187,11 +176,6 @@
                                 requiredMessage="Species is required.">
 
                                 <f:selectItem
-                                    itemLabel="-- Select Species --"
-                                    itemValue=""
-                                    noSelectionOption="true" />
-
-                                <f:selectItem
                                     itemLabel="Dog"
                                     itemValue="DOG" />
 
@@ -210,6 +194,11 @@
                                 <f:selectItem
                                     itemLabel="Fish"
                                     itemValue="FISH" />
+                                    
+								<f:ajax
+								    execute="@this"
+								    listener="#{PetEditBean.speciesChanged}"
+								    render="petDetails" />
 
                             </h:selectOneMenu>
 
