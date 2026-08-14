@@ -27,14 +27,49 @@
 		</div>
 		
 		
-			<!-- Manage Section Title -->
+       <!-- Section Title -->
+		<div class="section-title">Your pets</div>
+
+		<!-- User's Registered Pets Table -->
+		<h:dataTable
+			value="#{petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			var="pet"
+			rendered="#{not empty petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			styleClass="productTable" headerClass="productTableHeader"
+			rowClasses="productTableOddRow, productTableEvenRow">
+
+			<h:column>
+				<f:facet name="header">Pet ID</f:facet>
+        #{pet.petID}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Pet Name</f:facet>
+        #{pet.name}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Species / Type</f:facet>
+        #{pet.species}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Special Requirements</f:facet>
+        #{petList.getRequirements(pet.petID)}
+    </h:column>
+
+		</h:dataTable>
+
+		<!-- Empty State Message -->
+		<h:outputText value="You do not have any pets registered yet."
+			rendered="#{empty petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			style="font-weight: bold; color: #777; display: block; margin: 15px 0;" />
+		<!-- Manage Section Title -->
         <div class="section-title">Manage Account</div>
 
         <!-- Management Actions Grid -->
         <h:form id="dashboardForm">
             <div class="manage-grid">
-		
-		
 		
 		 <!-- Customers & Accounts -->
                 <div class="manage-card">
