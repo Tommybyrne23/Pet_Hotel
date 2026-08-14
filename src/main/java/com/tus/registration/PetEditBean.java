@@ -1,6 +1,7 @@
 package com.tus.registration;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,22 +176,69 @@ public class PetEditBean implements Serializable {
             return null;
         }
 
+        if (selectedPet.getName() == null
+                || selectedPet.getName().trim().isEmpty()) {
+            return null;
+        }
+
+        if (selectedPet.getBreed() == null
+                || selectedPet.getBreed().trim().isEmpty()) {
+            return null;
+        }
+
+        if (selectedPet.getSpecies() == null) {
+            return null;
+        }
+
+        if (selectedPet.getAge() == null
+                || selectedPet.getAge().trim().isEmpty()) {
+            return null;
+        }
+
         FacesContext context = FacesContext.getCurrentInstance();
 
-        context.getExternalContext()
-               .getFlash()
-               .setKeepMessages(true);
+        if (context != null) {
+            context.getExternalContext()
+                   .getFlash()
+                   .setKeepMessages(true);
 
-        context.addMessage(
-            null,
-            new FacesMessage(
-                FacesMessage.SEVERITY_INFO,
-                "Pet details have been updated successfully.",
-                null
-            )
-        );
+            context.addMessage(
+                null,
+                new FacesMessage(
+                    FacesMessage.SEVERITY_INFO,
+                    "Pet details have been updated successfully.",
+                    null
+                )
+            );
+        }
 
         return "/userDashboard?faces-redirect=true";
+    }
+    
+    public String deletePet() {
+
+        Pet selectedPet = getSelectedPet();
+
+        if (selectedPet == null) {
+            return null;
+        }
+
+        // Delete the selected pet
+        petList.removePet(selectedPet.getPetID());
+
+        // Refresh the user's pet list
+        int userID = loginBean.getLoggedInUser().getUserID();
+        userPets = petList.findByUserID(userID);
+
+        // Select the first remaining pet, if there is one
+        if (userPets != null && !userPets.isEmpty()) {
+            selectedPetID = userPets.get(0).getPetID();
+        } else {
+            // No pets remain
+            selectedPetID = 0;
+        }
+
+        return null;
     }
 
 
@@ -218,5 +266,13 @@ public class PetEditBean implements Serializable {
 
     public void setSelectedPetID(int selectedPetID) {
         this.selectedPetID = selectedPetID;
+    }
+    
+    public void setLoginBean(LoginBean loginBean) {
+        this.loginBean = loginBean;
+    }
+
+    public void setPetList(PetList petList) {
+        this.petList = petList;
     }
 }
