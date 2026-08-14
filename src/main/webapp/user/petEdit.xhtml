@@ -297,16 +297,10 @@
                         styleClass="btn-green-outline"
                         immediate="true"
                         action="#{PetEditBean.cancel}" />
-                        
-                        
-					<h:commandButton
-					    value="Save Changes"
-					    styleClass="btn-green"
-					    action="#{PetEditBean.savePet}" />
 					
 					<h:commandButton
 					    value="Delete Pet"
-					    styleClass="btn-green-outline"
+					    styleClass="btn-green"
 					    action="#{PetEditBean.deletePet}"
 					    onclick="return confirm('Are you sure you want to delete this pet?');" />
 
