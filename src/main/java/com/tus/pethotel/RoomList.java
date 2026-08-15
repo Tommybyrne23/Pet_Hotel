@@ -21,11 +21,11 @@ public class RoomList implements Serializable {
 
 		this.rooms = new ArrayList<>();
 
-		rooms.add(new Room("Lakeside Kennels", "North Block", Species.DOG, 10));
-		rooms.add(new Room("Cat Haven", "South Block", Species.CAT, 10));
-		rooms.add(new Room("Aviary", "East Wing", Species.BIRD, 10));
-		rooms.add(new Room("Reptile House", "East Wing", Species.REPTILE, 10));
-		rooms.add(new Room("Aquatics Room", "West Wing", Species.FISH, 10));
+		rooms.add(new Room("Lakeside Kennels", "North Block", Species.DOG));
+		rooms.add(new Room("Cat Haven", "South Block", Species.CAT));
+		rooms.add(new Room("Aviary", "East Wing", Species.BIRD));
+		rooms.add(new Room("Reptile House", "East Wing", Species.REPTILE));
+		rooms.add(new Room("Aquatics Room", "West Wing", Species.FISH));
 	}
 
 	// A room name must be unique
@@ -56,7 +56,7 @@ public class RoomList implements Serializable {
 	public boolean addRoom(Room room) {
 
 		if (room == null || room.getName() == null || room.getName().trim().isEmpty()
-				|| room.getSpecies() == null || room.getCapacity() <= 0) {
+				|| room.getSpecies() == null) {
 			return false;
 		}
 
