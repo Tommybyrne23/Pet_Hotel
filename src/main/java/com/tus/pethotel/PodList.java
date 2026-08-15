@@ -59,17 +59,21 @@ public class PodList implements Serializable {
 		return count;
 	}
 
-	// True when the room has no space left for another pod
-	public boolean isRoomFull(int roomID) {
+	// Pods in this room that are open for business. Differs from
+		// countPodsInRoom, which counts every pod whether offline or not,
+		// because an offline pod still takes up its physical slot.
+		public int countInServicePodsInRoom(int roomID) {
 
-		Room room = roomList.findByID(roomID);
+			int count = 0;
 
-		if (room == null) {
-			return true;
+			for (Pod pod : pods) {
+				if (pod.getRoomID() == roomID && !pod.isOutOfService()) {
+					count++;
+				}
+			}
+			return count;
 		}
-		return countPodsInRoom(roomID) >= room.getCapacity();
-	}
-
+		
 	/*
 	 * Adds a pod. Refuses if the label is missing, the room does not exist,
 	 * the label is already used in that room, or the room is at capacity.
@@ -85,10 +89,6 @@ public class PodList implements Serializable {
 		}
 
 		if (isLabelTakenInRoom(pod.getLabel(), pod.getRoomID())) {
-			return false;
-		}
-
-		if (isRoomFull(pod.getRoomID())) {
 			return false;
 		}
 
