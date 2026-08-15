@@ -1,6 +1,8 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +29,8 @@ public class RoomPodBean implements Serializable {
 	private String roomName;
 	private String roomLocation;
 	private Species roomSpecies;
-	private Integer roomCapacity = 10;
+	// Table filter, not part of either form. Defaults to today.
+	private String availabilityDate = LocalDate.now().toString();
 
 	// Add-a-pod form
 	private String podLabel;
@@ -56,22 +59,16 @@ public class RoomPodBean implements Serializable {
 			return blocked(ROOM_FORM_ID, "roomSpeciesInput", "Choose which animal this room is for.");
 		}
 
-		if (roomCapacity == null || roomCapacity <= 0) {
-			return blocked(ROOM_FORM_ID, "roomCapacityInput", "Enter a capacity of at least one pod.");
-		}
-
-		Room room = new Room(roomName.trim(), roomLocation.trim(), roomSpecies, roomCapacity);
+		Room room = new Room(roomName.trim(), roomLocation.trim(), roomSpecies);
 
 		if (!roomList.addRoom(room)) {
 			return blocked(ROOM_FORM_ID, "roomNameInput", "A room with that name already exists.");
 		}
 
-		addSuccess(room.getName() + " has been added, with space for "
-				+ room.getCapacity() + " pods.");
+		addSuccess(room.getName() + " has been added. Add pods to it below.");
 
 		return reset();
 	}
-
 
 	// ADDING A POD
 
@@ -85,17 +82,10 @@ public class RoomPodBean implements Serializable {
 			return blocked(POD_FORM_ID, "podRoomInput", "Choose which room this pod is in.");
 		}
 
-		// Checked here so the admin gets a message that names the problem,
-		// rather than the plain false that addPod returns
-		if (podList.isRoomFull(podRoomID)) {
-			Room full = roomList.findByID(podRoomID);
-			return blocked(POD_FORM_ID, "podRoomInput", full.getName()
-					+ " is already at its capacity of " + full.getCapacity() + " pods.");
-		}
+		
 
 		if (podList.isLabelTakenInRoom(podLabel, podRoomID)) {
-			return blocked(POD_FORM_ID, "podLabelInput",
-					"That room already has a pod with that label.");
+			return blocked(POD_FORM_ID, "podLabelInput", "That room already has a pod with that label.");
 		}
 
 		Pod pod = new Pod(podLabel.trim(), podRoomID);
@@ -104,16 +94,13 @@ public class RoomPodBean implements Serializable {
 			return blocked(POD_FORM_ID, "podLabelInput", "The pod could not be added.");
 		}
 
-		addSuccess("Pod " + pod.getLabel() + " has been added to "
-				+ roomList.findByID(podRoomID).getName() + ".");
+		addSuccess("Pod " + pod.getLabel() + " has been added to " + roomList.findByID(podRoomID).getName() + ".");
 
 		return reset();
 	}
 
-
 	// Takes a pod in or out of service, e.g. for cleaning or repairs
 	public String toggleOutOfService(Pod pod) {
-
 		if (pod != null) {
 			pod.setOutOfService(!pod.isOutOfService());
 		}
@@ -126,7 +113,6 @@ public class RoomPodBean implements Serializable {
 		roomName = null;
 		roomLocation = null;
 		roomSpecies = null;
-		roomCapacity = 10;
 		podLabel = null;
 		podRoomID = null;
 
@@ -157,17 +143,28 @@ public class RoomPodBean implements Serializable {
 			return "Out of service";
 		}
 
-		String today = LocalDate.now().toString();
-		String tomorrow = LocalDate.now().plusDays(1).toString();
+		LocalDate night = parseAvailabilityDate();
 
-		return podList.isPodAvailable(pod.getPodID(), today, tomorrow)
-				? "Available" : "Occupied";
+		return podList.isPodAvailable(pod.getPodID(), night.toString(),
+				night.plusDays(1).toString()) ? "Available" : "Occupied";
 	}
 
-	// Shows how full each room is in the dropdown, e.g. "The Cattery (3/10)"
+	// Pill styling for the status column, using the badge classes
+	// already in styles.css
+	public String getPodStatusClass(Pod pod) {
+
+		if (pod.isOutOfService()) {
+			return "status-cancelled";
+		}
+
+		return "Available".equals(getPodStatus(pod))
+				? "status-available" : "status-pending";
+	}
+		
+		
+	// Shows how many pods each room has, e.g. "Cat Haven (3 pods)"
 	public String getRoomLabel(Room room) {
-		return room.getName() + " (" + podList.countPodsInRoom(room.getRoomID())
-				+ "/" + room.getCapacity() + ")";
+		return room.getName() + " (" + podList.countPodsInRoom(room.getRoomID()) + " pods)";
 	}
 
 	public Species[] getSpeciesOptions() {
@@ -188,8 +185,7 @@ public class RoomPodBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		if (context != null) {
-			context.addMessage(formId + ":" + fieldId,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+			context.addMessage(formId + ":" + fieldId, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
 		}
 		return null;
 	}
@@ -199,15 +195,77 @@ public class RoomPodBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		if (context != null) {
-			context.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null));
 
 			// carries the message across the redirect
 			context.getExternalContext().getFlash().setKeepMessages(true);
 		}
 	}
+	
+	// How many of this room's pods are open for business. An offline pod
+	// still occupies its physical slot, so it counts toward Total Pods
+	// but not toward this.
+	public int getPodsInService(Room room) {
+		return podList.countInServicePodsInRoom(room.getRoomID());
+	}
+	
+	/*
+	 * "3/5" - pods free for the night of the selected date, out of the pods
+	 * open for use. An offline pod counts in neither figure.
+	 */
+	public String getPodsAvailable(Room room) {
 
+		LocalDate night = parseAvailabilityDate();
+		String from = night.toString();
+		String to = night.plusDays(1).toString();
 
+		int free = 0;
+
+		for (Pod pod : podList.getPodsForRoom(room.getRoomID())) {
+			if (podList.isPodAvailable(pod.getPodID(), from, to)) {
+				free++;
+			}
+		}
+
+		return free + "/" + podList.countInServicePodsInRoom(room.getRoomID());
+	}
+
+	// Falls back to today if the field is empty or unparseable
+	private LocalDate parseAvailabilityDate() {
+
+		if (availabilityDate == null || availabilityDate.isBlank()) {
+			return LocalDate.now();
+		}
+		try {
+			return LocalDate.parse(availabilityDate.trim());
+		} catch (java.time.format.DateTimeParseException e) {
+			return LocalDate.now();
+		}
+	}
+	
+	/*
+	 * Pods grouped by the room they sit in, so the inventory reads room by
+	 * room rather than in the order the admin happened to add them.
+	 *
+	 * Built by walking the rooms rather than sorting the pods, so the table
+	 * follows the same room order as the Rooms list above it.
+	 */
+	public List<Pod> getPodsByRoom() {
+
+		List<Pod> grouped = new ArrayList<>();
+
+		for (Room room : roomList.getRooms()) {
+			grouped.addAll(podList.getPodsForRoom(room.getRoomID()));
+		}
+
+		return grouped;
+	}
+
+	// Reloads the rooms table against the newly picked date
+	public String applyAvailabilityDate() {
+		return null;			// the value is already bound; returning null just re-renders
+	}
+	
 	// GETTERS AND SETTERS
 
 	public String getRoomName() {
@@ -234,14 +292,6 @@ public class RoomPodBean implements Serializable {
 		this.roomSpecies = roomSpecies;
 	}
 
-	public Integer getRoomCapacity() {
-		return roomCapacity;
-	}
-
-	public void setRoomCapacity(Integer roomCapacity) {
-		this.roomCapacity = roomCapacity;
-	}
-
 	public String getPodLabel() {
 		return podLabel;
 	}
@@ -265,5 +315,18 @@ public class RoomPodBean implements Serializable {
 
 	public void setPodList(PodList podList) {
 		this.podList = podList;
+	}
+	
+	// The room's size is however many pods have been added to it
+	public int getTotalPods(Room room) {
+		return podList.countPodsInRoom(room.getRoomID());
+	}
+	
+	public String getAvailabilityDate() {
+		return availabilityDate;
+	}
+
+	public void setAvailabilityDate(String availabilityDate) {
+		this.availabilityDate = availabilityDate;
 	}
 }
