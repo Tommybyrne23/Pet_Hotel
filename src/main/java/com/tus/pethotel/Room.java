@@ -28,13 +28,12 @@ public class Room implements Serializable {
 	public Room() {
 	}
 
-	public Room(String name, String location, Species species, int capacity) {
+	public Room(String name, String location, Species species) {
 		uuID++;
 		this.roomID = uuID;
 		this.name = name;
 		this.location = location;
 		this.species = species;
-		this.capacity = capacity;
 	}
 
 	// GETTERS AND SETTERS
@@ -65,13 +64,5 @@ public class Room implements Serializable {
 
 	public void setSpecies(Species species) {
 		this.species = species;
-	}
-
-	public int getCapacity() {
-		return capacity;
-	}
-
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
 	}
 }
