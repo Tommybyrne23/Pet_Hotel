@@ -76,7 +76,7 @@ public class PodList implements Serializable {
 		
 	/*
 	 * Adds a pod. Refuses if the label is missing, the room does not exist,
-	 * the label is already used in that room, or the room is at capacity.
+	 * the label is already used in that room.
 	 */
 	public boolean addPod(Pod pod) {
 

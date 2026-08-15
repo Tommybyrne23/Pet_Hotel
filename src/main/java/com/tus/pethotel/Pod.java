@@ -2,8 +2,6 @@ package com.tus.pethotel;
 
 import java.io.Serializable;
 
-import com.tus.Services.Species;
-
 /*
  * A single physical space for one pet. A pod belongs to exactly one room
  * and takes its species from that room.

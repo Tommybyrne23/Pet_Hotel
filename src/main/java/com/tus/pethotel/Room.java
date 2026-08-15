@@ -23,7 +23,6 @@ public class Room implements Serializable {
 	private String name;
 	private String location;
 	private Species species;
-	private int capacity;		// the most pods that fit in this room
 
 	public Room() {
 	}
