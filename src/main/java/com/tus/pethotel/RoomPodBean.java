@@ -99,11 +99,23 @@ public class RoomPodBean implements Serializable {
 		return reset();
 	}
 
-	// Takes a pod in or out of service, e.g. for cleaning or repairs
+	// Takes a pod in or out of service, e.g. for cleaning or repairs.
+	// Refuses to take a pod offline while a pet is in it - the button is
+	// disabled for those pods, but the rule belongs here too rather than
+	// relying on the page to enforce it.
 	public String toggleOutOfService(Pod pod) {
-		if (pod != null) {
-			pod.setOutOfService(!pod.isOutOfService());
+
+		if (pod == null) {
+			return null;
 		}
+
+		if (!pod.isOutOfService() && isPodLocked(pod)) {
+			addError("Pod " + pod.getLabel()
+			+ " has a pet booked in and cannot be taken out of service.");
+			return null;
+		}
+
+		pod.setOutOfService(!pod.isOutOfService());
 		return null;
 	}
 
@@ -202,6 +214,16 @@ public class RoomPodBean implements Serializable {
 		}
 	}
 	
+	private void addError(String summary) {
+
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		if (context != null) {
+			context.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+		}
+	}
+	
 	// How many of this room's pods are open for business. An offline pod
 	// still occupies its physical slot, so it counts toward Total Pods
 	// but not toward this.
@@ -264,6 +286,31 @@ public class RoomPodBean implements Serializable {
 	// Reloads the rooms table against the newly picked date
 	public String applyAvailabilityDate() {
 		return null;			// the value is already bound; returning null just re-renders
+	}
+	
+	/*
+	 * A pod cannot be taken offline while it has a pet in it. Locked when
+	 * occupied on the selected date (so the button agrees with the status
+	 * column) or occupied today (so viewing a future date cannot unlock a
+	 * pod that is in use right now).
+	 */
+	public boolean isPodLocked(Pod pod) {
+
+		if (pod.isOutOfService()) {
+			return false;			// always allow returning a pod to service
+		}
+
+		LocalDate selected = parseAvailabilityDate();
+
+		boolean busyOnSelectedDate = !podList.isPodAvailable(pod.getPodID(),
+				selected.toString(), selected.plusDays(1).toString());
+
+		LocalDate today = LocalDate.now();
+
+		boolean busyToday = !podList.isPodAvailable(pod.getPodID(),
+				today.toString(), today.plusDays(1).toString());
+
+		return busyOnSelectedDate || busyToday;
 	}
 	
 	// GETTERS AND SETTERS

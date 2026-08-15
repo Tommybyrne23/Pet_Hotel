@@ -229,11 +229,15 @@
 					</h:column>
 
 					<h:column>
-						<f:facet name="header">Actions</f:facet>
-						<h:commandButton styleClass="btn-card-outline"
-							value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
-							action="#{RoomPodBean.toggleOutOfService(pod)}" />
-					</h:column>
+					<f:facet name="header">Actions</f:facet>
+
+					<h:commandButton styleClass="btn-card-outline"
+						value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
+						action="#{RoomPodBean.toggleOutOfService(pod)}"
+						disabled="#{RoomPodBean.isPodLocked(pod)}"
+						title="#{RoomPodBean.isPodLocked(pod)
+							? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
+				</h:column>
 
 				</h:dataTable>
 			</h:form>

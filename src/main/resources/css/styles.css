@@ -609,6 +609,17 @@ input[type="checkbox"] {
 	color: #4E342E;
 }
 
+/* Disabled outline buttons, e.g. taking an occupied pod offline */
+.btn-card-outline:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.btn-card-outline:disabled:hover {
+	background-color: transparent;
+	color: #1e5631;
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 480px) {
 	.auth-card {
