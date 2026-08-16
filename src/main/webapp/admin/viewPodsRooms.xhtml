@@ -1,68 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets">
+
+<f:metadata>
+	<!-- Checks the user is an admin before the view is rendered -->
+	<f:viewAction action="#{LoginBean.checkAdminAccess}" />
+</f:metadata>
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css?v=2" />
+	<link rel="icon" type="image/png"
+		href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+	<title>Pet Hotel - PODS AND ROOMS</title>
+</h:head>
+
 <h:body>
 	<ui:include src="/WEB-INF/includes/header.xhtml" />
 	<div class="dashboard-wrapper">
 
 		<div class="dashboard-title">Pods &amp; rooms</div>
-		<div class="dashboard-subtitle">
-			Rooms are the areas of the hotel, each pod is a space for one animal of a given species.
-		</div>
+		<div class="dashboard-subtitle">Rooms are the areas of the
+			hotel, each pod is a space for one animal of a given species.</div>
 
 		<!-- ===== ROOMS ROW (1/3 Form | 2/3 Table) ===== -->
-		<div class="split-row">
-			
+
+		<!--  <div class="split-row"> this didn't work -->
+		<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 30px; width: 100%;">
 			<!-- Left Side (33%): Add a room -->
-			<div>
+			<div style="flex: 1; min-width: 0;">
+				
 				<div class="section-title">Add a room</div>
 				<div class="form-panel">
 					<h:form id="adminAddRoom">
 						<h:panelGroup layout="block" styleClass="message-box">
-							<h:messages globalOnly="true" errorClass="error-messages" infoClass="success-messages" />
+							<h:messages globalOnly="true" errorClass="error-messages"
+								infoClass="success-messages" />
 						</h:panelGroup>
 
 						<div class="form-field">
 							<h:outputLabel for="roomNameInput" value="Room name:" />
-							<h:inputText id="roomNameInput" value="#{RoomPodBean.roomName}" required="true" requiredMessage="A room name is required." />
+							<h:inputText id="roomNameInput" value="#{RoomPodBean.roomName}"
+								required="true" requiredMessage="A room name is required." />
 							<h:message for="roomNameInput" errorClass="error-messages" />
 						</div>
 
 						<div class="form-field">
 							<h:outputLabel for="roomLocationInput" value="Area / location:" />
-							<h:inputText id="roomLocationInput" value="#{RoomPodBean.roomLocation}" required="true" requiredMessage="An area or location is required." />
+							<h:inputText id="roomLocationInput"
+								value="#{RoomPodBean.roomLocation}" required="true"
+								requiredMessage="An area or location is required." />
 							<h:message for="roomLocationInput" errorClass="error-messages" />
 						</div>
 
 						<div class="form-field">
 							<h:outputLabel for="roomSpeciesInput" value="Species type:" />
-							<h:selectOneMenu id="roomSpeciesInput" value="#{RoomPodBean.roomSpecies}" required="true" requiredMessage="Choose which animal this room is for.">
-								<f:selectItem itemLabel="-- Select type --" itemValue="" noSelectionOption="true" />
-								<f:selectItems value="#{RoomPodBean.speciesOptions}" var="sp" itemLabel="#{sp.label}" itemValue="#{sp}" />
+							<h:selectOneMenu id="roomSpeciesInput"
+								value="#{RoomPodBean.roomSpecies}" required="true"
+								requiredMessage="Choose which animal this room is for.">
+								<f:selectItem itemLabel="-- Select type --" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{RoomPodBean.speciesOptions}" var="sp"
+									itemLabel="#{sp.label}" itemValue="#{sp}" />
 							</h:selectOneMenu>
 							<h:message for="roomSpeciesInput" errorClass="error-messages" />
 						</div>
 
 						<div style="display: flex; gap: 10px; margin-top: 15px;">
-							<h:commandButton value="Add room" styleClass="btn-card-action" action="#{RoomPodBean.addRoom}" />
-							<h:commandButton value="Reset" styleClass="btn-card-outline" immediate="true" action="#{RoomPodBean.reset}" />
+							<h:commandButton value="Add room" styleClass="btn-card-action"
+								action="#{RoomPodBean.addRoom}" />
+							<h:commandButton value="Reset" styleClass="btn-card-outline"
+								immediate="true" action="#{RoomPodBean.reset}" />
 						</div>
 					</h:form>
 				</div>
 			</div>
 
 			<!-- Right Side (66%): Rooms List -->
-			<div>
+		<div style="flex: 2; min-width: 0;">
 				<div class="section-title">Rooms</div>
-				<div class="table-card">
+				<!--  manually adding css as the lookupfrom styles didn't work -->
+				<div class="table-card" style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">>
 					<h:form id="availabilityForm">
 						<div style="display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px;">
 							<div class="form-field" style="margin-bottom: 0;">
-								<h:outputLabel for="availabilityDateInput" value="Show pods available for the night of:" />
-								<h:inputText id="availabilityDateInput" type="date" value="#{RoomPodBean.availabilityDate}" />
+								<h:outputLabel for="availabilityDateInput"
+									value="Show pods available for the night of:" />
+								<h:inputText id="availabilityDateInput" type="date"
+									value="#{RoomPodBean.availabilityDate}" />
 							</div>
-							<h:commandButton value="Show" styleClass="btn-card-action" action="#{RoomPodBean.applyAvailabilityDate}" />
+							<h:commandButton value="Show" styleClass="btn-card-action"
+								action="#{RoomPodBean.applyAvailabilityDate}" />
 						</div>
 					</h:form>
 
-					<h:dataTable value="#{roomList.rooms}" var="room" styleClass="productTable" headerClass="productTableHeader" rowClasses="productTableOddRow, productTableEvenRow">
+					<h:dataTable value="#{roomList.rooms}" var="room"
+						styleClass="productTable" headerClass="productTableHeader"
+						rowClasses="productTableOddRow, productTableEvenRow">
 						<h:column>
 							<f:facet name="header">Room</f:facet>
 							<strong>#{room.name}</strong>
@@ -93,55 +126,66 @@
 
 		</div>
 
-
 		<!-- ===== PODS ROW (1/3 Form | 2/3 Table) ===== -->
-		<div class="split-row">
+	<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 30px; width: 100%;">
 
 			<!-- Left Side (33%): Add a pod -->
-			<div>
+				<div style="flex: 1; min-width: 0;">
 				<div class="section-title">Add a pod</div>
 				<div class="form-panel">
 					<h:form id="adminAddPod">
 						<h:panelGroup layout="block" styleClass="message-box">
-							<h:messages globalOnly="true" errorClass="error-messages" infoClass="success-messages" />
+							<h:messages globalOnly="true" errorClass="error-messages"
+								infoClass="success-messages" />
 						</h:panelGroup>
 
 						<div class="form-field">
 							<h:outputLabel for="podLabelInput" value="Pod label:" />
-							<h:inputText id="podLabelInput" value="#{RoomPodBean.podLabel}" required="true" requiredMessage="A pod label is required." />
+							<h:inputText id="podLabelInput" value="#{RoomPodBean.podLabel}"
+								required="true" requiredMessage="A pod label is required." />
 							<h:message for="podLabelInput" errorClass="error-messages" />
 						</div>
 
 						<div class="form-field">
 							<h:outputLabel for="podRoomInput" value="Room:" />
-							<h:selectOneMenu id="podRoomInput" value="#{RoomPodBean.podRoomID}" required="true" requiredMessage="Choose which room this pod is in.">
-								<f:selectItem itemLabel="-- Select room --" itemValue="" noSelectionOption="true" />
-								<f:selectItems value="#{RoomPodBean.roomOptions}" var="r" itemLabel="#{RoomPodBean.getRoomLabel(r)}" itemValue="#{r.roomID}" />
+							<h:selectOneMenu id="podRoomInput"
+								value="#{RoomPodBean.podRoomID}" required="true"
+								requiredMessage="Choose which room this pod is in.">
+								<f:selectItem itemLabel="-- Select room --" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{RoomPodBean.roomOptions}" var="r"
+									itemLabel="#{RoomPodBean.getRoomLabel(r)}"
+									itemValue="#{r.roomID}" />
 							</h:selectOneMenu>
 							<h:message for="podRoomInput" errorClass="error-messages" />
 						</div>
 
 						<div style="display: flex; gap: 10px; margin-top: 15px;">
-							<h:commandButton value="Add pod" styleClass="btn-card-action" action="#{RoomPodBean.addPod}" />
+							<h:commandButton value="Add pod" styleClass="btn-card-action"
+								action="#{RoomPodBean.addPod}" />
 						</div>
 					</h:form>
 				</div>
 			</div>
 
-			<!-- Right Side (66%): Pod Inventory -->
-			<div>
+			<!-- Right Column: Rooms List (66%) -->
+			<div style="flex: 2; min-width: 0;">
 				<div class="section-title">Pod inventory</div>
-				<div class="table-card">
+				<div class="table-card" style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">
 					<p style="margin-top: 0; color: #555555;">
 						Total pods: <strong>#{podList.numberOfPods}</strong>
 					</p>
 
-					<h:panelGroup layout="block" rendered="#{podList.numberOfPods eq 0}" style="color: #666666;">
+					<h:panelGroup layout="block"
+						rendered="#{podList.numberOfPods eq 0}" style="color: #666666;">
 						No pods have been added yet. Add a room above, then add pods to it.
 					</h:panelGroup>
 
 					<h:form id="podTableForm">
-						<h:dataTable value="#{RoomPodBean.podsByRoom}" var="pod" rendered="#{podList.numberOfPods gt 0}" styleClass="productTable" headerClass="productTableHeader" rowClasses="productTableOddRow, productTableEvenRow">
+						<h:dataTable value="#{RoomPodBean.podsByRoom}" var="pod"
+							rendered="#{podList.numberOfPods gt 0}" styleClass="productTable"
+							headerClass="productTableHeader"
+							rowClasses="productTableOddRow, productTableEvenRow">
 							<h:column>
 								<f:facet name="header">Room</f:facet>
 								<strong>#{RoomPodBean.getRoomName(pod)}</strong>
@@ -156,11 +200,16 @@
 							</h:column>
 							<h:column>
 								<f:facet name="header">On selected date</f:facet>
-								<h:outputText value="#{RoomPodBean.getPodStatus(pod)}" styleClass="#{RoomPodBean.getPodStatusClass(pod)}" />
+								<h:outputText value="#{RoomPodBean.getPodStatus(pod)}"
+									styleClass="#{RoomPodBean.getPodStatusClass(pod)}" />
 							</h:column>
 							<h:column>
 								<f:facet name="header">Actions</f:facet>
-								<h:commandButton styleClass="btn-card-outline" value="#{pod.outOfService ? 'Return to service' : 'Take offline'}" action="#{RoomPodBean.toggleOutOfService(pod)}" disabled="#{RoomPodBean.isPodLocked(pod)}" title="#{RoomPodBean.isPodLocked(pod) ? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
+								<h:commandButton styleClass="btn-card-outline"
+									value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
+									action="#{RoomPodBean.toggleOutOfService(pod)}"
+									disabled="#{RoomPodBean.isPodLocked(pod)}"
+									title="#{RoomPodBean.isPodLocked(pod) ? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
 							</h:column>
 						</h:dataTable>
 					</h:form>
@@ -171,9 +220,11 @@
 
 		<center style="margin: 30px 0;">
 			<h:form id="navigationForm">
-				<h:commandButton value="Back to Dashboard" styleClass="btn-green50" action="/adminDashboard?faces-redirect=true" />
+				<h:commandButton value="Back to Dashboard" styleClass="btn-green50"
+					action="/adminDashboard?faces-redirect=true" />
 			</h:form>
 		</center>
 
 	</div>
 </h:body>
+</html>
