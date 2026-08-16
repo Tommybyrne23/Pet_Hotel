@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <link rel="icon" type="image/png"
+          href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+    <title>Contact Us - Adam's Ark and Avery</title>
+</h:head>
+
+<h:body>
+    <ui:include src="/WEB-INF/includes/header.xhtml" />
+
+    <h1>Contact Us</h1>
+    <p class="intro">
+        Have a question about boarding your pet?
+        <br />
+        Send us an enquiry and a member of our team will get back to you.
+    </p>
+
+    <div class="form-panel">
+
+        <!-- Confirmation / failure banner (AC1). globalOnly stops field errors duplicating here. -->
+        <h:messages globalOnly="true"
+                    styleClass="message-box"
+                    infoClass="success-messages"
+                    errorClass="error-messages" />
+
+        <h:form>
+
+            <div class="form-field">
+                <h:outputLabel for="name" value="Name" />
+                <h:inputText id="name" value="#{contactBean.name}"
+                             required="true"
+                             requiredMessage="Please enter your name." />
+                <h:message for="name" styleClass="error-messages" />
+            </div>
+
+            <div class="form-field">
+                <h:outputLabel for="email" value="Email" />
+                <h:inputText id="email" value="#{contactBean.email}"
+                             required="true"
+                             requiredMessage="Please enter your email address." />
+                <h:message for="email" styleClass="error-messages" />
+            </div>
+
+            <div class="form-field">
+                <h:outputLabel for="subject" value="Subject" />
+                <h:inputText id="subject" value="#{contactBean.subject}"
+                             required="true"
+                             requiredMessage="Please enter a subject." />
+                <h:message for="subject" styleClass="error-messages" />
+            </div>
+
+            <div class="form-field">
+                <h:outputLabel for="message" value="Message" />
+                <h:inputTextarea id="message" value="#{contactBean.message}"
+                                 rows="6"
+                                 required="true"
+                                 requiredMessage="Please enter your message." />
+                <h:message for="message" styleClass="error-messages" />
+            </div>
+
+            <h:commandButton value="Send Enquiry"
+                             action="#{contactBean.submit}"
+                             styleClass="btn-primary" />
+        </h:form>
+    </div>
+
+    <ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>
