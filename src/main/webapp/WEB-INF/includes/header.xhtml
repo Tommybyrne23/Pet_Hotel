@@ -16,7 +16,7 @@
 			<!-- Navigation Links -->
 			<ul class="navbar-menu">
 				<li class="nav-item"><h:link styleClass="nav-link" outcome="/index" value="Home" /></li>
-				<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
+			
 
 				<!-- Signed-in customers -->
 				<ui:fragment rendered="#{LoginBean.loggedIn and not LoginBean.admin}">
@@ -24,6 +24,7 @@
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/manageProfile" value="Manage Profile" /></li>
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/makeBooking" value="New Booking" /></li>
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/UserViewBookings" value="My Bookings" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
 				</ui:fragment>
 
 				<!-- Administrators -->
@@ -42,6 +43,7 @@
 				<!-- Signed-out visitors -->
 				<ui:fragment rendered="#{not LoginBean.loggedIn}">
 					<ul class="navbar-menu">
+						<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
 						<li class="nav-item"><h:link styleClass="nav-link" outcome="/login" value="Login" /></li>
 						<li class="nav-item"><h:link styleClass="nav-link btn-nav-register" outcome="/registration" value="Register" /></li>
 					</ul>
