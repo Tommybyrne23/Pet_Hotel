@@ -7,6 +7,8 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
+import com.paypal.sdk.models.Order;
+
 import com.paypal.sdk.exceptions.ApiException;
 
 @Named
@@ -67,6 +69,34 @@ public class AuthorizePayment implements Serializable {
 	        ex.printStackTrace();
 	    }
 	    return null;
+	}
+	
+	private String paymentStatus;
+
+	public String getPaymentStatus() {
+	    return paymentStatus;
+	}
+
+	public void confirm() {
+	    if (paymentStatus != null) {
+	        return; // already captured — ignore page refreshes
+	    }
+	    jakarta.faces.context.ExternalContext ext =
+	            FacesContext.getCurrentInstance().getExternalContext();
+	    String orderId = ext.getRequestParameterMap().get("token");
+	    if (orderId == null) {
+	        paymentStatus = "No order token returned from PayPal.";
+	        return;
+	    }
+	    try {
+	        Order order = new PaymentServices().captureOrder(orderId);
+	        paymentStatus = (order != null && order.getStatus() != null)
+	                ? order.getStatus().toString()   // e.g. "COMPLETED"
+	                : "UNKNOWN";
+	    } catch (ApiException | IOException ex) {
+	        ex.printStackTrace();
+	        paymentStatus = "Payment could not be completed: " + ex.getMessage();
+	    }
 	}
 
 }

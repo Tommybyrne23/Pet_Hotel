@@ -627,3 +627,38 @@ input[type="checkbox"] {
 		padding: 30px 22px;
 	}
 }
+
+
+/* --------------------------------
+ 	
+ 	Splitting Admin tables 1/3 2/3 
+
+   --------------------------------*/
+   
+
+/* 1/3 (33%) and 2/3 (66%) layout container */
+.split-row {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 20px;
+	align-items: start;
+	margin-bottom: 30px;
+}
+
+/* Override existing margins/widths when placed inside a split row */
+.split-row .form-panel,
+.split-row .table-card {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+/* Stack vertically on mobile or smaller screens */
+@media (max-width: 900px) {
+	.split-row {
+		grid-template-columns: 1fr;
+	}
+}
+   
+   

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.paypal.sdk.Environment;
 import com.paypal.sdk.PaypalServerSdkClient;
 import com.paypal.sdk.authentication.ClientCredentialsAuthModel;
@@ -11,6 +12,7 @@ import com.paypal.sdk.controllers.OrdersController;
 import com.paypal.sdk.exceptions.ApiException;
 import com.paypal.sdk.http.response.ApiResponse;
 import com.paypal.sdk.models.AmountWithBreakdown;
+import com.paypal.sdk.models.CaptureOrderInput;
 import com.paypal.sdk.models.CheckoutPaymentIntent;
 import com.paypal.sdk.models.PaypalWalletExperienceContext;
 import com.paypal.sdk.models.LinkDescription;
@@ -35,6 +37,8 @@ public class PaymentServices {
                 .environment(Environment.SANDBOX)
                 .build();
     }
+    
+    
 
     public String authorizePayment(OrderDetail orderDetail, String baseUrl) throws ApiException, IOException {
         OrdersController ordersController = client.getOrdersController();
@@ -52,8 +56,8 @@ public class PaymentServices {
 
         // Configure dynamic redirect URLs for checkout experience
         PaypalWalletExperienceContext experienceContext = new PaypalWalletExperienceContext.Builder()
-                .returnUrl(baseUrl + "/confirm.xhtml")	
-                .cancelUrl(baseUrl + "/cancel.xhtml")
+        		.returnUrl(baseUrl + "/payments/confirm.xhtml")
+        		.cancelUrl(baseUrl + "/payments/cancel.xhtml")
                 .build();
 
         PaypalWallet paypalWallet = new PaypalWallet.Builder()
@@ -64,8 +68,8 @@ public class PaymentServices {
                 .paypal(paypalWallet)
                 .build();
 
-        // Assemble order creation request
-        OrderRequest orderRequest = new OrderRequest.Builder(CheckoutPaymentIntent.AUTHORIZE, purchaseUnits)
+        // Assemble order creation request - use capture to allow for single 
+        OrderRequest orderRequest = new OrderRequest.Builder(CheckoutPaymentIntent.CAPTURE, purchaseUnits)
                 .paymentSource(paymentSource)
                 .build();
 
@@ -84,5 +88,41 @@ public class PaymentServices {
             }
         }
         return null;
+    }
+    
+    public Order captureOrder(String orderId) throws ApiException, IOException {
+        OrdersController ordersController = client.getOrdersController();
+        CaptureOrderInput captureInput = new CaptureOrderInput.Builder(orderId, null).build();
+        ApiResponse<Order> response = ordersController.captureOrder(captureInput);
+        return response.getResult();   // status becomes COMPLETED on success
+    }
+    
+    private String paymentStatus;
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void confirm() {
+        // Guard: don't re-capture if the page is refreshed (PayPal rejects a second capture)
+        if (paymentStatus != null) {
+            return;
+        }
+        jakarta.faces.context.ExternalContext ext =
+                FacesContext.getCurrentInstance().getExternalContext();
+        String orderId = ext.getRequestParameterMap().get("token");
+        if (orderId == null) {
+            paymentStatus = "No order token returned from PayPal.";
+            return;
+        }
+        try {
+            Order order = new PaymentServices().captureOrder(orderId);
+            paymentStatus = (order != null && order.getStatus() != null)
+                    ? order.getStatus().toString()      // e.g. "COMPLETED"
+                    : "UNKNOWN";
+        } catch (ApiException | IOException ex) {
+            ex.printStackTrace();
+            paymentStatus = "Payment could not be completed: " + ex.getMessage();
+        }
     }
 }

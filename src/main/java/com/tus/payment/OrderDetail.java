@@ -39,7 +39,9 @@ public class OrderDetail implements Serializable {
         return String.format("%.2f", tax);
     }
 
+    
+    //use Locale.ROOT (will use dot.decimal in Ireland. France/Germany would return a com,a  
     public String getTotal() {
-        return String.format("%.2f", total);
+        return String.format(java.util.Locale.ROOT, "%.2f", total);
     }
 }
