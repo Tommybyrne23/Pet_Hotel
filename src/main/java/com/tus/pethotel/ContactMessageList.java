@@ -12,11 +12,7 @@ public class ContactMessageList {
     private final List<ContactMessage> messages = new ArrayList<>();
 
     public boolean addMessage(ContactMessage message) {
-        if (message == null
-                || isBlank(message.getName())
-                || isBlank(message.getEmail())
-                || isBlank(message.getSubject())
-                || isBlank(message.getMessage())) {
+        if (message == null || isBlank(message.getName()) || isBlank(message.getEmail()) || isBlank(message.getSubject()) || isBlank(message.getMessage())) {
             return false;
         }
         messages.add(message);
