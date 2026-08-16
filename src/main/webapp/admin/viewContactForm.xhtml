@@ -1,65 +1,87 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets">
+
 <f:metadata>
-    <!-- Checks the user is an admin before the view is rendered -->
-    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+	<!-- Checks the user is an admin before the view is rendered -->
+	<f:viewAction action="#{LoginBean.checkAdminAccess}" />
 </f:metadata>
 
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
-	<title>Pet Hotel - Registered Users</title>
+	<h:outputStylesheet library="css" name="contactMessages.css" />
+	<link rel="icon" type="image/png"
+		href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+	<title>Contact Form Messages</title>
 </h:head>
 
 <h:body>
-<ui:include src="/WEB-INF/includes/header.xhtml" />
-	<!--  TODO ONCE BOOKINGS HAVE BEEN MADE 
-	table created for the dashboard view  
-	This page has been made as a placeholder
-	-->
-<div class="dashboard-wrapper">
-<div class="dashboard-title">Contact Form Messages </div>
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
 
-	<!-- Display total number of registered users -->
+	<div class="dashboard-wrapper">
+
+		<div class="dashboard-title">Contact Form Messages</div>
+		<div class="dashboard-subtitle">Enquiries submitted through the
+			website contact form.</div>
 
 		<p>
-			Number of messages: <strong>#{contactForm.numberOfMessages}</strong>
+			Number of messages: <strong>#{contactMessageList.numberOfMessages}</strong>
 		</p>
 
+		<div class="table-card">
+			<h:dataTable value="#{contactMessageList.messages}" var="contact"
+				rendered="#{not empty contactMessageList.messages}"
+				styleClass="productTable" headerClass="productTableHeader"
+				rowClasses="productTableOddRow, productTableEvenRow">
 
-		<!-- Table displaying all users stored in the ApplicationScoped list -->
+				<h:column>
+					<f:facet name="header">Received</f:facet>
+					<h:outputText value="#{contact.receivedAt}">
+						<f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+					</h:outputText>
+				</h:column>
 
-		<h:dataTable value="#{contactForm.contact}" var="contact"
-			styleClass="productTable" headerClass="productTableHeader"
-			rowClasses="productTableOddRow, productTableEvenRow">
-			<h:column>
-				<f:facet name="header">Name</f:facet>
-            #{booking.name}
-        </h:column>
+				<h:column>
+					<f:facet name="header">Name</f:facet>
+                    #{contact.name}
+                </h:column>
 
-			<h:column>
-				<f:facet name="header">Email</f:facet>
-            #{contact.email}
-        </h:column>
-			<h:column>
-				<f:facet name="header">Contact Message </f:facet>
-            #{contact.message}
-        </h:column>
-			
-       
-		</h:dataTable>
-		 <br />
+				<h:column>
+					<f:facet name="header">Email</f:facet>
+                    #{contact.email}
+                </h:column>
+
+				<h:column>
+					<f:facet name="header">Subject</f:facet>
+                    #{contact.subject}
+                </h:column>
+
+				<h:column>
+					<f:facet name="header">Message</f:facet>
+                    #{contact.message}
+                </h:column>
+
+			</h:dataTable>
+		</div>
+
+		<h:outputText value="No messages have been received yet."
+			rendered="#{empty contactMessageList.messages}"
+			style="display: block; font-weight: bold; color: #777; margin: 15px 0;" />
+
+		<h:outputText value="No messages have been received yet."
+			rendered="#{empty contactMessageList.messages}"
+			styleClass="messages-empty" />
+
+		<br />
+
 		<h:form>
-				<h:commandButton value="Return to Dashboard"
-					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
-			</h:form>         class="btn-green50"/>
-        </h:form>
+			<h:commandButton value="Return to Dashboard"
+				action="/adminDashboard?faces-redirect=true"
+				styleClass="btn-card-action" />
+		</h:form>
 
-</div>
-	<br />
-<ui:include src="/WEB-INF/includes/footer.xhtml" />
+	</div>
+
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
 </html>
