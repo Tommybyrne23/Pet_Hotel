@@ -7,7 +7,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
-import com.paypal.base.rest.PayPalRESTException;
+import com.paypal.sdk.exceptions.ApiException;
 
 @Named
 @SessionScoped
@@ -49,15 +49,24 @@ public class AuthorizePayment implements Serializable {
 	}
 	
 	public String checkOut() throws IOException {
-		try {
-			OrderDetail orderDetail = new OrderDetail(product, subTotal, shipping, tax, total);
-			PaymentServices paymentServices = new PaymentServices();
-			String approvalLink = paymentServices.authorizePayment(orderDetail);
-			FacesContext.getCurrentInstance().
-			getExternalContext().redirect(approvalLink);   
-		} catch (PayPalRESTException ex) {
-			ex.printStackTrace();
-		}
-		return null;
+	    try {
+	        jakarta.faces.context.ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+	        String baseUrl = extContext.getRequestScheme() + "://" + 
+	                         extContext.getRequestServerName() + ":" + 
+	                         extContext.getRequestServerPort() + 
+	                         extContext.getRequestContextPath();
+
+	        OrderDetail orderDetail = new OrderDetail(product, subTotal, shipping, tax, total);
+	        PaymentServices paymentServices = new PaymentServices();
+	        
+	        String approvalLink = paymentServices.authorizePayment(orderDetail, baseUrl);
+	        if (approvalLink != null) {
+	            extContext.redirect(approvalLink);   
+	        }
+	    } catch (ApiException ex) {
+	        ex.printStackTrace();
+	    }
+	    return null;
 	}
+
 }

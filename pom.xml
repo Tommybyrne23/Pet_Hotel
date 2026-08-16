@@ -14,15 +14,13 @@
         <version>4.0.9</version>
     </dependency>
 
+<!-- Taken from Paypal developer portal https://developer.paypal.com/serversdk/java/getting-started/how-to-get-started-->
 
-<!-- Source: https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk -->
 <dependency>
     <groupId>com.paypal.sdk</groupId>
-    <artifactId>rest-api-sdk</artifactId>
-    <version>1.14.0</version>
-    <scope>compile</scope>
+    <artifactId>paypal-server-sdk</artifactId>
+    <version>2.0.0</version>
 </dependency>
-
 
 <dependency>
     <groupId>org.junit.jupiter</groupId>

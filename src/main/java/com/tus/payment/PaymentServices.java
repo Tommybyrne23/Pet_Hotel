@@ -1,138 +1,88 @@
 package com.tus.payment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import all.api.payments.Amount;
-import com.paypal.api.payments.Details;
-import com.paypal.api.payments.Item;
-import com.paypal.api.payments.ItemList;
-import com.paypal.api.payments.Links;
-import com.paypal.api.payments.Payer;
-import com.paypal.api.payments.PayerInfo;
-import com.paypal.api.payments.Payment;
-import com.paypal.api.payments.PaymentExecution;
-import com.paypal.api.payments.RedirectUrls;
-import com.paypal.api.payments.Transaction;
-import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
+import com.paypal.sdk.Environment;
+import com.paypal.sdk.PaypalServerSdkClient;
+import com.paypal.sdk.authentication.ClientCredentialsAuthModel;
+import com.paypal.sdk.controllers.OrdersController;
+import com.paypal.sdk.exceptions.ApiException;
+import com.paypal.sdk.http.response.ApiResponse;
+import com.paypal.sdk.models.AmountWithBreakdown;
+import com.paypal.sdk.models.CheckoutPaymentIntent;
+import com.paypal.sdk.models.PaypalWalletExperienceContext;
+import com.paypal.sdk.models.LinkDescription;
+import com.paypal.sdk.models.Order;
+import com.paypal.sdk.models.OrderRequest;
+import com.paypal.sdk.models.CreateOrderInput;
+import com.paypal.sdk.models.PaymentSource;
+import com.paypal.sdk.models.PaypalWallet;
+import com.paypal.sdk.models.PurchaseUnitRequest;
 
 public class PaymentServices {
-	//email sb-bvh5l52480718@personal.example.com
-	private static final String CLIENT_ID="BAAVMM_6WtNW3NIjHV1_Oo5pUffZU8Z3fnua4MqRzVqmqvBfW-FO3yDd5RNVv6kgo23t4qyrpbMJf2QQ_8";
-	private static final String CLIENT_SECRET="EKyK2cV6wUEewb01kYoPFRQ-5UADeHXtiUeEsMVini9Fekot5Dq17_2plAGaRLb_NVV6dVoHzS2zSSvP";
+    private static final String CLIENT_ID = "BAAVMM_6WtNW3NIjHV1_Oo5pUffZU8Z3fnua4MqRzVqmqvBfW-FO3yDd5RNVv6kgo23t4qyrpbMJf2QQ_8";
+    private static final String CLIENT_SECRET = "EKyK2cV6wUEewb01kYoPFRQ-5UADeHXtiUeEsMVini9Fekot5Dq17_2plAGaRLb_NVV6dVoHzS2zSSvP";
 	private static final String MODE = "sandbox";
 	
-	
-	public String authorizePayment(OrderDetail orderDetail)        
-            throws PayPalRESTException {       
- 
-        Payer payer = getPayerInformation();
-        RedirectUrls redirectUrls = getRedirectURLs();
-        List<Transaction> listTransaction = getTransactionInformation(orderDetail);
-         
-        Payment requestPayment = new Payment();
-        requestPayment.setTransactions(listTransaction);
-        requestPayment.setRedirectUrls(redirectUrls);
-        requestPayment.setPayer(payer);
-        requestPayment.setIntent("authorize");
- 
-        APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
- 
-        Payment approvedPayment = requestPayment.create(apiContext);
- 
-        return getApprovalLink(approvedPayment);
- 
+	private final PaypalServerSdkClient client;
+
+    public PaymentServices() {
+        // Initializes client; OAuth token management happens automatically
+        this.client = new PaypalServerSdkClient.Builder()
+                .clientCredentialsAuth(new ClientCredentialsAuthModel.Builder(CLIENT_ID, CLIENT_SECRET).build())
+                .environment(Environment.SANDBOX)
+                .build();
     }
-     
-    private Payer getPayerInformation() {
-        Payer payer = new Payer();
-        payer.setPaymentMethod("paypal");
-         
-        PayerInfo payerInfo = new PayerInfo();
-        payerInfo.setFirstName("John")
-                 .setLastName("Doe")
-                 .setEmail("sb-bvh5l52480718@personal.example.com");
- 
-         
-        payer.setPayerInfo(payerInfo);
-         
-        return payer;
-    }
-     
-    /*
-     * CHANGE PAYMENT REDIFRECT URLS 
-     */
-    
-    private RedirectUrls getRedirectURLs() {
-        RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:8080/PayPalExample/cancel.xhtml");
-        redirectUrls.setReturnUrl("http://localhost:8080/PayPalExample/confirm.xhtml");  
-        return redirectUrls;
-    }
-     
-    private List<Transaction> getTransactionInformation(OrderDetail orderDetail) {
-        Details details = new Details();
-        details.setShipping(orderDetail.getShipping());
-        details.setSubtotal(orderDetail.getSubtotal());
-        details.setTax(orderDetail.getTax());
-     
-        Amount amount = new Amount();
-        amount.setCurrency("EUR");
-        amount.setTotal(orderDetail.getTotal());
-        amount.setDetails(details);
-     
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setDescription(orderDetail.getProductName());
-         
-        ItemList itemList = new ItemList();
-        List<Item> items = new ArrayList<Item>();
-         
-        Item item = new Item();
-        item.setCurrency("USD");
-        item.setName(orderDetail.getProductName());
-        item.setPrice(orderDetail.getSubtotal());
-        item.setTax(orderDetail.getTax());
-        item.setQuantity("1");
-         
-        items.add(item);
-        itemList.setItems(items);
-        transaction.setItemList(itemList);
-     
-        List<Transaction> listTransaction = new ArrayList<Transaction>();
-        listTransaction.add(transaction);  
-         
-        return listTransaction;
-    }
-     
-    private String getApprovalLink(Payment approvedPayment) {
-        List<Links> links = approvedPayment.getLinks();
-        String approvalLink = null;
-         
-        for (Links link : links) {
-            if (link.getRel().equalsIgnoreCase("approval_url")) {
-                approvalLink = link.getHref();
-                break;
+
+    public String authorizePayment(OrderDetail orderDetail, String baseUrl) throws ApiException, IOException {
+        OrdersController ordersController = client.getOrdersController();
+
+        // Build amount configuration, make sure amounts set to Eruro
+        AmountWithBreakdown amount = new AmountWithBreakdown.Builder("EUR", orderDetail.getTotal()).build();
+
+        // Build purchase unit item
+        PurchaseUnitRequest purchaseUnit = new PurchaseUnitRequest.Builder(amount)
+                .description(orderDetail.getProductName())
+                .build();
+
+        List<PurchaseUnitRequest> purchaseUnits = new ArrayList<>();
+        purchaseUnits.add(purchaseUnit);
+
+        // Configure dynamic redirect URLs for checkout experience
+        PaypalWalletExperienceContext experienceContext = new PaypalWalletExperienceContext.Builder()
+                .returnUrl(baseUrl + "/confirm.xhtml")	
+                .cancelUrl(baseUrl + "/cancel.xhtml")
+                .build();
+
+        PaypalWallet paypalWallet = new PaypalWallet.Builder()
+                .experienceContext(experienceContext)
+                .build();
+
+        PaymentSource paymentSource = new PaymentSource.Builder()
+                .paypal(paypalWallet)
+                .build();
+
+        // Assemble order creation request
+        OrderRequest orderRequest = new OrderRequest.Builder(CheckoutPaymentIntent.AUTHORIZE, purchaseUnits)
+                .paymentSource(paymentSource)
+                .build();
+
+        CreateOrderInput createInput = new CreateOrderInput.Builder(null, orderRequest).build();
+
+        // Execute API call
+        ApiResponse<Order> response = ordersController.createOrder(createInput);
+        Order order = response.getResult();
+
+        // Extract approval redirect URL
+        if (order != null && order.getLinks() != null) {
+            for (LinkDescription link : order.getLinks()) {
+                if ("payer-action".equalsIgnoreCase(link.getRel()) || "approve".equalsIgnoreCase(link.getRel())) {
+                    return link.getHref();
+                }
             }
-        }      
-         
-        return approvalLink;
-    }
-    public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
-        APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
-        return Payment.get(apiContext, paymentId);
-    }
-    public Payment executePayment(String paymentId, String payerId)
-            throws PayPalRESTException {
-        PaymentExecution paymentExecution = new PaymentExecution();
-        paymentExecution.setPayerId(payerId);
-     
-        Payment payment = new Payment().setId(paymentId);
-     
-        APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
-     
-        return payment.execute(apiContext, paymentExecution);
+        }
+        return null;
     }
 }
-
