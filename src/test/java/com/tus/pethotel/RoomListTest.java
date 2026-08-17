@@ -15,7 +15,6 @@ import com.tus.Services.Species;
 /*
  * Tests for the read-only helpers behind the Rooms and Pod inventory
  * tables on viewPodsRooms.xhtml
- * Split from RoomPodBeanTest, which covers the two forms.
  */
 class RoomListTest {
 
