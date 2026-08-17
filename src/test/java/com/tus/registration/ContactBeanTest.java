@@ -31,12 +31,13 @@ class ContactBeanTest {
 
 	TestableContactBean contactBean;
 	ContactMessageList contactMessageList;
-	UserList userList = new UserList();
-	LoginBean loginBean = new LoginBean();
-	List<ContactMessage> messages = contactMessageList.getMessages();
+	UserList userList;
+	LoginBean loginBean;
 
 	@BeforeEach
 	void setUp() {
+		userList = new UserList();
+		loginBean = new LoginBean();
 		contactMessageList = new ContactMessageList();
 		contactBean = new TestableContactBean();
 		contactBean.setContactMessageList(contactMessageList);
@@ -50,6 +51,7 @@ class ContactBeanTest {
 		contactBean.setSubject("Boarding availability");
 		contactBean.setMessage("Do you have space for two cats next weekend?");
 		contactBean.submit();
+		List<ContactMessage> messages = contactMessageList.getMessages();
 		assertEquals(1, messages.size());
 		assertEquals("Mary Byrne", messages.get(0).getName());
 		assertEquals("mary@byrne.com", messages.get(0).getEmail());
