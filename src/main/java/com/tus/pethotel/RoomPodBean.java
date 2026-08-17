@@ -94,7 +94,7 @@ public class RoomPodBean implements Serializable {
 			return blocked(POD_FORM_ID, "podLabelInput", "The pod could not be added.");
 		}
 
-		addSuccess("Pod " + pod.getLabel() + " has been added to " + roomList.findByID(podRoomID).getName() + ".");
+		addSuccess("Pod " + pod.getLabel() + " has been added to " + roomList.findByID(podRoomID).getName() + " and is out of service. Return it to service when it is ready for use.");
 
 		return reset();
 	}
