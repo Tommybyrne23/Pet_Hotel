@@ -25,13 +25,19 @@ import com.paypal.sdk.models.PurchaseUnitRequest;
 
 import jakarta.faces.context.FacesContext;
 
+
+//class manages the payPal calls. 
 public class PaymentServices {
+	
+	//credentials taken from the developer portal signed up with A00347373
     private static final String CLIENT_ID = "BAAVMM_6WtNW3NIjHV1_Oo5pUffZU8Z3fnua4MqRzVqmqvBfW-FO3yDd5RNVv6kgo23t4qyrpbMJf2QQ_8";
     private static final String CLIENT_SECRET = "EKyK2cV6wUEewb01kYoPFRQ-5UADeHXtiUeEsMVini9Fekot5Dq17_2plAGaRLb_NVV6dVoHzS2zSSvP";
-	private static final String MODE = "sandbox";
+    //this may be legacy code from TUS week example, new environment.SANDBOX mode is imported  
+    //private static final String MODE = "sandbox";
 	
 	private final PaypalServerSdkClient client;
-
+    private String paymentStatus;			//used for returning Jarkata faces messages
+    
     public PaymentServices() {
         // Initializes client; OAuth token management happens automatically
         this.client = new PaypalServerSdkClient.Builder()
@@ -99,7 +105,7 @@ public class PaymentServices {
         return response.getResult();   // status becomes COMPLETED on success
     }
     
-    private String paymentStatus;
+
 
     public String getPaymentStatus() {
         return paymentStatus;

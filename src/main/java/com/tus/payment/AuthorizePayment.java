@@ -11,14 +11,23 @@ import com.paypal.sdk.models.Order;
 
 import com.paypal.sdk.exceptions.ApiException;
 
+
+//BackingBean the payment pages bind to (#{authorizePayment.*}).
+//Session-scoped so the call completes round-trip out to PayPal and back.
+
 @Named
 @SessionScoped
 public class AuthorizePayment implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	private String paymentStatus;
 	private String product;
+
 	private float subTotal, shipping, tax, total;
 
+
+		
+	//getters and setters	
+		
 	public String getProduct() {
 		return product;
 	}
@@ -50,6 +59,7 @@ public class AuthorizePayment implements Serializable {
 		this.total = total;
 	}
 	
+	//creates the order and passed on the information to Paypal to confirm the booking. 
 	public String checkOut() throws IOException {
 	    try {
 	        jakarta.faces.context.ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -70,13 +80,13 @@ public class AuthorizePayment implements Serializable {
 	    }
 	    return null;
 	}
-	
-	private String paymentStatus;
-
+		
 	public String getPaymentStatus() {
 	    return paymentStatus;
 	}
 
+	
+	//Confirm runs when PayPal redirects back to confirm.xhtml. "Token" in the message is the orderID
 	public void confirm() {
 	    if (paymentStatus != null) {
 	        return; // already captured — ignore page refreshes
