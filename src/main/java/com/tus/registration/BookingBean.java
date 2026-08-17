@@ -307,8 +307,8 @@ public class BookingBean implements Serializable {
 				r.setHoldExpiry(null);
 				r.setPaypalOrderId(orderId);
 				r.setStatusUpdatedAt(LocalDateTime.now());
-				addMessage(FacesMessage.SEVERITY_INFO, "Payment complete. Booking confirmed for "
-						+ r.getPetName() + ". Total: \u20AC" + String.format("%.2f", r.getTotalPrice()));
+				addMessage(FacesMessage.SEVERITY_INFO, "Payment complete! A booking has been confirmed for "
+						+ r.getPetName() + "\n From "+ r.getCheckInDate()+ "\nto "+ r.getCheckOutDate() + "\nTotal: \u20AC" + String.format("%.2f", r.getTotalPrice()));
 				resetForm();
 			} else {
 				r.setPaypalOrderId(orderId);
