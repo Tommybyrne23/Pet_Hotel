@@ -292,7 +292,7 @@ public class BookingBean implements Serializable {
 		ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 		String orderId = ext.getRequestParameterMap().get("token"); // token = PayPal order id
 		if (orderId == null) {
-			failReservation(r, "No order token returned from PayPal.");
+			failReservation(r, "No order token returned from PayPal.");					//adds a failrue message to the reservation informaiton
 			addMessage(FacesMessage.SEVERITY_ERROR, "Payment could not be confirmed.");
 			return;
 		}
@@ -322,6 +322,19 @@ public class BookingBean implements Serializable {
 		}
 	}
 	
+	
+	private void cancelPayment() {
+		Reservation r = reservationList.findByID(pendingReservationID);
+		if (r !=null && "Pending".equalsIgnoreCase(r.getStatus())){
+		r.setStatus("Cancelled");					//set the status to Cancelled 
+		r.setStatusUpdatedAt(LocalDateTime.now());	//set the time to now 
+		r.setHoldExpiry(null);
+		r.setFailureReason("Cancelled payment in Paypal Portal");
+		}
+		
+		addMessage(FacesMessage.SEVERITY_INFO, "Payment has been cancelled. No Booking was completed");
+	}
+	
 	// Mark a held reservation as failed so it stops holding the pod and shows
 	// up on the admin follow-up list.
 	private void failReservation(Reservation res, String reason) {
@@ -339,6 +352,7 @@ public class BookingBean implements Serializable {
 		checkOutDate = null;
 		totalPrice = 0;
 		priceCalculated = false;
+		pendingReservationID=0;
 		
 	}
 
