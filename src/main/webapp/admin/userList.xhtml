@@ -69,6 +69,32 @@
                         #{pet.name}<br />
                     </ui:repeat>
                 </h:column>
+                
+                <h:column>
+                    <f:facet name="header">Reset Password</f:facet>
+
+                    <h:panelGroup rendered="#{u.userID == LoginBean.loggedInUser.userID}">
+                        (you)
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{u.userID != LoginBean.loggedInUser.userID}">
+
+                        <h:panelGroup layout="block" styleClass="form-field">
+                            <h:outputLabel for="newPasswordInput" value="New password" />
+                            <h:inputSecret id="newPasswordInput"
+                                value="#{AdminPasswordBean.newPasswords[u.userID]}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" styleClass="form-field">
+                            <h:outputLabel for="confirmPasswordInput" value="Confirm password" />
+                            <h:inputSecret id="confirmPasswordInput"
+                                value="#{AdminPasswordBean.confirmPasswords[u.userID]}" />
+                        </h:panelGroup>
+
+                        <h:commandButton value="Reset" styleClass="btn-card-outline"
+                            action="#{AdminPasswordBean.resetPassword(u)}" />
+                    </h:panelGroup>
+                </h:column>
 
             </h:dataTable>
             <br />
