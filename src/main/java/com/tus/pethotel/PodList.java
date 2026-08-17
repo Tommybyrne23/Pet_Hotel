@@ -1,6 +1,7 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import com.tus.Services.Species;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.annotation.PostConstruct;
 
 @Named("podList")
 @ApplicationScoped
@@ -25,9 +27,48 @@ public class PodList implements Serializable {
 
 	@Inject
 	private ReservationList reservationList;
-
+	
 	public PodList() {
 		this.pods = new ArrayList<>();
+	}
+	
+	/*
+	 * Seeds a starting set of pods. Runs after CDI has injected roomList,
+	 * so each pod takes its room ID from the actual Room object rather
+	 * than assuming the rooms were numbered from 1.
+	 */
+	@PostConstruct
+	public void init() {
+
+		if (!pods.isEmpty()) {
+			return;
+		}
+
+		for (Room room : roomList.getRooms()) {
+
+			String prefix;
+			int count;
+
+			switch (room.getSpecies()) {
+				case DOG:     prefix = "K"; count = 6; break;
+				case CAT:     prefix = "C"; count = 5; break;
+				case BIRD:    prefix = "A"; count = 4; break;
+				case REPTILE: prefix = "R"; count = 3; break;
+				case FISH:    prefix = "F"; count = 4; break;
+				default:      prefix = "P"; count = 3; break;
+			}
+
+			for (int i = 1; i <= count; i++) {
+				pods.add(new Pod(prefix + i, room.getRoomID()));
+			}
+		}
+
+		// One pod starts offline so the inventory shows the Out of service
+		// state without an admin having to take one offline by hand
+		List<Pod> reptilePods = getPodsForSpecies(Species.REPTILE);
+		if (!reptilePods.isEmpty()) {
+			reptilePods.get(reptilePods.size() - 1).setOutOfService(true);
+		}
 	}
 
 	// A pod label must be unique inside its own room. Two rooms can both
@@ -93,6 +134,7 @@ public class PodList implements Serializable {
 		}
 
 		pod.setLabel(pod.getLabel().trim());
+		pod.setOutOfService(true);
 		pods.add(pod);
 		return true;
 	}
