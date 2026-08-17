@@ -1,13 +1,19 @@
 <!DOCTYPE html>
+<!-- PayPal returns here after approval. completePayment() captures and confirms the booking. -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core">
     <f:metadata>
-        <f:viewAction action="#{authorizePayment.confirm}" />
+        <f:viewAction action="#{BookingBean.completePayment}" />
     </f:metadata>
-    <h:head><title>Payment Confirmation</title></h:head>
+    <h:head>
+        <title>Payment Confirmation</title>
+    </h:head>
     <h:body>
-        <h2>Payment status: #{authorizePayment.paymentStatus}</h2>
-        <h:link value="Back to home" outcome="index" />
+        <h2>Payment Confirmation</h2>
+        <h:messages />
+      
+      <h:link value="Back to Dashboard" outcome="/userDashboard" />
+                
     </h:body>
 </html>
