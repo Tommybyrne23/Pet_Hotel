@@ -109,6 +109,29 @@ public class ReservationList implements Serializable {
         return reservations.size();
     }
     
+   public Reservation findByID(int reservationID) {
+	   for (Reservation r: reservations ) {
+		   if(r.getReservationID() == reservationID) {
+			   return r; 
+		   }
+	   }return null;
+   }
+    
+   
+   //Reservations that did not result in a confirmed, paid booking can still be shown in the admin dashboard
+   
+   public ArrayList<Reservation>getUnsuccessfulPayments(){
+	   ArrayList<Reservation> failedTxns = new ArrayList<>();		//create a new arrayList for failed transactions from Paypal 
+	   for (Reservation r : reservations) {
+		   String s = r.getStatus();
+		   if ("Cancelled".equalsIgnoreCase(s) || "Payment Failed".equalsIgnoreCase(s) || "Expired".equalsIgnoreCase(s)) {
+			   failedTxns.add(r);
+		   }
+	   }
+	   return failedTxns;		//return the failed transactions 
+   }
+   
+   
     
     //filter previous booking 
     public ArrayList<Reservation> getPastReservations(){

@@ -2,7 +2,6 @@ package com.tus.registration;
 
 import java.io.Serializable;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,9 +19,10 @@ import com.tus.pethotel.Reservation;
 import com.tus.pethotel.ReservationList;
 import com.tus.pethotel.User;
 import com.tus.Services.Species;
-import com.tus.payment.PaymentServices;
 import com.tus.pethotel.Pod;
 import com.tus.pethotel.PodList;
+
+import java.io.IOException;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -32,10 +32,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import com.paypal.sdk.exceptions.ApiException;
-
+import com.paypal.sdk.models.Order;
 import com.tus.payment.OrderDetail;
 import com.tus.payment.PaymentServices;
-
 @Named("BookingBean")
 @SessionScoped
 public class BookingBean implements Serializable {
@@ -251,6 +250,7 @@ public class BookingBean implements Serializable {
 		try {
 			
 			ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+			
 			//sets the url to the local host and appropriate ports dependent on the developer and users. 
 			String baseUrl = ext.getRequestScheme() + "://"  + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
 				
@@ -260,9 +260,9 @@ public class BookingBean implements Serializable {
 			if (approvalLink != null) {
 				ext.redirect(approvalLink);
 			} else {
-				failReservation(reservation, "Paypal did not return an approval link");
-			} return addError("Failed to transfer to PayPal payments. Please try again!");
-		
+				failReservation(reservation, "PayPal did not return an approval link.");
+				return addError("Failed to transfer to PayPal payments. Please try again!");
+			}
 			
 			
 		} catch (ApiException | IOException ex) {
@@ -280,6 +280,56 @@ public class BookingBean implements Serializable {
 //		return null;
 	}
 
+	
+	//changes the status after the booking comes back from paypal 
+	public void completePayment() {
+
+		Reservation r = reservationList.findByID(pendingReservationID);
+		if (r == null || "Confirmed".equalsIgnoreCase(r.getStatus())) {
+			return; // nothing to do, or already handled (e.g. a page refresh)
+		}
+
+		ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+		String orderId = ext.getRequestParameterMap().get("token"); // token = PayPal order id
+		if (orderId == null) {
+			failReservation(r, "No order token returned from PayPal.");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Payment could not be confirmed.");
+			return;
+		}
+
+		try {
+			Order order = new PaymentServices().captureOrder(orderId);
+			String status = (order != null && order.getStatus() != null)
+					? order.getStatus().toString() : "UNKNOWN";
+
+			if ("COMPLETED".equalsIgnoreCase(status)) {
+				r.setStatus("Confirmed");
+				r.setHoldExpiry(null);
+				r.setPaypalOrderId(orderId);
+				r.setStatusUpdatedAt(LocalDateTime.now());
+				addMessage(FacesMessage.SEVERITY_INFO, "Payment complete. Booking confirmed for "
+						+ r.getPetName() + ". Total: \u20AC" + String.format("%.2f", r.getTotalPrice()));
+				resetForm();
+			} else {
+				r.setPaypalOrderId(orderId);
+				failReservation(r, "Capture returned status: " + status);
+				addMessage(FacesMessage.SEVERITY_ERROR, "Payment was not completed (" + status + ").");
+			}
+		} catch (ApiException | IOException ex) {
+			ex.printStackTrace();
+			failReservation(r, "Capture failed: " + ex.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Payment could not be completed.");
+		}
+	}
+	
+	// Mark a held reservation as failed so it stops holding the pod and shows
+	// up on the admin follow-up list.
+	private void failReservation(Reservation res, String reason) {
+		res.setStatus("Payment Failed");
+		res.setFailureReason(reason);
+		res.setHoldExpiry(null);                    // release the pod immediately
+		res.setStatusUpdatedAt(LocalDateTime.now());
+	}
 
 	public void resetForm() {
 		selectedPetID = 0;

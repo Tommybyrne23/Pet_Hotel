@@ -15,19 +15,22 @@ public class Reservation implements Serializable {
     private static int uuID = 0;
 
     private int reservationID;
-    private int userID;          			// which user made the booking
-    private int petID;           			// which pet is being booked
-    private int podID;          			// the physical pod allocated to this stay
-    private String petName;      			// pet name for easy display
-    private String checkInDate;  			// format: yyyy-MM-dd
-    private String checkOutDate; 			// format: yyyy-MM-dd
-    private double totalPrice;   			// calculated price
-    private String status;       			// "Pending", "Confirmed", "Cancelled", "Payment Failed", "Expired"
-    private LocalDateTime holdExpiry;		// plan is to set a 15minute window for the set date and time 
-    private String podName;             	// the pod booked, e.g. "Dog Boarding"
-    private double podPricePerNight;    	// the rate at the time of booking
-    private String paypalOrderID; 	 		// the Paypal Order number-  this is set when user returns (whether successful or not) 
-    private LocalDateTime statusUpdatedAt; 	// when the status was changed (will be recorded for the admin view. 
+    private int userID;          // which user made the booking
+    private int petID;           // which pet is being booked
+    private String petName;      // pet name for easy display
+    private String checkInDate;  // format: yyyy-MM-dd
+    private String checkOutDate; // format: yyyy-MM-dd
+    private double totalPrice;   // calculated price
+    private String status;       // "Pending", "Confirmed", "Cancelled"
+    private String podName;              // the pod booked, e.g. "Dog Boarding"
+    private double podPricePerNight;     // the rate at the time of booking
+    private int podID;          // the physical pod allocated to this stay
+
+    // Payment / hold tracking
+    private LocalDateTime holdExpiry;      // pod held until this time while the user pays
+    private String paypalOrderId;          // PayPal order id, for admin reconciliation
+    private String failureReason;          // why a payment ended up cancelled/failed/expired
+    private LocalDateTime statusUpdatedAt; // when the status last changed
 
     // extras chosen, stored as text so the booking still reads correctly
     // if an admin later renames or reprices a service
@@ -144,36 +147,45 @@ public class Reservation implements Serializable {
     public void setPodID(int podID) {
         this.podID = podID;
     }
-    
-    
-    
-public LocalDateTime getHoldExpiry() {
-		return holdExpiry;
-	}
 
-	public void setHoldExpiry(LocalDateTime holdExpiry) {
-		this.holdExpiry = holdExpiry;
-	}
+    public LocalDateTime getHoldExpiry() {
+        return holdExpiry;
+    }
 
-	public String getPaypalOrderID() {
-		return paypalOrderID;
-	}
+    public void setHoldExpiry(LocalDateTime holdExpiry) {
+        this.holdExpiry = holdExpiry;
+    }
 
-	public void setPaypalOrderID(String paypalOrderID) {
-		this.paypalOrderID = paypalOrderID;
-	}
+    public String getPaypalOrderId() {
+        return paypalOrderId;
+    }
 
-	public LocalDateTime getStatusUpdatedAt() {
-		return statusUpdatedAt;
-	}
+    public void setPaypalOrderId(String paypalOrderId) {
+        this.paypalOrderId = paypalOrderId;
+    }
 
-	public void setStatusUpdatedAt(LocalDateTime localDateTime) {
-		this.statusUpdatedAt = localDateTime;
-	}
+    public String getFailureReason() {
+        return failureReason;
+    }
 
-	public void setReservationID(int reservationID) {
-		this.reservationID = reservationID;
-	}
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
+    }
+
+    public LocalDateTime getStatusUpdatedAt() {
+        return statusUpdatedAt;
+    }
+
+    public void setStatusUpdatedAt(LocalDateTime statusUpdatedAt) {
+        this.statusUpdatedAt = statusUpdatedAt;
+    }
+
+    // A pod is "held" only while the booking is Pending and the 15-minute window is still open.
+    public boolean isHoldActive() {
+        return "Pending".equalsIgnoreCase(status)
+                && holdExpiry != null
+                && holdExpiry.isAfter(LocalDateTime.now());
+    }
 
 /* -----------------------------------------
  *
@@ -218,30 +230,4 @@ private String getOrdinalSuffix(int day) {
     }
 }
     
-
-/* ----------------------------------------------------------------------
- * CHeck for active hold in booking status 
- *	if the status is Pending  && hold expiry has a time and the time now 
- *	is before the expiry time, return a true statement 
- *
- *	for any other options, return this as false 
- *	Had an issue with the first code where status would crash due to 
- *	a null point exception. 
-   ----------------------------------------------------------------------*/
-
-public boolean isHoldActive() {
-
-//	if (this.status.equalsIgnoreCase("Pending") && this.holdExpiry.isAfter(LocalDateTime.now())) {
-//		
-//		return true;
-//	}
-//	else return false;
-	
-//	}
-	    return "Pending".equalsIgnoreCase(status) 
-	            && holdExpiry != null
-	            && holdExpiry.isAfter(LocalDateTime.now());
-	}
-
-
 }

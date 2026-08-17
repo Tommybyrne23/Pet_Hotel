@@ -63,10 +63,7 @@ public class AuthorizePayment implements Serializable {
 	public String checkOut() throws IOException {
 	    try {
 	        jakarta.faces.context.ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-	        String baseUrl = extContext.getRequestScheme() + "://" + 
-	                         extContext.getRequestServerName() + ":" + 
-	                         extContext.getRequestServerPort() + 
-	                         extContext.getRequestContextPath();
+	        String baseUrl = extContext.getRequestScheme() + "://" +  extContext.getRequestServerName() + ":" +  extContext.getRequestServerPort() +   extContext.getRequestContextPath();
 
 	        OrderDetail orderDetail = new OrderDetail(product, subTotal, shipping, tax, total);
 	        PaymentServices paymentServices = new PaymentServices();
