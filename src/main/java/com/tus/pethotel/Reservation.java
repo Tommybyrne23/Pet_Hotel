@@ -167,8 +167,8 @@ public LocalDateTime getHoldExpiry() {
 		return statusUpdatedAt;
 	}
 
-	public void setStatusUpdatedAt(LocalDateTime statusUpdatedAt) {
-		this.statusUpdatedAt = statusUpdatedAt;
+	public void setStatusUpdatedAt(LocalDateTime localDateTime) {
+		this.statusUpdatedAt = localDateTime;
 	}
 
 	public void setReservationID(int reservationID) {

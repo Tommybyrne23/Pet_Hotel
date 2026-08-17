@@ -2,7 +2,9 @@ package com.tus.registration;
 
 import java.io.Serializable;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -18,14 +20,21 @@ import com.tus.pethotel.Reservation;
 import com.tus.pethotel.ReservationList;
 import com.tus.pethotel.User;
 import com.tus.Services.Species;
+import com.tus.payment.PaymentServices;
 import com.tus.pethotel.Pod;
 import com.tus.pethotel.PodList;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import com.paypal.sdk.exceptions.ApiException;
+
+import com.tus.payment.OrderDetail;
+import com.tus.payment.PaymentServices;
 
 @Named("BookingBean")
 @SessionScoped
@@ -33,6 +42,7 @@ public class BookingBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private int pendingReservationID;		//setup to link with Paypal payment
 	private int selectedPetID;
 	private int selectedPodID;
 	private Integer[] selectedExtraIDs = new Integer[0];  
@@ -46,10 +56,10 @@ public class BookingBean implements Serializable {
 	@Inject private ReservationList reservationList;
 	@Inject private ServiceList serviceList;
 	@Inject private PodList podList;
+	@Inject private PaymentServices paymentServices; 		//links to PayPal payment methods
 
 
-
-    
+	
     // Get the logged-in user's registered pets for the dropdown.
     
     public List<Pet> getUserPets() {
@@ -192,7 +202,7 @@ public class BookingBean implements Serializable {
 	}
 
 
-	public String confirmBooking() {
+	public String confirmAndPay() {
 
 		if (!priceCalculated) {
 			return addError("Please calculate the price before confirming.");
@@ -231,15 +241,43 @@ public class BookingBean implements Serializable {
 
 		reservation.setExtras(extraLabels);
 		reservation.setTotalPrice(totalPrice);
-		reservation.setStatus("Confirmed");
-
+		reservation.setStatus("Pending");
+		reservation.setHoldExpiry(LocalDateTime.now().plusMinutes(15));		// added 15 minutes searching here --> https://stackoverflow.com/questions/30374796/how-can-i-add-an-int-minutes-to-localdatetime-now
 		reservationList.addReservation(reservation);
-
-		addMessage(FacesMessage.SEVERITY_INFO, "Booking confirmed! Your reservation for "
-				+ pet.getName() + " has been saved. Total: \u20AC"
-				+ String.format("%.2f", totalPrice));
-		resetForm();
+		pendingReservationID = reservation.getReservationID();
+		reservation.setStatusUpdatedAt(LocalDateTime.now());					//records the time of the booking and when it was updated
+		
+		// PAYPAL Starts and app hands detail over to paypal 
+		try {
+			
+			ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+			//sets the url to the local host and appropriate ports dependent on the developer and users. 
+			String baseUrl = ext.getRequestScheme() + "://"  + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
+				
+			OrderDetail orderDetail = new OrderDetail(pod.getName()+ " for " + pet.getName(),0f, 0f, 0f, (float) totalPrice);
+			String approvalLink = new PaymentServices().authorizePayment(orderDetail, baseUrl);
+			
+			if (approvalLink != null) {
+				ext.redirect(approvalLink);
+			} else {
+				failReservation(reservation, "Paypal did not return an approval link");
+			} return addError("Failed to transfer to PayPal payments. Please try again!");
+		
+			
+			
+		} catch (ApiException | IOException ex) {
+			ex.printStackTrace();
+			failReservation(reservation, "Create order failed: " + ex.getMessage());
+			return addError("Could Not Start the Paypal Payment. Please try again.");
+		}
 		return null;
+//		old code change 
+//
+//		addMessage(FacesMessage.SEVERITY_INFO, "Booking confirmed! Your reservation for "
+//				+ pet.getName() + " has been saved. Total: \u20AC"
+//				+ String.format("%.2f", totalPrice));
+//		resetForm();
+//		return null;
 	}
 
 
@@ -251,6 +289,7 @@ public class BookingBean implements Serializable {
 		checkOutDate = null;
 		totalPrice = 0;
 		priceCalculated = false;
+		
 	}
 
 	public String cancel() {
