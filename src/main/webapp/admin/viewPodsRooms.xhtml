@@ -193,6 +193,7 @@
 					</h:panelGroup>
 
 					<h:form id="podTableForm">
+					<h:messages errorClass="error-messages" infoClass="success-messages" />
 						<h:dataTable value="#{RoomPodBean.podsByRoom}" var="pod"
 							rendered="#{podList.numberOfPods gt 0}"
 							styleClass="productTable" headerClass="productTableHeader"
@@ -215,12 +216,22 @@
 									styleClass="#{RoomPodBean.getPodStatusClass(pod)}" />
 							</h:column>
 							<h:column>
-								<f:facet name="header">Actions</f:facet>
-								<h:commandButton styleClass="btn-card-outline"
-									value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
-									action="#{RoomPodBean.toggleOutOfService(pod)}"
-									disabled="#{RoomPodBean.isPodLocked(pod)}"
-									title="#{RoomPodBean.isPodLocked(pod) ? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
+							    <f:facet name="header">Actions</f:facet>
+							
+							    <h:commandButton
+							        styleClass="btn-card-outline"
+							        value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
+							        action="#{RoomPodBean.toggleOutOfService(pod)}"
+							        disabled="#{RoomPodBean.isPodLocked(pod)}"
+							        title="#{RoomPodBean.isPodLocked(pod) ? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
+							
+							    <h:commandButton
+							        styleClass="btn-card-outline"
+							        value="Delete"
+							        action="#{RoomPodBean.deletePod(pod)}"
+							        rendered="#{pod.outOfService}"
+							        onclick="return confirm('Are you sure you want to permanently delete this pod?');" />
+							
 							</h:column>
 						</h:dataTable>
 					</h:form>

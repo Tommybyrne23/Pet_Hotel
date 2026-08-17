@@ -271,6 +271,54 @@ public class PodList implements Serializable {
 		}
 		return free;
 	}
+	
+	public boolean deletePod(int podID) {
+
+	    Pod pod = findByID(podID);
+
+	    if (pod == null) {
+	        return false;
+	    }
+
+	    // Pod must be out of service before it can be deleted
+	    if (!pod.isOutOfService()) {
+	        return false;
+	    }
+
+	    LocalDate today = LocalDate.now();
+	    LocalDate oneYearFromNow = today.plusDays(365);
+
+	    for (Reservation reservation : reservationList.getReservations()) {
+
+	        // A confirmed booking or active hold prevents deletion
+	        boolean podBlock =
+	                "Confirmed".equalsIgnoreCase(reservation.getStatus())
+	                || reservation.isHoldActive();
+
+	        if (reservation.getPodID() != podID || !podBlock) {
+	            continue;
+	        }
+
+	        LocalDate bookedIn = parseDate(reservation.getCheckInDate());
+	        LocalDate bookedOut = parseDate(reservation.getCheckOutDate());
+
+	        if (bookedIn == null || bookedOut == null) {
+	            continue;
+	        }
+
+	        // Check if the booking overlaps the next 365 days
+	        if (datesOverlap(
+	                today,
+	                oneYearFromNow,
+	                bookedIn,
+	                bookedOut)) {
+
+	            return false;
+	        }
+	    }
+
+	    return pods.removeIf(p -> p.getPodID() == podID);
+	}
 
 	public ArrayList<Pod> getPods() {
 		return pods;

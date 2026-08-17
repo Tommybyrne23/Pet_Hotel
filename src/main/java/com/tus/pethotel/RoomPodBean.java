@@ -118,7 +118,51 @@ public class RoomPodBean implements Serializable {
 		pod.setOutOfService(!pod.isOutOfService());
 		return null;
 	}
+	
+	/**
+	 * Deletes a pod if it is out of service and has no
+	 * confirmed booking or active hold within the next 365 days.
+	 */
+	public String deletePod(Pod pod) {
 
+	    if (pod == null) {
+	        return null;
+	    }
+
+	    boolean deleted = podList.deletePod(pod.getPodID());
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+
+	    if (context != null) {
+
+	        if (deleted) {
+
+	            context.addMessage(
+	                "podTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_INFO,
+	                    "Pod " + pod.getLabel() + " has been deleted.",
+	                    null
+	                )
+	            );
+
+	        } else {
+
+	            context.addMessage(
+	                "podTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Pod " + pod.getLabel()
+	                        + " cannot be deleted. It must be out of service "
+	                        + "and have no bookings within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+	    }
+
+	    return null;
+	}
 
 	public String reset() {
 
