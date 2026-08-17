@@ -67,6 +67,20 @@ public class LoginBean implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, messageText, null));
             context.getExternalContext().getFlash().setKeepMessages(true);
         }
+        
+        for (User user : userList.getUsers()) {
+            if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)) {
+                loggedInUser = user;
+
+                if (user.getRole().equals(Role.ADMIN)) {
+                    return "/adminDashboard?faces-redirect=true";
+                } else if (user.getRole().equals(Role.CUSTOMER)) {
+                    return "/userDashboard?faces-redirect=true";
+                } else {
+                    return "/attendantDashboard?faces-redirect=true";
+                }
+            }
+        }
         return "/login?faces-redirect=true";
     }
     
