@@ -323,7 +323,7 @@ public class BookingBean implements Serializable {
 	}
 	
 	
-	private void cancelPayment() {
+	public void cancelPayment() {
 		Reservation r = reservationList.findByID(pendingReservationID);
 		if (r !=null && "Pending".equalsIgnoreCase(r.getStatus())){
 		r.setStatus("Cancelled");					//set the status to Cancelled 
