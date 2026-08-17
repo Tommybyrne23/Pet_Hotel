@@ -8,12 +8,16 @@ import com.tus.Services.Species;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import jakarta.inject.Inject;
 
 @Named("roomList")
 @ApplicationScoped
 public class RoomList implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private PodList podList;
 
 	private ArrayList<Room> rooms;
 
@@ -88,6 +92,35 @@ public class RoomList implements Serializable {
 			}
 		}
 		return matches;
+	}
+	
+	public boolean deleteRoom(int roomID) {
+
+	    Room room = findByID(roomID);
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    List<Pod> roomPods = podList.getPodsForRoom(roomID);
+
+	    // Every pod in the room must be eligible for deletion
+	    for (Pod pod : roomPods) {
+
+	        if (!podList.canDeletePod(pod.getPodID())) {
+	            return false;
+	        }
+	    }
+
+	    // All pods passed the check, so delete the pods first
+	    for (Pod pod : roomPods) {
+	        podList.deletePod(pod.getPodID());
+	    }
+
+	    // Now remove the room itself
+	    rooms.remove(room);
+
+	    return true;
 	}
 
 	public ArrayList<Room> getRooms() {

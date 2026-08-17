@@ -272,7 +272,7 @@ public class PodList implements Serializable {
 		return free;
 	}
 	
-	public boolean deletePod(int podID) {
+	public boolean canDeletePod(int podID) {
 
 	    Pod pod = findByID(podID);
 
@@ -280,7 +280,7 @@ public class PodList implements Serializable {
 	        return false;
 	    }
 
-	    // Pod must be out of service before it can be deleted
+	    // Pod must be out of service
 	    if (!pod.isOutOfService()) {
 	        return false;
 	    }
@@ -290,7 +290,6 @@ public class PodList implements Serializable {
 
 	    for (Reservation reservation : reservationList.getReservations()) {
 
-	        // A confirmed booking or active hold prevents deletion
 	        boolean podBlock =
 	                "Confirmed".equalsIgnoreCase(reservation.getStatus())
 	                || reservation.isHoldActive();
@@ -306,7 +305,6 @@ public class PodList implements Serializable {
 	            continue;
 	        }
 
-	        // Check if the booking overlaps the next 365 days
 	        if (datesOverlap(
 	                today,
 	                oneYearFromNow,
@@ -317,8 +315,20 @@ public class PodList implements Serializable {
 	        }
 	    }
 
-	    return pods.removeIf(p -> p.getPodID() == podID);
+	    return true;
 	}
+	
+	public boolean deletePod(int podID) {
+
+	    if (!canDeletePod(podID)) {
+	        return false;
+	    }
+
+	    Pod pod = findByID(podID);
+
+	    return pods.remove(pod);
+	}
+	
 
 	public ArrayList<Pod> getPods() {
 		return pods;

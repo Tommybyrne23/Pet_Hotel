@@ -101,35 +101,60 @@
 						</div>
 					</h:form>
 
-					<h:dataTable value="#{roomList.rooms}" var="room"
-						styleClass="productTable" headerClass="productTableHeader"
-						rowClasses="productTableOddRow, productTableEvenRow">
-						<h:column>
-							<f:facet name="header">Room</f:facet>
-							<strong>#{room.name}</strong>
-						</h:column>
-						<h:column>
-							<f:facet name="header">Location</f:facet>
-							#{room.location}
-						</h:column>
-						<h:column>
-							<f:facet name="header">Species Type</f:facet>
-							#{room.species.label}
-						</h:column>
-						<h:column>
-							<f:facet name="header">Total Pods</f:facet>
-							#{RoomPodBean.getTotalPods(room)}
-						</h:column>
-						<h:column>
-							<f:facet name="header">Pods in Service</f:facet>
-							#{RoomPodBean.getPodsInService(room)}
-						</h:column>
-						<h:column>
-							<f:facet name="header">Pods available</f:facet>
-							#{RoomPodBean.getPodsAvailable(room)}
-						</h:column>
-					</h:dataTable>
+					<h:form id="roomsTableForm">
 
+					    <h:dataTable value="#{roomList.rooms}" var="room"
+					        styleClass="productTable" headerClass="productTableHeader"
+					        rowClasses="productTableOddRow,productTableEvenRow">
+					
+					        <h:column>
+					            <f:facet name="header">Room</f:facet>
+					            <strong>#{room.name}</strong>
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Location</f:facet>
+					            #{room.location}
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Species Type</f:facet>
+					            #{room.species.label}
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Total Pods</f:facet>
+					            #{RoomPodBean.getTotalPods(room)}
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Pods in Service</f:facet>
+					            #{RoomPodBean.getPodsInService(room)}
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Pods available</f:facet>
+					            #{RoomPodBean.getPodsAvailable(room)}
+					        </h:column>
+					
+					        <h:column>
+					            <f:facet name="header">Actions</f:facet>
+					
+					            <h:commandButton
+					                value="Delete Room"
+					                styleClass="btn-card-outline"
+					                action="#{RoomPodBean.deleteRoom(room)}"
+					                onclick="return confirm('Are you sure you want to delete this room?');" />
+					
+					        </h:column>
+					
+					    </h:dataTable>
+					
+					    <h:messages
+					        errorClass="error-messages"
+					        infoClass="success-messages" />
+					
+					</h:form>
 				</div>
 			</div>
 

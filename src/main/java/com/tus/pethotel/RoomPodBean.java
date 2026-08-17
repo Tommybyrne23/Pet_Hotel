@@ -357,6 +357,48 @@ public class RoomPodBean implements Serializable {
 		return busyOnSelectedDate || busyToday;
 	}
 	
+	public String deleteRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    boolean deleted = roomList.deleteRoom(room.getRoomID());
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+
+	    if (context != null) {
+
+	        if (deleted) {
+
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_INFO,
+	                    "Room " + room.getName() + " has been deleted.",
+	                    null
+	                )
+	            );
+
+	        } else {
+
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Room " + room.getName()
+	                        + " cannot be deleted. All pods in the room "
+	                        + "must be out of service and have no bookings "
+	                        + "within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+	    }
+
+	    return null;
+	}
+	
 	// GETTERS AND SETTERS
 
 	public String getRoomName() {
