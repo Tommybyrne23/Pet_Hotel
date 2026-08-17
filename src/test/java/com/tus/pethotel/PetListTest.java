@@ -2,7 +2,7 @@ package com.tus.pethotel;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,30 +24,30 @@ class PetListTest {
         petList = new PetList();
 
         pet1 = new Pet(
-                1,					//customers userID
-                "Buddy",			//Pet
-                Species.DOG,		//Species
-                "Labrador",			//
-                "1-3 years",		//Age 
-                "Needs medication with food."					//Special Requirements 
+                1,
+                "Buddy",
+                Species.DOG,
+                "Labrador",
+                "1-3 years",
+                "Needs medication with food."
         );
 
         pet2 = new Pet(
-                1,					//customers userID
-                "Milo",				//Pet name 
-                Species.CAT,		//Species 
-                "Siamese",			//species type
-                "4-7 years",		//age
-                ""					//special requirements
+                1,
+                "Milo",
+                Species.CAT,
+                "Siamese",
+                "4-7 years",
+                ""
         );
 
         pet3 = new Pet(
-                2,					//customer user ID
-                "Charlie",			//Pet name 
-                Species.BIRD,		//Species type 
-                "Budgie",			//Type of species
-                "1-5 years",		//age
-                ""					//species requirement
+                2,
+                "Charlie",
+                Species.BIRD,
+                "Budgie",
+                "1-5 years",
+                ""
         );
     }
 
@@ -58,8 +58,7 @@ class PetListTest {
 
         assertEquals(
                 0,
-                petList.getNumberOfPets(),
-                "A new PetList should contain no pets"
+                petList.getNumberOfPets()
         );
     }
 
@@ -72,8 +71,7 @@ class PetListTest {
 
         assertEquals(
                 1,
-                petList.getNumberOfPets(),
-                "Adding a pet should increase the pet count"
+                petList.getNumberOfPets()
         );
     }
 
@@ -85,8 +83,7 @@ class PetListTest {
         petList.addPet(pet1);
 
         assertTrue(
-                petList.getPets().contains(pet1),
-                "The added pet should be stored in the list"
+                petList.getPets().contains(pet1)
         );
     }
 
@@ -114,12 +111,11 @@ class PetListTest {
         petList.addPet(pet2);
         petList.addPet(pet3);
 
-        ArrayList<Pet> userPets = petList.findByUserID(1);
+        List<Pet> userPets = petList.findByUserID(1);
 
         assertEquals(
                 2,
-                userPets.size(),
-                "User 1 should have two pets"
+                userPets.size()
         );
 
         assertTrue(userPets.contains(pet1));
@@ -135,11 +131,10 @@ class PetListTest {
         petList.addPet(pet2);
         petList.addPet(pet3);
 
-        ArrayList<Pet> userPets = petList.findByUserID(1);
+        List<Pet> userPets = petList.findByUserID(1);
 
         assertFalse(
-                userPets.contains(pet3),
-                "User 1 should not receive User 2's pet"
+                userPets.contains(pet3)
         );
     }
 
@@ -151,14 +146,10 @@ class PetListTest {
         petList.addPet(pet1);
         petList.addPet(pet2);
 
-        ArrayList<Pet> userPets = petList.findByUserID(999);
+        List<Pet> userPets = petList.findByUserID(999);
 
         assertNotNull(userPets);
-
-        assertTrue(
-                userPets.isEmpty(),
-                "A user with no pets should receive an empty list"
-        );
+        assertTrue(userPets.isEmpty());
     }
 
 
@@ -170,26 +161,189 @@ class PetListTest {
         petList.addPet(pet2);
         petList.addPet(pet3);
 
-        ArrayList<Pet> pets = petList.getPets();
+        List<Pet> pets = petList.getPets();
 
-        assertEquals(3, pets.size());
+        assertEquals(
+                3,
+                pets.size()
+        );
 
         assertTrue(pets.contains(pet1));
         assertTrue(pets.contains(pet2));
         assertTrue(pets.contains(pet3));
     }
-    
+
+
     @Test
-    @DisplayName("Test: Pet requirements are stored when provided")
-    void testPetRequirements() {
+    @DisplayName("Test: findByPetID returns the correct pet")
+    void testFindByPetID() {
+
+        petList.addPet(pet1);
+        petList.addPet(pet2);
+
+        Pet foundPet = petList.findByPetID(
+                pet1.getPetID()
+        );
+
+        assertNotNull(foundPet);
+
+        assertEquals(
+                pet1,
+                foundPet
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: findByPetID returns null when pet does not exist")
+    void testFindByPetIDNotFound() {
 
         petList.addPet(pet1);
 
-        Pet storedPet = petList.getPets().get(0);
+        Pet foundPet = petList.findByPetID(999);
+
+        assertNull(foundPet);
+    }
+
+
+    @Test
+    @DisplayName("Test: removePet removes the correct pet")
+    void testRemovePet() {
+
+        petList.addPet(pet1);
+        petList.addPet(pet2);
+
+        assertEquals(
+                2,
+                petList.getNumberOfPets()
+        );
+
+        petList.removePet(
+                pet1.getPetID()
+        );
+
+        assertEquals(
+                1,
+                petList.getNumberOfPets()
+        );
+
+        assertFalse(
+                petList.getPets().contains(pet1)
+        );
+
+        assertTrue(
+                petList.getPets().contains(pet2)
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: removePet does nothing when pet does not exist")
+    void testRemovePetNotFound() {
+
+        petList.addPet(pet1);
+
+        petList.removePet(999);
+
+        assertEquals(
+                1,
+                petList.getNumberOfPets()
+        );
+
+        assertTrue(
+                petList.getPets().contains(pet1)
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: getRequirements returns pet requirements")
+    void testGetRequirements() {
+
+        petList.addPet(pet1);
+
+        String requirements = petList.getRequirements(
+                pet1.getPetID()
+        );
 
         assertEquals(
                 "Needs medication with food.",
-                storedPet.getRequirements()
+                requirements
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: getRequirements returns None when requirements are empty")
+    void testGetRequirementsEmpty() {
+
+        petList.addPet(pet2);
+
+        String requirements = petList.getRequirements(
+                pet2.getPetID()
+        );
+
+        assertEquals(
+                "None",
+                requirements
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: getRequirements returns None for unknown pet")
+    void testGetRequirementsUnknownPet() {
+
+        String requirements = petList.getRequirements(999);
+
+        assertEquals(
+                "None",
+                requirements
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: getPetsByUserId returns the user's pets")
+    void testGetPetsByUserId() {
+
+        petList.addPet(pet1);
+        petList.addPet(pet2);
+        petList.addPet(pet3);
+
+        List<Pet> userPets = petList.getPetsByUserId(1);
+
+        assertEquals(
+                2,
+                userPets.size()
+        );
+
+        assertTrue(
+                userPets.contains(pet1)
+        );
+
+        assertTrue(
+                userPets.contains(pet2)
+        );
+
+        assertFalse(
+                userPets.contains(pet3)
+        );
+    }
+
+
+    @Test
+    @DisplayName("Test: getPetsByUserId returns empty list for unknown user")
+    void testGetPetsByUserIdNoPets() {
+
+        petList.addPet(pet1);
+
+        List<Pet> userPets = petList.getPetsByUserId(999);
+
+        assertNotNull(userPets);
+
+        assertTrue(
+                userPets.isEmpty()
         );
     }
 }
