@@ -50,6 +50,20 @@ public class UserList implements Serializable {
         users.add(user);	// add the user to the array list
         return true;		// return the value of true when successful... 
     }
+    
+    /* Updates a user's password. */
+    public boolean updatePassword(int userID, String newPassword) {
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            return false;
+        }
+
+        User user = findByUserID(userID);
+        if (user == null) {
+            return false;
+        }
+        user.setPassword(newPassword);
+        return true;
+    }
 
     public User findByEmail(String email) {
         if (email == null) return null;
