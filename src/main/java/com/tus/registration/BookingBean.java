@@ -1,6 +1,7 @@
 package com.tus.registration;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -16,6 +17,9 @@ import com.tus.pethotel.PetList;
 import com.tus.pethotel.Reservation;
 import com.tus.pethotel.ReservationList;
 import com.tus.pethotel.User;
+import com.tus.Services.Species;
+import com.tus.pethotel.Pod;
+import com.tus.pethotel.PodList;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -41,13 +45,14 @@ public class BookingBean implements Serializable {
 	@Inject private PetList petList;
 	@Inject private ReservationList reservationList;
 	@Inject private ServiceList serviceList;
+	@Inject private PodList podList;
 
 
 
     
     // Get the logged-in user's registered pets for the dropdown.
     
-    public ArrayList<Pet> getUserPets() {
+    public List<Pet> getUserPets() {
         User user = loginBean.getLoggedInUser();
         if (user != null) {
             return petList.findByUserID(user.getUserID());
@@ -151,6 +156,22 @@ public class BookingBean implements Serializable {
 
 			long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
 
+			// A booking needs a physical pod for the pet's species. Checked
+			// here so the customer finds out before seeing a price, but not
+			// allocated until they confirm.
+			Pet pet = getSelectedPet();
+			Species species = pet.getSpecies();
+
+			if (podList.getPodsForSpecies(species).isEmpty()) {
+				return addError("We do not have any " + species.getLabel().toLowerCase()
+						+ " pods set up at the moment. Please contact us to arrange a stay.");
+			}
+
+			if (podList.findAvailablePod(species, checkInDate, checkOutDate) == null) {
+				return addError("All of our " + species.getLabel().toLowerCase()
+						+ " pods are taken for those dates. Please try different dates.");
+			}
+
 			// The pod is always charged per night
 			double total = serviceList.findByID(selectedPodID).getPrice() * nights;
 
@@ -181,9 +202,20 @@ public class BookingBean implements Serializable {
 		Service pod = serviceList.findByID(selectedPodID);
 		User user = loginBean.getLoggedInUser();
 
+		// Re-checked rather than trusting the check at calculate time, since
+		// another customer may have taken the last pod in between
+		Pod allocatedPod = podList.findAvailablePod(pet.getSpecies(),
+				checkInDate, checkOutDate);
+
+		if (allocatedPod == null) {
+			return addError("Sorry, the last " + pet.getSpecies().getLabel().toLowerCase()
+					+ " pod was taken while you were booking. Please try different dates.");
+		}
+
 		Reservation reservation = new Reservation(user.getUserID(), selectedPetID,
 				pet.getName(), checkInDate, checkOutDate);
 
+		reservation.setPodID(allocatedPod.getPodID());
 		reservation.setPodName(pod.getName());
 		reservation.setPodPricePerNight(pod.getPrice());
 
@@ -239,6 +271,28 @@ public class BookingBean implements Serializable {
 			context.addMessage(null, new FacesMessage(severity, summary, null));
 		}
 	}
+	
+	// Feeds the availability note on the booking page. Empty until both
+	// dates are filled in, since availability is date-dependent.
+	public String getPodAvailabilityNote() {
+
+		Pet pet = getSelectedPet();
+
+		if (pet == null || checkInDate == null || checkInDate.isBlank()
+				|| checkOutDate == null || checkOutDate.isBlank()) {
+			return "";
+		}
+
+		int free = podList.countAvailablePods(pet.getSpecies(), checkInDate, checkOutDate);
+
+		if (free == 0) {
+			return "No " + pet.getSpecies().getLabel().toLowerCase()
+					+ " pods are free for those dates.";
+		}
+
+		return free + " " + pet.getSpecies().getLabel().toLowerCase()
+				+ " pod(s) free for those dates.";
+	}
 
 	public int getSelectedPetID() { 
 		return selectedPetID; 
@@ -276,5 +330,8 @@ public class BookingBean implements Serializable {
 	}
 	public boolean isPriceCalculated() {
 		return priceCalculated; 
+	}
+	public void setPodList(PodList podList) {
+		this.podList = podList;
 	}
 }

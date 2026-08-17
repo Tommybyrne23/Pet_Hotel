@@ -609,10 +609,61 @@ input[type="checkbox"] {
 	color: #4E342E;
 }
 
+/* Disabled outline buttons, e.g. taking an occupied pod offline */
+.btn-card-outline:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.btn-card-outline:disabled:hover {
+	background-color: transparent;
+	color: #1e5631;
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 480px) {
 	.auth-card {
 		margin: 30px auto;
 		padding: 30px 22px;
+	}
+}
+
+
+/* --------------------------------
+ 	
+ 	Splitting Admin tables 1/3 2/3 
+
+   --------------------------------*/
+ 
+ 
+   /* Split layout container (33% / 66%) */
+.split-row {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 20px;
+	align-items: start;
+	margin-bottom: 30px;
+	width: 100%;
+}
+
+/* Force elements inside split rows to respect container bounds */
+.split-row .form-panel,
+.split-row .table-card {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+	box-sizing: border-box;
+}
+
+/* Remove min-width restriction so table fits inside 2/3 column */
+.split-row .productTable {
+	width: 100% !important;
+	min-width: 0 !important;
+}
+
+/* Mobile responsive fallback */
+@media (max-width: 900px) {
+	.split-row {
+		grid-template-columns: 1fr;
 	}
 }

@@ -23,18 +23,16 @@ public class Room implements Serializable {
 	private String name;
 	private String location;
 	private Species species;
-	private int capacity;		// the most pods that fit in this room
 
 	public Room() {
 	}
 
-	public Room(String name, String location, Species species, int capacity) {
+	public Room(String name, String location, Species species) {
 		uuID++;
 		this.roomID = uuID;
 		this.name = name;
 		this.location = location;
 		this.species = species;
-		this.capacity = capacity;
 	}
 
 	// GETTERS AND SETTERS
@@ -65,13 +63,5 @@ public class Room implements Serializable {
 
 	public void setSpecies(Species species) {
 		this.species = species;
-	}
-
-	public int getCapacity() {
-		return capacity;
-	}
-
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
 	}
 }

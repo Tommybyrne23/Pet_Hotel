@@ -94,6 +94,10 @@
 								itemValue="#{pod.serviceID}" />
 
 						</h:selectOneMenu>
+						
+						<h:outputText value="#{BookingBean.podAvailabilityNote}"
+							rendered="#{not empty BookingBean.podAvailabilityNote}"
+							style="display: block; margin: 6px 0; color: #555555; font-size: 14px;" />
 
 						<br />
 
