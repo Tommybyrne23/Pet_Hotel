@@ -25,9 +25,10 @@ import com.paypal.sdk.models.PurchaseUnitRequest;
 
 import jakarta.faces.context.FacesContext;
 
+import jakarta.enterprise.context.ApplicationScoped; // or @RequestScoped / @Dependent
 
-//class manages the payPal calls. 
-public class PaymentServices {
+@ApplicationScoped
+public class PaymentServices { 
 	
 	//credentials taken from the developer portal signed up with A00347373
     private static final String CLIENT_ID = "BAAVMM_6WtNW3NIjHV1_Oo5pUffZU8Z3fnua4MqRzVqmqvBfW-FO3yDd5RNVv6kgo23t4qyrpbMJf2QQ_8";
