@@ -23,6 +23,8 @@ import com.paypal.sdk.models.PaymentSource;
 import com.paypal.sdk.models.PaypalWallet;
 import com.paypal.sdk.models.PurchaseUnitRequest;
 
+import jakarta.faces.context.FacesContext;
+
 public class PaymentServices {
     private static final String CLIENT_ID = "BAAVMM_6WtNW3NIjHV1_Oo5pUffZU8Z3fnua4MqRzVqmqvBfW-FO3yDd5RNVv6kgo23t4qyrpbMJf2QQ_8";
     private static final String CLIENT_SECRET = "EKyK2cV6wUEewb01kYoPFRQ-5UADeHXtiUeEsMVini9Fekot5Dq17_2plAGaRLb_NVV6dVoHzS2zSSvP";
@@ -112,7 +114,7 @@ public class PaymentServices {
                 FacesContext.getCurrentInstance().getExternalContext();
         String orderId = ext.getRequestParameterMap().get("token");
         if (orderId == null) {
-            paymentStatus = "No order token returned from PayPal.";
+            paymentStatus = "No order confirmation has been returned from PayPal.";			//change the message to remove the word token for everyday users. 
             return;
         }
         try {

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
-	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <f:metadata>
 	<!-- Checks the user is an admin before the view is rendered -->
@@ -23,12 +26,10 @@
 			hotel, each pod is a space for one animal of a given species.</div>
 
 		<!-- ===== ROOMS ROW (1/3 Form | 2/3 Table) ===== -->
-
-		<!--  <div class="split-row"> this didn't work -->
 		<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 30px; width: 100%;">
+			
 			<!-- Left Side (33%): Add a room -->
 			<div style="flex: 1; min-width: 0;">
-				
 				<div class="section-title">Add a room</div>
 				<div class="form-panel">
 					<h:form id="adminAddRoom">
@@ -76,20 +77,27 @@
 			</div>
 
 			<!-- Right Side (66%): Rooms List -->
-		<div style="flex: 2; min-width: 0;">
+			<div style="flex: 2; min-width: 0;">
 				<div class="section-title">Rooms</div>
-				<!--  manually adding css as the lookupfrom styles didn't work -->
-				<div class="table-card" style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">>
+
+				<div class="table-card"
+					style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">
+
 					<h:form id="availabilityForm">
-						<div style="display: flex; align-items: flex-end; gap: 12px; margin-bottom: 20px;">
-							<div class="form-field" style="margin-bottom: 0;">
+						<div style="display: flex; align-items: flex-end; gap: 15px; margin-bottom: 22px; flex-wrap: wrap;">
+							<div class="form-field" style="margin-bottom: 0; flex: 1; min-width: 220px;">
 								<h:outputLabel for="availabilityDateInput"
-									value="Show pods available for the night of:" />
+									value="Show pods available for the night of:"
+									style="font-weight: bold; color: #6D4C41; margin-bottom: 6px; display: block;" />
+
 								<h:inputText id="availabilityDateInput" type="date"
-									value="#{RoomPodBean.availabilityDate}" />
+									value="#{RoomPodBean.availabilityDate}"
+									style="width: 100%; padding: 10px 14px; font-size: 15px; font-family: inherit; color: #4E342E; background-color: #ffffff; border: 1px solid #cfc3ba; border-radius: 8px; box-sizing: border-box;" />
 							</div>
+
 							<h:commandButton value="Show" styleClass="btn-card-action"
-								action="#{RoomPodBean.applyAvailabilityDate}" />
+								action="#{RoomPodBean.applyAvailabilityDate}"
+								style="height: 42px; margin-bottom: 1px;" />
 						</div>
 					</h:form>
 
@@ -121,16 +129,18 @@
 							#{RoomPodBean.getPodsAvailable(room)}
 						</h:column>
 					</h:dataTable>
+
 				</div>
 			</div>
 
-		</div>
+		</div> <!-- FIXED: Added missing closing div for Rooms Row flex container -->
+
 
 		<!-- ===== PODS ROW (1/3 Form | 2/3 Table) ===== -->
-	<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 30px; width: 100%;">
+		<div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 30px; width: 100%;">
 
 			<!-- Left Side (33%): Add a pod -->
-				<div style="flex: 1; min-width: 0;">
+			<div style="flex: 1; min-width: 0;">
 				<div class="section-title">Add a pod</div>
 				<div class="form-panel">
 					<h:form id="adminAddPod">
@@ -168,10 +178,11 @@
 				</div>
 			</div>
 
-			<!-- Right Column: Rooms List (66%) -->
+			<!-- Right Column: Pod Inventory (66%) -->
 			<div style="flex: 2; min-width: 0;">
 				<div class="section-title">Pod inventory</div>
-				<div class="table-card" style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">
+				<div class="table-card"
+					style="width: 100%; max-width: 100%; margin: 0; box-sizing: border-box;">
 					<p style="margin-top: 0; color: #555555;">
 						Total pods: <strong>#{podList.numberOfPods}</strong>
 					</p>
@@ -183,8 +194,8 @@
 
 					<h:form id="podTableForm">
 						<h:dataTable value="#{RoomPodBean.podsByRoom}" var="pod"
-							rendered="#{podList.numberOfPods gt 0}" styleClass="productTable"
-							headerClass="productTableHeader"
+							rendered="#{podList.numberOfPods gt 0}"
+							styleClass="productTable" headerClass="productTableHeader"
 							rowClasses="productTableOddRow, productTableEvenRow">
 							<h:column>
 								<f:facet name="header">Room</f:facet>
