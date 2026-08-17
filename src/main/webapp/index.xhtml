@@ -34,53 +34,6 @@
     </h:outputScript>
 </h:head>
 <h:body>
-
-    <!-- NAVIGATION BUTTONS -->
-
-    <div class="button" style="text-align:right">
-
-        <!-- Logged out -->
-        <h:panelGroup rendered="#{not LoginBean.loggedIn}">
-
-            <h:button outcome="login"
-                      value="Login"
-                      styleClass="nav-btn" />
-            <br />
-            <h:button outcome="registration"
-                      value="Register"
-                      styleClass="nav-btn" />
-        </h:panelGroup>
-
-        <!-- Logged in -->
-        <h:panelGroup rendered="#{LoginBean.loggedIn}">
-            <h:form>
-                <!-- Everyone logged in -->
-                <h:commandButton value="User Dashboard"
-                                 styleClass="nav-btn"
-                                 action="userDashboard?faces-redirect=true" />
-                <br />
-                <!-- Pet Attendants and Admins -->
-                <h:panelGroup rendered="#{LoginBean.attendant}">
-                    <h:commandButton value="Attendant Dashboard"
-                                     styleClass="nav-btn"
-                                     action="petAttendantDashboard?faces-redirect=true" />
-                    <br />
-                </h:panelGroup>
-                <!-- Admins only -->
-                <h:panelGroup rendered="#{LoginBean.admin}">
-                    <h:commandButton value="Admin Dashboard"
-                                     styleClass="nav-btn"
-                                     action="adminDashboard?faces-redirect=true" />
-                    <br />
-                </h:panelGroup>
-                <!-- Everyone logged in -->
-                <h:commandButton value="Logout"
-                                 styleClass="nav-btn"
-                                 action="#{LoginBean.logout}" />
-            </h:form>
-        </h:panelGroup>
-    </div>
-
     <!-- INTRODUCTION -->
 
     <h1>Adams Ark and Avery</h1>
