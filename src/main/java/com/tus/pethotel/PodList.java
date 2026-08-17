@@ -226,8 +226,11 @@ public class PodList implements Serializable {
 		}
 
 		for (Reservation reservation : reservationList.getReservations()) {
-
-			if (reservation.getPodID() != podID || !"Confirmed".equalsIgnoreCase(reservation.getStatus())) {
+			
+			//updated the checker to add a block. If the pod has a confirmed BOOKING or the reservation status is Active 
+			boolean podBlock = "Confirmed".equalsIgnoreCase(reservation.getStatus()) || reservation.isHoldActive() ;
+																										  
+			if (reservation.getPodID() != podID || !podBlock ) {
 				continue;
 			}
 
