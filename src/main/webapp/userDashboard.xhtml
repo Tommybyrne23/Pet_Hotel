@@ -59,6 +59,51 @@
     </h:column>
 
 		</h:dataTable>
+		
+		
+		
+       <!-- Section Title -->
+		<div class="section-title">Your Bookings</div>
+		
+		<!-- Bookings table -->
+<h:dataTable value="#{BookingBean.userBookings}"
+    var="booking"
+    rendered="#{not empty BookingBean.userBookings}"
+    styleClass="productTable"
+    headerClass="productTableHeader"
+    rowClasses="productTableOddRow, productTableEvenRow">
+
+			<h:column>
+				<f:facet name="header">Booking No.</f:facet>
+				#{booking.reservationID}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Pet</f:facet>
+				#{booking.petName}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Check-In</f:facet>
+				#{booking.checkInDate}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Check-Out</f:facet>
+				#{booking.checkOutDate}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Price</f:facet>
+				&#8364;#{booking.totalPrice}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Status</f:facet>
+				#{booking.status}
+			</h:column>
+
+		</h:dataTable>
 
 		<!-- Empty State Message -->
 		<h:outputText value="You do not have any pets registered yet."

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class OrderDetailsTest {
+class paymentTest {
 
 	@BeforeEach
 	void setUp() throws Exception {

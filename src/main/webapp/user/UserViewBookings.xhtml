@@ -7,6 +7,10 @@
       xmlns:p="http://primefaces.org/ui">
 
 
+<f:metadata>
+    <f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
+
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
 	<title>My Bookings</title>
@@ -14,7 +18,9 @@
 
 <h:body>
 
-	<h1>My Bookings</h1>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+<div class="dashboard-wrapper">  <!-- makes the page width slightly narrower, tables look better -->
+    <div class="dashboard-title">My Bookings</div>
 
 	<h:form>
 
@@ -70,11 +76,11 @@
 		</h:dataTable>
 
 		<br />
-
-		<h:link outcome="/userDashboard"
-			value="Back to Dashboard" />
-
+<h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
 	</h:form>
-
+</div>
 </h:body>
 </html>
