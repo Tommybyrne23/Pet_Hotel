@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<f:metadata>
+
+    <f:viewParam
+        name="podID"
+        value="#{podBean.selectedPodID}" />
+
+    <f:viewAction
+        action="#{podBean.loadPod}" />
+
+</f:metadata>
+
+
+<h:head>
+
+    <title>Edit Pod</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .readonly {
+            padding: 10px;
+            background-color: #eeeeee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .save {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .cancel {
+            background-color: #777;
+            color: white;
+        }
+
+        .message {
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</h:head>
+
+
+<h:body>
+
+    <div class="container">
+
+        <h1>Edit Pod</h1>
+
+
+        <h:messages
+            styleClass="message"
+            infoClass="message"
+            errorClass="message" />
+
+
+        <h:panelGroup
+            rendered="#{not empty podBean.selectedPod}">
+
+            <h:form id="editPodForm">
+
+
+                <!-- POD ID - READ ONLY -->
+
+                <div class="field">
+
+                    <h:outputLabel value="Pod ID" />
+
+                    <div class="readonly">
+
+                        <h:outputText
+                            value="#{podBean.selectedPod.podID}" />
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROOM - READ ONLY -->
+
+                <div class="field">
+
+                    <h:outputLabel value="Room" />
+
+                    <div class="readonly">
+
+                        <h:outputText
+                            value="#{podBean.selectedPodRoom.name}" />
+
+                    </div>
+
+                </div>
+
+
+                <!-- SPECIES - READ ONLY -->
+
+                <div class="field">
+
+                    <h:outputLabel value="Species" />
+
+                    <div class="readonly">
+
+                        <h:outputText
+                            value="#{podBean.selectedPodSpecies.label}" />
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS - READ ONLY -->
+
+                <div class="field">
+
+                    <h:outputLabel value="Status" />
+
+                    <div class="readonly">
+
+                        <h:outputText
+                            value="#{podBean.selectedPodStatus}" />
+
+                    </div>
+
+                </div>
+
+
+                <!-- ONLY EDITABLE FIELD -->
+
+                <div class="field">
+
+                    <h:outputLabel
+                        for="podName"
+                        value="Pod Name" />
+
+                    <h:inputText
+                        id="podName"
+                        value="#{podBean.editPodLabel}"
+                        styleClass="input"
+                        required="true"
+                        requiredMessage="Please enter a pod name." />
+
+                    <h:message
+                        for="podName"
+                        errorClass="message" />
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="buttons">
+
+                    <h:commandButton
+                        value="Save Changes"
+                        action="#{podBean.savePod}"
+                        styleClass="button save" />
+
+                    <h:commandButton
+                        value="Cancel"
+                        action="#{podBean.cancel}"
+                        immediate="true"
+                        styleClass="button cancel" />
+
+                </div>
+
+
+            </h:form>
+
+        </h:panelGroup>
+
+
+        <!-- POD NOT FOUND -->
+
+        <h:panelGroup
+            rendered="#{empty podBean.selectedPod}">
+
+            <p>
+                Pod edited successfully.
+            </p>
+
+            <h:button
+                value="Back to Pods"
+                outcome="viewPodsRooms"
+                styleClass="button cancel" />
+
+        </h:panelGroup>
+
+
+    </div>
+
+</h:body>
+
+</html>

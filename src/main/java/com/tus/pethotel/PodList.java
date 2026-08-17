@@ -138,6 +138,34 @@ public class PodList implements Serializable {
 		pods.add(pod);
 		return true;
 	}
+	
+	public boolean renamePod(int podID, String newLabel) {
+
+	    Pod pod = findByID(podID);
+
+	    // Pod doesn't exist
+	    if (pod == null) {
+	        return false;
+	    }
+
+	    // Label can't be blank
+	    if (newLabel == null || newLabel.trim().isEmpty()) {
+	        return false;
+	    }
+
+	    newLabel = newLabel.trim();
+
+	    // Don't allow the same label to already exist in this room
+	    if (isLabelTakenInRoom(newLabel, pod.getRoomID())) {
+	        // Allow the pod to keep its current name
+	        if (!newLabel.equalsIgnoreCase(pod.getLabel())) {
+	            return false;
+	        }
+	    }
+
+	    pod.setLabel(newLabel);
+	    return true;
+	}
 
 	public Pod findByID(int podID) {
 
