@@ -786,3 +786,69 @@ input[type="checkbox"] {
 	color: #ffffff !important;
 	border-radius: 4px;
 }    
+
+/* ---- Homepage hero slideshow (index.xhtml) ---- */
+
+.hero-slideshow {
+	position: relative;
+	width: 90%;
+	max-width: 1400px;
+	height: 700px;
+	margin: 25px auto 35px auto;
+	overflow: hidden;
+	border-radius: 16px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-slideshow img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center 35%;
+	opacity: 0;
+	animation: heroFade 30s infinite;
+}
+
+/* Five images, six seconds each, with a short crossfade between */
+@keyframes heroFade {
+	0%   { opacity: 0; }
+	2%   { opacity: 1; }
+	15%  { opacity: 1; }
+	18%  { opacity: 0; }
+	100% { opacity: 0; }
+}
+
+.hero-slideshow img:nth-child(1) { animation-delay: 0s; }
+.hero-slideshow img:nth-child(2) { animation-delay: 5s; }
+.hero-slideshow img:nth-child(3) { animation-delay: 10s; }
+.hero-slideshow img:nth-child(4) { animation-delay: 15s; }
+.hero-slideshow img:nth-child(5) { animation-delay: 20s; }
+.hero-slideshow img:nth-child(6) { animation-delay: 25s; }
+
+/* Respect a visitor's system setting for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.hero-slideshow img {
+		animation: none;
+	}
+	.hero-slideshow img:nth-child(1) {
+		opacity: 1;
+	}
+}
+
+/* A left-column heading should not be centred or underlined */
+.service-left h1 {
+	text-align: left;
+	border-bottom: none;
+	margin: 0;
+}
+
+/* The service row rule above sizes photos to a fixed box and crops the
+   overflow, which mangles the logo's wider aspect ratio */
+.service-left img.site-logo {
+	width: 320px;
+	height: auto;
+	object-fit: contain;
+}

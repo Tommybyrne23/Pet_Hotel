@@ -9,8 +9,8 @@
 
     <h:outputStylesheet library="css" name="styles.css" />
     <link rel="icon"
-          type="image/png"
-          href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+          type="image/svg+xml"
+          href="#{request.contextPath}/images/3a-logo-badge.svg" />
     <title>Adam's Ark and Avery</title>
     <!-- Collapsible Services JavaScript -->
     <h:outputScript target="head">
@@ -34,15 +34,31 @@
     </h:outputScript>
 </h:head>
 <h:body>
-    <!-- INTRODUCTION -->
-
-    <h1>Adams Ark and Avery</h1>
-    <p class="intro">
-        Whether you're away for a day, a weekend, or an extended holiday,
-        <br />
-        our dedicated team is committed to providing a safe, comfortable,
-        and caring environment for every pet in our care.
-    </p>
+    
+    <!-- INTRODUCTION -->  
+    <div class="service-left">
+        <div>
+            <h1><img src="images/3a-logo.svg" alt="3A Pet Hotel" class="site-logo" /></h1>
+        </div>
+        <div>
+            <p class="intro">
+                Whether you're away for a day, a weekend, or an extended holiday,
+        		our dedicated team is committed to providing a safe, comfortable,
+        		and caring environment for every pet in our care.
+            </p>
+        </div>
+    </div>
+    
+    <div class="hero-slideshow">
+        <h:graphicImage value="/images/DogPool.webp" alt="A couple checkin-in their dog at the hotel" />
+        <h:graphicImage value="/images/catHotel.webp" alt="Dogs playing in a mini pool" />
+        <h:graphicImage value="/images/aviary2.jpg" alt="Some birds in an aviary" />
+        <h:graphicImage value="/images/aquariam1.jpg" alt="Cat pods in a pet hotel" />
+        <h:graphicImage value="/images/dogKing.avif" alt="An aquarium at 3A Pet Hotel" />
+        <h:graphicImage value="/images/catHotel2.webp" alt="Some pets playing in a pet playground" />
+    </div>
+    
+    
     <!-- SERVICES -->
     <h2>Services</h2>
     
