@@ -422,6 +422,45 @@ public class PodList implements Serializable {
 	    return true;
 	}
 	
+	public boolean isPodOccupied(int podID, String checkInDate, String checkOutDate) {
+
+	    Pod pod = findByID(podID);
+
+	    LocalDate checkIn = parseDate(checkInDate);
+	    LocalDate checkOut = parseDate(checkOutDate);
+
+	    if (pod == null
+	            || checkIn == null
+	            || checkOut == null
+	            || !checkOut.isAfter(checkIn)) {
+	        return false;
+	    }
+
+	    for (Reservation reservation : reservationList.getReservations()) {
+
+	        boolean podBlock =
+	                "Confirmed".equalsIgnoreCase(reservation.getStatus())
+	                || reservation.isHoldActive();
+
+	        if (reservation.getPodID() != podID || !podBlock) {
+	            continue;
+	        }
+
+	        LocalDate bookedIn = parseDate(reservation.getCheckInDate());
+	        LocalDate bookedOut = parseDate(reservation.getCheckOutDate());
+
+	        if (bookedIn == null || bookedOut == null) {
+	            continue;
+	        }
+
+	        if (datesOverlap(checkIn, checkOut, bookedIn, bookedOut)) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+	
 
 	public ArrayList<Pod> getPods() {
 		return pods;

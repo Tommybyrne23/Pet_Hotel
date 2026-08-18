@@ -204,26 +204,38 @@ public class RoomPodBean implements Serializable {
 	 */
 	public String getPodStatus(Pod pod) {
 
-		if (pod.isOutOfService()) {
-			return "Out of service";
-		}
+	    LocalDate night = parseAvailabilityDate();
 
-		LocalDate night = parseAvailabilityDate();
+	    boolean occupied = podList.isPodOccupied(
+	            pod.getPodID(),
+	            night.toString(),
+	            night.plusDays(1).toString());
 
-		return podList.isPodAvailable(pod.getPodID(), night.toString(),
-				night.plusDays(1).toString()) ? "Available" : "Occupied";
+	    if (occupied) {
+	        return "Occupied";
+	    }
+
+	    if (pod.isOutOfService()) {
+	        return "Out of service";
+	    }
+
+	    return "Available";
 	}
-
 	// Pill styling for the status column, using the badge classes
 	// already in styles.css
 	public String getPodStatusClass(Pod pod) {
 
-		if (pod.isOutOfService()) {
-			return "status-cancelled";
-		}
+	    String status = getPodStatus(pod);
 
-		return "Available".equals(getPodStatus(pod))
-				? "status-available" : "status-pending";
+	    if ("Occupied".equals(status)) {
+	        return "status-pending";
+	    }
+
+	    if ("Out of service".equals(status)) {
+	        return "status-cancelled";
+	    }
+
+	    return "status-available";
 	}
 		
 		
