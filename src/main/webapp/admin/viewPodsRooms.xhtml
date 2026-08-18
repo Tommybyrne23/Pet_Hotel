@@ -218,65 +218,188 @@
 					</h:panelGroup>
 
 					<h:form id="podTableForm">
-					<h:messages errorClass="error-messages" infoClass="success-messages" />
-						<h:dataTable value="#{RoomPodBean.podsByRoom}" var="pod"
-							rendered="#{podList.numberOfPods gt 0}"
-							styleClass="productTable" headerClass="productTableHeader"
-							rowClasses="productTableOddRow, productTableEvenRow">
+					    <h:messages
+					        errorClass="error-messages"
+					        infoClass="success-messages" />
+					
+					    <h:dataTable
+					        value="#{RoomPodBean.podsByRoom}"
+					        var="pod"
+					        rendered="#{podList.numberOfPods gt 0}"
+					        styleClass="productTable"
+					        headerClass="productTableHeader"
+					        rowClasses="productTableOddRow, productTableEvenRow">
+					
+					
+					        <!-- ROOM -->
 							<h:column>
-								<f:facet name="header">Room</f:facet>
-								<strong>#{RoomPodBean.getRoomName(pod)}</strong>
-							</h:column>
-							<h:column>
-								<f:facet name="header">Pod</f:facet>
-								#{pod.label}
-							</h:column>
-							<h:column>
-								<f:facet name="header">For</f:facet>
-								#{RoomPodBean.getSpeciesLabel(pod)}
-							</h:column>
-							<h:column>
-								<f:facet name="header">On selected date</f:facet>
-								<h:outputText value="#{RoomPodBean.getPodStatus(pod)}"
-									styleClass="#{RoomPodBean.getPodStatusClass(pod)}" />
-							</h:column>
-
-							<h:column>
+							    <f:facet name="header">Room</f:facet>
 							
+							    <!-- Normal mode -->
+							    <h:panelGroup rendered="#{not podBean.isEditing(pod)}">
+							        <strong>
+							            #{RoomPodBean.getRoomName(pod)}
+							        </strong>
+							    </h:panelGroup>
+							
+							    <!-- Edit mode -->
+							    <h:panelGroup rendered="#{podBean.isEditing(pod)}">
+							        <h:selectOneMenu
+							            id="editPodRoom"
+							            value="#{podBean.editPodRoomID}">
+							
+							            <f:selectItems
+							                value="#{RoomPodBean.roomOptions}"
+							                var="r"
+							                itemLabel="#{RoomPodBean.getRoomLabel(r)}"
+							                itemValue="#{r.roomID}" />
+							
+							        </h:selectOneMenu>
+							    </h:panelGroup>
+							</h:column>
+					
+					
+					        <!-- POD -->
+					
+					        <h:column>
+					
+					            <f:facet name="header">Pod</f:facet>
+					
+					
+					            <!-- Normal label -->
+					
+					            <h:panelGroup
+					                rendered="#{not podBean.isEditing(pod)}">
+					
+					                <h:outputText value="#{pod.label}" />
+					
+					            </h:panelGroup>
+					
+					
+					            <!-- Editable label -->
+					
+					            <h:panelGroup
+					                rendered="#{podBean.isEditing(pod)}">
+					
+					                <h:inputText
+					                    id="podNameInput"
+					                    value="#{podBean.editPodLabel}"
+					                    styleClass="pod-edit-input"
+					                    required="true"
+					                    requiredMessage="Please enter a pod name." />
+					
+					                <h:message
+					                    for="podNameInput"
+					                    errorClass="error-messages" />
+					
+					            </h:panelGroup>
+					
+					        </h:column>
+					
+					
+					        <!-- SPECIES -->
+					
+					        <h:column>
+					
+					            <f:facet name="header">For</f:facet>
+					
+					            #{RoomPodBean.getSpeciesLabel(pod)}
+					
+					        </h:column>
+					
+					
+					        <!-- STATUS -->
+					
+					        <h:column>
+					
+					            <f:facet name="header">
+					                On selected date
+					            </f:facet>
+					
+					            <h:outputText
+					                value="#{RoomPodBean.getPodStatus(pod)}"
+					                styleClass="#{RoomPodBean.getPodStatusClass(pod)}" />
+					
+					        </h:column>
+					
+					
+					        <!-- ACTIONS -->
+					
+							<h:column>
 							    <f:facet name="header">Actions</f:facet>
 							
 							
-							    <h:button
-							        value="Edit"
-							        styleClass="btn-card-outline"
-							        outcome="editPods">
+							    <!-- ========================= -->
+							    <!-- NORMAL MODE -->
+							    <!-- ========================= -->
 							
-							        <f:param
-							            name="podID"
-							            value="#{pod.podID}" />
+							    <h:panelGroup rendered="#{not podBean.isEditing(pod)}">
 							
-							    </h:button>
+							       <!-- EDIT -->
+									<h:commandButton
+									    id="editPodButton"
+									    value="Edit"
+									    styleClass="btn-card-outline"
+									    action="#{podBean.startEdit(pod)}"
+									    rendered="#{pod.outOfService and not podBean.isEditing(pod)}" />
+									
+									<h:message
+									    for="editPodButton"
+									    errorClass="error-messages" />
 							
 							
-							    <h:commandButton
-							        styleClass="btn-card-outline"
-							        value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
-							        action="#{RoomPodBean.toggleOutOfService(pod)}"
-							        disabled="#{RoomPodBean.isPodLocked(pod)}"
-							        title="#{RoomPodBean.isPodLocked(pod) ? 'This pod has a pet in it today and cannot be taken offline.' : ''}" />
+							        <!-- TAKE OFFLINE / RETURN TO SERVICE -->
+							
+							        <h:commandButton
+							            styleClass="btn-card-outline"
+							            value="#{pod.outOfService ? 'Return to service' : 'Take offline'}"
+							            action="#{RoomPodBean.toggleOutOfService(pod)}"
+							            disabled="#{RoomPodBean.isPodLocked(pod)}"
+							            title="#{RoomPodBean.isPodLocked(pod)
+							                ? 'This pod has a pet in it today and cannot be taken offline.'
+							                : ''}" />
 							
 							
-							    <h:commandButton
-							        styleClass="btn-card-outline"
-							        value="Delete"
-							        action="#{RoomPodBean.deletePod(pod)}"
-							        rendered="#{pod.outOfService}"
-							        onclick="return confirm('Are you sure you want to permanently delete this pod?');" />
+							        <!-- DELETE -->
+							
+							        <h:commandButton
+							            styleClass="btn-card-outline"
+							            value="Delete"
+							            action="#{RoomPodBean.deletePod(pod)}"
+							            rendered="#{pod.outOfService}"
+							            onclick="return confirm('Are you sure you want to permanently delete this pod?');" />
+							
+							    </h:panelGroup>
+							
+							
+							    <!-- ========================= -->
+							    <!-- EDIT MODE -->
+							    <!-- ========================= -->
+							
+							    <h:panelGroup rendered="#{podBean.isEditing(pod)}">
+							
+							        <!-- SAVE -->
+							
+							        <h:commandButton
+							            value="Save"
+							            styleClass="btn-card-action"
+							            action="#{podBean.savePod(pod)}" />
+							
+							
+							        <!-- CANCEL -->
+							
+							        <h:commandButton
+							            value="Cancel"
+							            styleClass="btn-card-outline"
+							            action="#{podBean.cancelEdit}"
+							            immediate="true" />
+							
+							    </h:panelGroup>
 							
 							</h:column>
-
-
-						</h:dataTable>
+					
+					    </h:dataTable>
+					
 					</h:form>
 				</div>
 			</div>

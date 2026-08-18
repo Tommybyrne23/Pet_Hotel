@@ -2,13 +2,11 @@ package com.tus.pethotel;
 
 import java.io.Serializable;
 
-import com.tus.Services.Species;
-
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 @Named("podBean")
 @SessionScoped
@@ -19,38 +17,60 @@ public class PodBean implements Serializable {
     @Inject
     private PodList podList;
 
-    @Inject
-    private RoomList roomList;
+    // The pod currently being edited
+    private int editingPodID = 0;
 
-    private int selectedPodID;
-
-    private Pod selectedPod;
-
+    // Temporary value typed into the input box
     private String editPodLabel;
+    private int editPodRoomID;
 
 
     // ---------------------------------------------------------
-    // LOAD SELECTED POD
+    // START EDITING
     // ---------------------------------------------------------
 
-    /**
-     * Loads the pod selected by the admin.
-     *
-     * This is called when the edit page is opened.
-     */
-    public void loadPod() {
+    public void startEdit(Pod pod) {
 
-        if (selectedPodID <= 0) {
-            selectedPod = null;
-            editPodLabel = null;
+        if (pod == null) {
             return;
         }
 
-        selectedPod = podList.findByID(selectedPodID);
+        // Use the same rules as deleting a pod.
+        if (!podList.canDeletePod(pod.getPodID())) {
 
-        if (selectedPod != null) {
-            editPodLabel = selectedPod.getLabel();
+            FacesContext context = FacesContext.getCurrentInstance();
+
+            if (context != null) {
+            	context.addMessage(
+            		    "editPodButton",
+            		    new FacesMessage(
+            		        FacesMessage.SEVERITY_ERROR,
+            		        "This pod cannot be edited because it has a reservation within the next 365 days.",
+            		        null
+            		    )
+            	);
+            }
+
+            return;
         }
+
+        editingPodID = pod.getPodID();
+        editPodLabel = pod.getLabel();
+        editPodRoomID = pod.getRoomID();
+    }
+
+
+    // ---------------------------------------------------------
+    // CHECK IF POD IS BEING EDITED
+    // ---------------------------------------------------------
+
+    public boolean isEditing(Pod pod) {
+
+        if (pod == null) {
+            return false;
+        }
+
+        return pod.getPodID() == editingPodID;
     }
 
 
@@ -58,207 +78,53 @@ public class PodBean implements Serializable {
     // SAVE POD
     // ---------------------------------------------------------
 
-    /**
-     * Saves the new pod name.
-     */
-    public String savePod() {
+    public void savePod(Pod pod) {
 
-        // Make sure the selected pod exists
-        if (selectedPod == null || selectedPod.getPodID() != selectedPodID) {
-            selectedPod = podList.findByID(selectedPodID);
+        if (pod == null) {
+            return;
         }
-
-        // Pod not found
-        if (selectedPod == null) {
-            return "viewPodsRooms?faces-redirect=true";
-        }
-
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        // ---------------------------------------------------------
-        // CHECK FOR BLANK NAME
-        // ---------------------------------------------------------
 
         if (editPodLabel == null || editPodLabel.trim().isEmpty()) {
-
-            context.addMessage(
-                "editPodForm:podName",
-                new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR,
-                    "Please enter a pod name.",
-                    null
-                )
-            );
-
-            return null;
+            return;
         }
 
-        String newLabel = editPodLabel.trim();
-
-        // ---------------------------------------------------------
-        // CHECK FOR DUPLICATE NAME
-        // ---------------------------------------------------------
-
-        boolean sameAsCurrentName =
-            newLabel.equalsIgnoreCase(selectedPod.getLabel());
-
-        if (!sameAsCurrentName
-                && podList.isLabelTakenInRoom(
-                    newLabel,
-                    selectedPod.getRoomID())) {
-
-            context.addMessage(
-                "editPodForm:podName",
-                new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR,
-                    "A pod with this name already exists in this room.",
-                    null
-                )
-            );
-
-            return null;
-        }
-
-        // ---------------------------------------------------------
-        // SAVE / RENAME POD
-        // ---------------------------------------------------------
-
-        boolean renamed = podList.renamePod(
-            selectedPod.getPodID(),
-            newLabel
+        boolean updated = podList.updatePod(
+            pod.getPodID(),
+            editPodLabel,
+            editPodRoomID
         );
 
-        // Save failed
-        if (!renamed) {
+        if (!updated) {
 
-            context.addMessage(
-                "editPodForm:podName",
-                new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR,
-                    "The pod could not be saved. Please try again.",
-                    null
-                )
-            );
+            FacesContext context = FacesContext.getCurrentInstance();
 
-            return null;
-        }
-
-        // ---------------------------------------------------------
-        // SUCCESSFUL SAVE
-        // ---------------------------------------------------------
-
-        selectedPod = null;
-        selectedPodID = 0;
-        editPodLabel = null;
-
-        // Redirect to the pods/rooms page
-        return "viewPodsRooms?faces-redirect=true";
-    }
-
-    // ---------------------------------------------------------
-    // SELECTED POD
-    // ---------------------------------------------------------
-
-    public Pod getSelectedPod() {
-
-        if (selectedPod == null && selectedPodID > 0) {
-            selectedPod = podList.findByID(selectedPodID);
-
-            if (selectedPod != null && editPodLabel == null) {
-                editPodLabel = selectedPod.getLabel();
+            if (context != null) {
+                context.addMessage(
+                    "editPodButton",
+                    new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR,
+                        "A pod with this name already exists in that room.",
+                        null
+                    )
+                );
             }
+
+            return;
         }
 
-        return selectedPod;
-    }
-
-
-    // ---------------------------------------------------------
-    // ROOM
-    // ---------------------------------------------------------
-
-    public Room getSelectedPodRoom() {
-
-        Pod pod = getSelectedPod();
-
-        if (pod == null) {
-            return null;
-        }
-
-        return roomList.findByID(pod.getRoomID());
-    }
-
-
-    // ---------------------------------------------------------
-    // SPECIES
-    // ---------------------------------------------------------
-
-    public Species getSelectedPodSpecies() {
-
-        Pod pod = getSelectedPod();
-
-        if (pod == null) {
-            return null;
-        }
-
-        return podList.getSpeciesFor(pod);
-    }
-
-
-    // ---------------------------------------------------------
-    // STATUS
-    // ---------------------------------------------------------
-
-    public String getSelectedPodStatus() {
-
-        Pod pod = getSelectedPod();
-
-        if (pod == null) {
-            return "";
-        }
-
-        if (pod.isOutOfService()) {
-            return "Out of service";
-        }
-
-        return "Available";
-    }
-
-
-    // ---------------------------------------------------------
-    // CANCEL
-    // ---------------------------------------------------------
-
-    public String cancel() {
-    	
-        selectedPod = null;
-        selectedPodID = 0;
+        editingPodID = 0;
         editPodLabel = null;
-        
-        return "viewPodsRooms?faces-redirect=true";
     }
 
+
     // ---------------------------------------------------------
-    // MESSAGES
+    // CANCEL EDIT
     // ---------------------------------------------------------
 
-    private void addMessage(
-            FacesMessage.Severity severity,
-            String message) {
+    public void cancelEdit() {
 
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        if (context != null) {
-
-            context.addMessage(
-                null,
-                new FacesMessage(
-                    severity,
-                    message,
-                    null
-                )
-            );
-        }
+        editingPodID = 0;
+        editPodLabel = null;
     }
 
 
@@ -266,62 +132,36 @@ public class PodBean implements Serializable {
     // GETTERS / SETTERS
     // ---------------------------------------------------------
 
-    public int getSelectedPodID() {
-        return selectedPodID;
+    public int getEditingPodID() {
+        return editingPodID;
     }
 
-    public void setSelectedPodID(int selectedPodID) {
-
-        this.selectedPodID = selectedPodID;
-
-        // Load the pod immediately when the ID changes
-        if (selectedPodID > 0) {
-
-            selectedPod = podList.findByID(selectedPodID);
-
-            if (selectedPod != null) {
-                editPodLabel = selectedPod.getLabel();
-            }
-        }
+    public void setEditingPodID(int editingPodID) {
+        this.editingPodID = editingPodID;
     }
-
-
-    public Pod getSelectedPodObject() {
-        return selectedPod;
-    }
-
-
-    public void setSelectedPod(Pod selectedPod) {
-
-        this.selectedPod = selectedPod;
-
-        if (selectedPod != null) {
-
-            this.selectedPodID = selectedPod.getPodID();
-            this.editPodLabel = selectedPod.getLabel();
-        }
-    }
-
 
     public String getEditPodLabel() {
         return editPodLabel;
     }
 
-
     public void setEditPodLabel(String editPodLabel) {
         this.editPodLabel = editPodLabel;
+    }
+    
+    public int getEditPodRoomID() {
+        return editPodRoomID;
+    }
+
+    public void setEditPodRoomID(int editPodRoomID) {
+        this.editPodRoomID = editPodRoomID;
     }
 
 
     // ---------------------------------------------------------
-    // TESTING / CDI SETTERS
+    // TESTING / CDI SETTER
     // ---------------------------------------------------------
 
     public void setPodList(PodList podList) {
         this.podList = podList;
-    }
-
-    public void setRoomList(RoomList roomList) {
-        this.roomList = roomList;
     }
 }

@@ -357,6 +357,71 @@ public class PodList implements Serializable {
 	    return pods.remove(pod);
 	}
 	
+	public boolean movePod(int podID, int newRoomID) {
+
+	    Pod pod = findByID(podID);
+
+	    if (pod == null) {
+	        return false;
+	    }
+
+	    // Make sure the destination room exists
+	    if (roomList.findByID(newRoomID) == null) {
+	        return false;
+	    }
+
+	    // If the pod is already in this room, nothing needs changing
+	    if (pod.getRoomID() == newRoomID) {
+	        return true;
+	    }
+
+	    // The pod's label must be unique within the destination room
+	    if (isLabelTakenInRoom(pod.getLabel(), newRoomID)) {
+	        return false;
+	    }
+
+	    pod.setRoomID(newRoomID);
+	    return true;
+	}
+	
+	public boolean updatePod(int podID, String newLabel, int newRoomID) {
+
+	    Pod pod = findByID(podID);
+
+	    if (pod == null) {
+	        return false;
+	    }
+
+	    if (newLabel == null || newLabel.trim().isEmpty()) {
+	        return false;
+	    }
+
+	    if (roomList.findByID(newRoomID) == null) {
+	        return false;
+	    }
+
+	    newLabel = newLabel.trim();
+
+	    // Check the destination room for another pod
+	    // with the same label.
+	    for (Pod other : pods) {
+
+	        if (other.getPodID() == podID) {
+	            continue;
+	        }
+
+	        if (other.getRoomID() == newRoomID
+	                && other.getLabel().equalsIgnoreCase(newLabel)) {
+	            return false;
+	        }
+	    }
+
+	    pod.setLabel(newLabel);
+	    pod.setRoomID(newRoomID);
+
+	    return true;
+	}
+	
 
 	public ArrayList<Pod> getPods() {
 		return pods;
