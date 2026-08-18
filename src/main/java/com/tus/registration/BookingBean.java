@@ -459,4 +459,10 @@ public class BookingBean implements Serializable {
 	public void setPodList(PodList podList) {
 		this.podList = podList;
 	}
+	public void setLoginBean(LoginBean loginBean) {
+	    this.loginBean = loginBean;
+	}
+	public void setReservationList(ReservationList reservationList) {
+	    this.reservationList = reservationList;
+	}
 }
