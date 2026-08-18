@@ -66,9 +66,9 @@
 		<div class="section-title">Your Bookings</div>
 		
 		<!-- Bookings table -->
-<h:dataTable value="#{BookingBean.userBookings}"
+<h:dataTable value="#{BookingBean.confirmedUserBookings}"
     var="booking"
-    rendered="#{not empty BookingBean.userBookings}"
+    rendered="#{not empty BookingBean.confirmedUserBookings}"
     styleClass="productTable"
     headerClass="productTableHeader"
     rowClasses="productTableOddRow, productTableEvenRow">
@@ -100,7 +100,7 @@
 
 			<h:column>
 				<f:facet name="header">Status</f:facet>
-				#{booking.status}
+			#{booking.status}
 			</h:column>
 
 		</h:dataTable>

@@ -86,6 +86,28 @@ public class BookingBean implements Serializable {
         }
         return new ArrayList<>();
     }
+    
+    
+    // lists only the confirmed bookings for the array list, 
+    //drops any pending orders from the user dashboard. 
+    // Added after Paypal integration and booking status was added.  
+    public ArrayList<Reservation> getConfirmedUserBookings() {
+        ArrayList<Reservation> confirmedBookings = new ArrayList<>();
+        User user = loginBean.getLoggedInUser();
+
+        if (user != null) {
+            ArrayList<Reservation> allUserBookings = reservationList.findByUserID(user.getUserID());
+
+            for (Reservation booking : allUserBookings) {
+                // Checks if the status is not null and matches "Confirmed"
+                if (booking.getStatus() != null && "Confirmed".equalsIgnoreCase(booking.getStatus())) {
+                    confirmedBookings.add(booking);
+                }
+            }
+        }
+
+        return confirmedBookings;
+    }
 
     // Calculate the total price based on dates and services.
     
