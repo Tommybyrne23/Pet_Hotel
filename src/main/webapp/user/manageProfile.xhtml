@@ -1,13 +1,12 @@
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <f:metadata>
-    <f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+	<f:event type="preRenderView" listener="#{ProfileBean.loadProfile}" />
 </f:metadata>
 <h:head>
 	<h:outputStylesheet library="css" name="styles.css" />
@@ -15,77 +14,67 @@
 </h:head>
 
 <h:body>
-<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
 
-	<f:metadata>
-		<f:event type="preRenderView"
-			listener="#{ProfileBean.loadProfile}" />
-	</f:metadata>
 
-	<div class="dashboard-wrapper">  <!-- makes the page width slightly narrower, tables look better -->
-    <div class="dashboard-title">My profile</div>
 
-	<h:form id="profileForm" styleClass="account">
-		<h:panelGrid columns="1" styleClass="account">
+	<div class="dashboard-wrapper">
+		<!-- makes the page width slightly narrower, tables look better -->
+		<div class="dashboard-title">My profile</div>
 
-			<h:messages />
+		<h:form id="profileForm" styleClass="account">
+			<h:panelGrid columns="1" styleClass="account">
 
-			<!-- Profile Details -->
-		   <div class="section-title">Profile Details</div>
-			<h:outputLabel value="Name:" />
-			<h:inputText id="nameInput"
-				value="#{ProfileBean.editName}"
-				required="true"
-				requiredMessage="Name is required." />
-			<h:message for="nameInput" />
+				<h:messages />
 
-			<h:outputLabel value="Email:" />
-			<h:inputText id="emailInput"
-				value="#{ProfileBean.editEmail}"
-				required="true"
-				requiredMessage="Email is required." />
-			<h:message for="emailInput" />
+				<!-- Profile Details -->
+				<div class="section-title">Profile Details</div>
+				<h:outputLabel value="Name:" />
+				<h:inputText id="nameInput" value="#{ProfileBean.editName}"
+					required="true" requiredMessage="Name is required." />
+				<h:message for="nameInput" />
 
-			<h:commandButton value="Save Profile"
-				action="#{ProfileBean.saveProfile}" />
+				<h:outputLabel value="Email:" />
+				<h:inputText id="emailInput" value="#{ProfileBean.editEmail}"
+					required="true" requiredMessage="Email is required." />
+				<h:message for="emailInput" />
 
-			<br />
+				<h:commandButton value="Save Profile"
+					action="#{ProfileBean.saveProfile}" />
 
-			<!-- Change Password -->
-   <div class="section-title">Change Password</div>
-			
+				<br />
 
-			<h:outputLabel value="Current Password:" />
-			<h:inputSecret id="oldPasswordInput"
-				value="#{ProfileBean.oldPassword}"
-				redisplay="true" />
-			<h:message for="oldPasswordInput" />
+				<!-- Change Password -->
+				<div class="section-title">Change Password</div>
 
-			<h:outputLabel value="New Password:" />
-			<h:inputSecret id="newPasswordInput"
-				value="#{ProfileBean.newPassword}"
-				redisplay="true" />
-			<h:message for="newPasswordInput" />
 
-			<h:outputLabel value="Confirm New Password:" />
-			<h:inputSecret id="confirmPasswordInput"
-				value="#{ProfileBean.confirmPassword}"
-				redisplay="true" />
-			<h:message for="confirmPasswordInput" />
+				<h:outputLabel value="Current Password:" />
+				<h:inputSecret id="oldPasswordInput"
+					value="#{ProfileBean.oldPassword}" redisplay="true" />
+				<h:message for="oldPasswordInput" />
 
-			<h:commandButton value="Change Password"
-				action="#{ProfileBean.changePassword}" />
+				<h:outputLabel value="New Password:" />
+				<h:inputSecret id="newPasswordInput"
+					value="#{ProfileBean.newPassword}" redisplay="true" />
+				<h:message for="newPasswordInput" />
 
-			<br />
+				<h:outputLabel value="Confirm New Password:" />
+				<h:inputSecret id="confirmPasswordInput"
+					value="#{ProfileBean.confirmPassword}" redisplay="true" />
+				<h:message for="confirmPasswordInput" />
 
-			<h:commandButton value="Cancel" immediate="true"
-				action="#{ProfileBean.cancel}" />
+				<h:commandButton value="Change Password"
+					action="#{ProfileBean.changePassword}" />
 
-			<h:link outcome="/userDashboard"
-				value="Back to Dashboard" />
+				<br />
 
-		</h:panelGrid>
-	</h:form>
-</div>
+				<h:commandButton value="Cancel" immediate="true"
+					action="#{ProfileBean.cancel}" />
+
+				<h:link outcome="/userDashboard" value="Back to Dashboard" />
+
+			</h:panelGrid>
+		</h:form>
+	</div>
 </h:body>
 </html>

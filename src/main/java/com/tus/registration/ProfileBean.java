@@ -31,6 +31,7 @@ public class ProfileBean implements Serializable {
 		}
 	}
 
+
 	public void loadProfile() {
 		User user = loginBean.getLoggedInUser();
 		if (user != null) {
@@ -117,7 +118,7 @@ public class ProfileBean implements Serializable {
 
 		user.setPassword(newPassword);
 
-	
+
 		oldPassword = null;
 		newPassword = null;
 		confirmPassword = null;
