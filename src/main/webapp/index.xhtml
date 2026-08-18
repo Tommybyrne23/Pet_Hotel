@@ -65,195 +65,157 @@
 
 
 	<!-- SERVICES -->
-	<h2>Services</h2>
+	<div class="dashboard-wrapper">
 
-	<!-- DOGS -->
-	<div class="service-left">
-		<img src="images/dog.jpg" alt="Dog Boarding" />
-		<div class="service-text">
-			<h3>Dog Boarding</h3>
-			<p>
-				Our spacious dog boarding facilities provide a safe and comfortable
-				environment for dogs of all breeds and sizes. <br /> Each guest
-				receives daily exercise, regular feeding, fresh water, and plenty of
-				attention from our experienced staff. <br /> We aim to make every
-				stay enjoyable, whether it's for a weekend or an extended holiday.
-			</p>
+		<div class="section-title">Our Services</div>
 
-			<!-- Dog Services Button -->
-			<button type="button" id="dogServices-button"
-				onclick="toggleServices('dogServices')">View Services &amp;
-				Prices ▼</button>
+		<div class="services-grid">
 
-			<!-- Dog Services -->
-			<div id="dogServices" style="display: none;">
-				<ui:repeat value="#{serviceList.getServicesForSpecies('Dog')}"
-					var="service">
-					<p>
-						<strong>#{service.name}</strong> - €#{service.price}
+			<!-- DOGS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/dog.jpg" alt="Dog Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Dog Boarding</div>
+					<div class="manage-card-desc">Our spacious dog boarding facilities
+						provide a safe and comfortable environment for dogs of all breeds
+						and sizes, with daily exercise, regular feeding, fresh water and
+						plenty of attention from our experienced staff.</div>
 
-						<h:outputText value=" (Per night)"
-							rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+					<button type="button" class="btn-card-outline" id="dogServices-button"
+						onclick="toggleServices('dogServices')">View services &amp; prices &#9660;</button>
 
-						<h:outputText value=" (One-off cost)"
-							rendered="#{service.chargeType eq 'ONE_OFF'}" />
-						<br /> #{service.description}
-					</p>
-				</ui:repeat>
+					<div id="dogServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Dog')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> &#8212;
+								<span class="price-tag">&#8364;#{service.price}</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
 
-	<!-- CATS -->
-	<div class="service-right">
-		<img src="images/cat.jpg" alt="Cat Boarding" />
-		<div class="service-text">
-			<h3>Cat Boarding</h3>
-			<p>
-				Our cat accommodation offers a quiet and relaxing environment
-				designed to reduce stress while you're away. <br /> Each cat has
-				its own clean, comfortable space for daily feeding, fresh litter,
-				and regular care from our team. <br /> We strive to ensure every
-				feline guest feels secure and well looked after.
-			</p>
+			<!-- CATS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/cat.jpg" alt="Cat Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Cat Boarding</div>
+					<div class="manage-card-desc">Our cat accommodation offers a quiet
+						and relaxing environment designed to reduce stress while you're
+						away, with a clean, comfortable space, daily feeding, fresh litter
+						and regular care from our team.</div>
 
-			<!-- Cat Services Button -->
-			<button type="button" id="catServices-button"
-				onclick="toggleServices('catServices')">View Services &amp;
-				Prices ▼</button>
+					<button type="button" class="btn-card-outline" id="catServices-button"
+						onclick="toggleServices('catServices')">View services &amp; prices &#9660;</button>
 
-			<!-- Cat Services -->
-			<div id="catServices" style="display: none;">
-				<ui:repeat value="#{serviceList.getServicesForSpecies('Cat')}"
-					var="service">
-					<p>
-						<strong>#{service.name}</strong> - €#{service.price}
-
-						<h:outputText value=" (Per night)"
-							rendered="#{service.chargeType eq 'PER_NIGHT'}" />
-
-						<h:outputText value=" (One-off cost)"
-							rendered="#{service.chargeType eq 'ONE_OFF'}" />
-						<br /> #{service.description}
-					</p>
-				</ui:repeat>
+					<div id="catServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Cat')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> &#8212;
+								<span class="price-tag">&#8364;#{service.price}</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
 
+			<!-- REPTILES -->
+			<div class="service-card">
+				<h:graphicImage value="/images/reptile.jpg" alt="Reptile Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Reptile Boarding</div>
+					<div class="manage-card-desc">Our reptile boarding service meets the
+						specialised needs of reptiles and exotic pets, with enclosures
+						maintained at the appropriate heating, lighting and humidity, and
+						feeding schedules carefully followed throughout the stay.</div>
 
-	<!-- REPTILES -->
-	<div class="service-left">
-		<img src="images/reptile.jpg" alt="Reptile Boarding" />
-		<div class="service-text">
-			<h3>Reptile Boarding</h3>
-			<p>
-				Our reptile boarding service is designed to meet the specialised
-				needs of reptiles and other exotic pets. <br /> Enclosures are
-				maintained with appropriate heating, lighting, and humidity where
-				required. <br /> Our trained staff ensure feeding schedules and
-				habitat conditions are carefully followed throughout your pet's
-				stay.
-			</p>
+					<button type="button" class="btn-card-outline" id="reptileServices-button"
+						onclick="toggleServices('reptileServices')">View services &amp; prices &#9660;</button>
 
-			<!-- Reptile Services Button -->
-			<button type="button" id="reptileServices-button"
-				onclick="toggleServices('reptileServices')">View Services
-				&amp; Prices ▼</button>
-
-			<!-- Reptile Services -->
-			<div id="reptileServices" style="display: none;">
-				<ui:repeat value="#{serviceList.getServicesForSpecies('Reptile')}"
-					var="service">
-					<p>
-						<strong>#{service.name}</strong> - €#{service.price}
-
-						<h:outputText value=" (Per night)"
-							rendered="#{service.chargeType eq 'PER_NIGHT'}" />
-
-						<h:outputText value=" (One-off cost)"
-							rendered="#{service.chargeType eq 'ONE_OFF'}" />
-						<br /> #{service.description}
-					</p>
-				</ui:repeat>
+					<div id="reptileServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Reptile')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> &#8212;
+								<span class="price-tag">&#8364;#{service.price}</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
 
-	<!-- BIRDS -->
-	<div class="service-right">
-		<img src="images/bird.jpg" alt="Bird Boarding" />
-		<div class="service-text">
-			<h3>Bird Boarding</h3>
-			<p>
-				We provide spacious, hygienic cages suitable for a variety of bird
-				species. <br /> Birds are cared for with daily feeding, fresh
-				water, cage cleaning, and regular interaction where appropriate. <br />
-				Our staff work to maintain a calm environment that supports your
-				bird's health and wellbeing.
-			</p>
+			<!-- BIRDS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/bird.jpg" alt="Bird Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Bird Boarding</div>
+					<div class="manage-card-desc">We provide spacious, hygienic cages
+						suitable for a variety of bird species, with daily feeding, fresh
+						water, cage cleaning and regular interaction to support your bird's
+						health and wellbeing.</div>
 
-			<!-- Bird Services Button -->
+					<button type="button" class="btn-card-outline" id="birdServices-button"
+						onclick="toggleServices('birdServices')">View services &amp; prices &#9660;</button>
 
-			<button type="button" id="birdServices-button"
-				onclick="toggleServices('birdServices')">View Services
-				&amp; Prices ▼</button>
-
-			<!-- Bird Services -->
-			<div id="birdServices" style="display: none;">
-				<ui:repeat value="#{serviceList.getServicesForSpecies('Bird')}"
-					var="service">
-					<p>
-						<strong>#{service.name}</strong> - €#{service.price}
-
-						<h:outputText value=" (Per night)"
-							rendered="#{service.chargeType eq 'PER_NIGHT'}" />
-
-						<h:outputText value=" (One-off cost)"
-							rendered="#{service.chargeType eq 'ONE_OFF'}" />
-						<br /> #{service.description}
-					</p>
-				</ui:repeat>
+					<div id="birdServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Bird')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> &#8212;
+								<span class="price-tag">&#8364;#{service.price}</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
 
-	<!-- FISH -->
-	<div class="service-left">
-		<img src="images/fish.jpg" alt="Fish Boarding" />
-		<div class="service-text">
-			<h3>Fish Boarding</h3>
-			<p>
-				Our fish boarding service provides a clean and carefully maintained
-				environment for a variety of freshwater and tropical fish. <br />
-				Each fish is cared for according to its individual feeding
-				requirements, with water conditions monitored throughout their stay.
-				<br /> Our staff follow the owner's care instructions to ensure
-				every fish remains healthy and comfortable while in our care.
-			</p>
+			<!-- FISH -->
+			<div class="service-card">
+				<h:graphicImage value="/images/fish.jpg" alt="Fish Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Aquatic Boarding</div>
+					<div class="manage-card-desc">Our aquatic boarding service provides a
+						clean, carefully monitored environment for freshwater and tropical
+						fish, with filtration, daily feeding and water conditions checked
+						throughout the stay to keep every fish healthy and comfortable.</div>
 
-			<!-- Fish Services Button -->
+					<button type="button" class="btn-card-outline" id="fishServices-button"
+						onclick="toggleServices('fishServices')">View services &amp; prices &#9660;</button>
 
-			<button type="button" id="fishServices-button"
-				onclick="toggleServices('fishServices')">View Services
-				&amp; Prices ▼</button>
-
-			<!-- Fish Services -->
-			<div id="fishServices" style="display: none;">
-				<ui:repeat value="#{serviceList.getServicesForSpecies('Fish')}"
-					var="service">
-					<p>
-						<strong>#{service.name}</strong> - €#{service.price}
-
-						<h:outputText value=" (Per night)"
-							rendered="#{service.chargeType eq 'PER_NIGHT'}" />
-
-						<h:outputText value=" (One-off cost)"
-							rendered="#{service.chargeType eq 'ONE_OFF'}" />
-						<br /> #{service.description}
-					</p>
-				</ui:repeat>
+					<div id="fishServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Fish')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> &#8212;
+								<span class="price-tag">&#8364;#{service.price}</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
 			</div>
+
 		</div>
 	</div>
 

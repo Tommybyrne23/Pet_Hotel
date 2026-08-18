@@ -517,6 +517,103 @@ input[type="checkbox"] {
 	text-align: center;
 }
 
+
+/* ------------------------------------------------------------
+   
+   	   			Homepage styles updated to
+   	    	 	match the admin dashboard
+   
+   ------------------------------------------------------------ */
+
+.home-hero {
+	text-align: center;
+	margin: 34px auto 6px;
+	max-width: 1100px;
+	padding: 0 20px;
+}
+
+/* Intro paragraph: slate-grey instead of the old brown #4E342E */
+.home-hero .intro {
+	color: #555555;
+	max-width: 720px;
+	margin: 14px auto 0;
+}
+
+/* Service cards reuse the dashboard card tokens (#fcfbf7 / gold / green) */
+.services-grid {
+	display: flex;			/*allows resizing on mobile*/
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+}
+
+.service-card {
+	background-color: #fcfbf7;
+	border: 1px solid #eae7dd;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+
+.service-card img {
+	width: 100%;
+	height: 170px;
+	object-fit: cover;
+	display: block;
+}
+
+.service-card-body {
+	padding: 22px;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.service-card-body .manage-card-desc {
+	flex: 1;
+}
+
+.service-prices {
+	margin-top: 14px;
+	border-top: 1px solid #eae7dd;
+	padding-top: 12px;
+	font-size: 14px;
+	color: #444444;
+	line-height: 1.6;
+}
+
+.service-prices p {
+	margin: 0 0 10px 0;
+}
+
+.service-prices .price-name {
+	font-weight: 700;
+	color: #1e5631;
+}
+
+.service-prices .price-tag {
+	font-weight: 700;
+	color: #2c3e50;
+}
+
+.service-prices .price-note {
+	color: #777777;
+	font-size: 12px;
+}
+
+@media (max-width: 900px) {
+	.services-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+
+
+
 /* ---------------------------------
 
 	Page content and services layout 
