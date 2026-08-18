@@ -838,6 +838,22 @@ input[type="checkbox"] {
 	}
 }
 
+/* ---- Welcome caption on the hero slideshow ---- */
+
+.hero-caption {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 85px;
+	font-weight: 800px;
+	line-height: 1.2;
+	background: linear-gradient(rgba(0, 0, 0, 20), rgba(0, 0, 0, 0));
+}
+
 /* A left-column heading should not be centred or underlined */
 .service-left h1 {
 	text-align: left;
