@@ -70,7 +70,7 @@ public class PodBean implements Serializable {
 
         // Pod not found
         if (selectedPod == null) {
-            return "/viewPodsRooms.xhtml?faces-redirect=true";
+            return "viewPodsRooms?faces-redirect=true";
         }
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -152,7 +152,7 @@ public class PodBean implements Serializable {
         editPodLabel = null;
 
         // Redirect to the pods/rooms page
-        return "/viewPodsRooms.xhtml?faces-redirect=true";
+        return "viewPodsRooms?faces-redirect=true";
     }
 
     // ---------------------------------------------------------
@@ -230,16 +230,13 @@ public class PodBean implements Serializable {
     // ---------------------------------------------------------
 
     public String cancel() {
-
-        // Clear the editing state
+    	
         selectedPod = null;
         selectedPodID = 0;
         editPodLabel = null;
-
-        // Redirect back to the pods/rooms page
-        return "/viewPodsRooms.xhtml?faces-redirect=true";
+        
+        return "viewPodsRooms?faces-redirect=true";
     }
-
 
     // ---------------------------------------------------------
     // MESSAGES
