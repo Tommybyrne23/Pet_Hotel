@@ -465,4 +465,8 @@ public class BookingBean implements Serializable {
 	public void setReservationList(ReservationList reservationList) {
 	    this.reservationList = reservationList;
 	}
+	
+	public void setPendingReservationID(int pendingReservationID) {
+	    this.pendingReservationID = pendingReservationID;
+	}
 }

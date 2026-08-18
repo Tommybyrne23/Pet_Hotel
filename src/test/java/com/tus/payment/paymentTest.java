@@ -76,12 +76,13 @@ import jakarta.faces.application.FacesMessage;
  */
 class paymentTest {
 
-	BookingBean bookingbean;
+	BookingBean bookingBean;
 	LoginBean login;
 	Reservation reservation;
 	ReservationList reservationList;
 	PetList petList;
 	PodList podList;
+
 	RoomList roomList;
 	UserList userList;
 	ServiceList serviceList;
@@ -107,7 +108,7 @@ class paymentTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		//set up all lists
-		bookingbean = new BookingBean();
+		bookingBean = new BookingBean();
 		login = new LoginBean();
 		reservationList = new ReservationList();
 		petList = new PetList();
@@ -130,11 +131,11 @@ class paymentTest {
 		
 		
 		//Create Pets
-		pet1 = new Pet(1,"Jess",Species.DOG, "Old English SheepDog", "1-3 years old", "Medication twice a day");
-		pet2 = new Pet(2,"Arthur",Species.CAT, "Siamese", "4-7 years old", "Nothing twice a day");
-		pet3 = new Pet(1, "Charlie", Species.BIRD, "Budgie", "1-5 years","");
-		pet4 = new Pet(3, "Hissy", Species.REPTILE, "Boa Constrictor", "4-7 years","Needs a live mouse every few days, don't sleep next to him");
-		pet5 = new Pet(3, "Nemo", Species.FISH, "Clownfish", "0-1years","Saltwater, tank will be provided");
+		pet1 = new Pet(user1.getUserID(),"Jess",Species.DOG, "Old English SheepDog", "1-3 years old", "Medication twice a day");
+		pet2 = new Pet(user2.getUserID(),"Arthur",Species.CAT, "Siamese", "4-7 years old", "Nothing twice a day");
+		pet3 = new Pet(user1.getUserID(), "Charlie", Species.BIRD, "Budgie", "1-5 years","");
+		pet4 = new Pet(user3.getUserID(), "Hissy", Species.REPTILE, "Boa Constrictor", "4-7 years","Needs a live mouse every few days, don't sleep next to him");
+		pet5 = new Pet(user3.getUserID(), "Nemo", Species.FISH, "Clownfish", "0-1years","Saltwater, tank will be provided");
 		//add users to list 
 		petList.addPet(pet1);
 		petList.addPet(pet2);
@@ -150,25 +151,92 @@ class paymentTest {
 		roomFish = new Room("Mariana Trench", "Basement", Species.FISH);
 		
 		//add rooms to lists
-		roomList.addRoom(roomBird);
 		roomList.addRoom(roomDog);
 		roomList.addRoom(roomCat);
-		roomList.addRoom(roomFish);
 		roomList.addRoom(roomReptile);
-		
-		
-		
+		roomList.addRoom(roomBird);
+		roomList.addRoom(roomFish);
+			
+						
 		//Create Pods
-		pod1 = new Pod()
+		//use the getter to assign the room ID from the name of the room 
+		pod1  = new Pod("k1", roomDog.getRoomID());     // Dog
+		pod2  = new Pod("k2", roomDog.getRoomID());     // Dog
+		pod3  = new Pod("k3", roomDog.getRoomID());     // Dog
+		pod4  = new Pod("C1", roomCat.getRoomID());     // Cat 
+		pod5  = new Pod("C2", roomCat.getRoomID());     // Cat
+		pod6  = new Pod("C3", roomCat.getRoomID());     // Cat
+		pod7  = new Pod("R1", roomReptile.getRoomID()); // Reptile
+		pod8  = new Pod("B1", roomBird.getRoomID());    // Bird	
+		pod9  = new Pod("Aq1", roomFish.getRoomID());   // Fish
+		pod10 = new Pod("Aq2", roomFish.getRoomID());   // Fish
+		
+		//Add all pods
+		podList.setRoomList(roomList);	//set the RoomList field from the roomList Array
+		podList.addPod(pod1);
+		podList.addPod(pod2);
+		podList.addPod(pod3);
+		podList.addPod(pod4);
+		podList.addPod(pod5);
+		podList.addPod(pod6);
+		podList.addPod(pod7);
+		podList.addPod(pod8);
+		podList.addPod(pod9);
+		podList.addPod(pod10);
+
+		// 	FOR REFERENCE 
+		//	pods 1-3 = Dog 
+		//	pods 3-6 = Cat 
+		//	P7 		 = Reptile, 
+		//	P8 		 = Bird
+		//	P9 - 10	 = FIsh
+		
+		//Set the booking bean list elements 
+		bookingBean.setPodList(podList);
+		bookingBean.setReservationList(reservationList);
+		
+		//set a new default reservation 
+		reservation = new Reservation(user1.getUserID(),pet1.getPetID(),pet1.getName(), "2026-08-22", "2026-09-01");
+		reservationList.addReservation(reservation);
 		
 		
 	}
+	@Test
+	@DisplayName("List All User and Pet IDs")
+	void listAllIDs() {
+	    System.out.println("--- USERS ---");
+	    for (User u : userList.getUsers()) {
+	        System.out.println("ID: " + u.getUserID() + " | Name: " + u.getName());
+	    }
 
+	    System.out.println("--- PETS ---");
+	    for (Pet p : petList.getPets()) {
+	        System.out.println("Pet ID: " + p.getPetID() + " | Name: " + p.getName() + " | Owner User ID: " + p.getUserID());
+	    }
+	
+	}
 	
 	@Test
-	@DisplayName("BlankForm")
-	void test() {
-		fail("Not yet implemented");
+	@DisplayName("Verify User and Pet IDs")
+	void testUserAndPetIDs() {
+	  
+	    // Verify PetList retrieval by User ID
+	    List<Pet> jonsPets = petList.findByUserID(user1.getUserID());
+	    assertEquals(2, jonsPets.size()); // Jess and Charlie
 	}
+	
+	@Test
+	@DisplayName("Verify Reservation Status to pending ")
+	void testReservationStatusPending() {
+		
+		// Verify PetList retrieval by User ID
+		String result = reservation.getStatus();
+		String userName = userList.getUserNameById(reservation.getUserID());
+		assertEquals("Pending", result);					//test should automatically be set to pending 
+		assertEquals("Jon", userName);					//Customer name is Jon
+	
+	}
+	
+	
 
 }
