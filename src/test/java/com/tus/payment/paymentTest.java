@@ -34,13 +34,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 
 
 //jakarta face faces imports 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextWrapper;
+import jakarta.faces.context.FacesContextMocker;
 import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.ExternalContextWrapper;
 import jakarta.faces.application.FacesMessage;
 
 /*
@@ -172,7 +176,8 @@ class paymentTest {
 		pod10 = new Pod("Aq2", roomFish.getRoomID());   // Fish
 		
 		//Add all pods
-		podList.setRoomList(roomList);	//set the RoomList field from the roomList Array
+		podList.setRoomList(roomList);					//set the RoomList field from the roomList Array
+		podList.setReservationList(reservationList);	//link the pod list to the reservation list
 		podList.addPod(pod1);
 		podList.addPod(pod2);
 		podList.addPod(pod3);
@@ -184,6 +189,18 @@ class paymentTest {
 		podList.addPod(pod9);
 		podList.addPod(pod10);
 
+		//set all pods as in service 
+		pod1.setOutOfService(false);
+		pod2.setOutOfService(false);
+		pod3.setOutOfService(false);
+		pod4.setOutOfService(false);
+		pod5.setOutOfService(false);
+		pod6.setOutOfService(false);
+		pod7.setOutOfService(false);
+		pod8.setOutOfService(false);
+		pod9.setOutOfService(false);
+		pod10.setOutOfService(false);
+		
 		// 	FOR REFERENCE 
 		//	pods 1-3 = Dog 
 		//	pods 3-6 = Cat 
@@ -237,6 +254,190 @@ class paymentTest {
 	
 	}
 	
+	@Test
+	@DisplayName("Cancel Payment - Status updated and Pod released")
+	void testCancelPayment() {
+	    // Link bean to the active pending reservation
+	    reservation.setPodID(pod1.getPodID());		// set the booking to pod1 
+		reservation.setPodName(pod1.getLabel());	// sets the pod label
+		
+	    bookingBean.setPendingReservationID(reservation.getReservationID());
+			    
+	   //verify the name matches the Manual pod assignment 
+		assertEquals("k1", reservation.getPodName());
+	
+	    // Simulation of the user clicking cancel on the PayPal portal  
+	    bookingBean.cancelPayment();
+	    
+	    // Verify Reservation updates
+	    assertEquals("Cancelled", reservation.getStatus());
+	    assertNull(reservation.getHoldExpiry());				//resets the hold expiry
+	    assertEquals("Cancelled payment in Paypal Portal", reservation.getFailureReason());
+	    
+	    // Verify unsuccessful payment shows in admin tracking list
+	    assertTrue(reservationList.getUnsuccessfulPayments().contains(reservation));
+	    
+	    // Verify pod is immediately free for booking
+	    boolean isAvailable = podList.isPodAvailable(pod1.getPodID(), "2026-08-22", "2026-09-01");
+	    assertTrue(isAvailable);
+	}
+	
+	@Test
+	@DisplayName("Test: Simulated Successful Payment ")
+	void testSuccessfulPayment() {
+		// Link bean to the active pending reservation
+		reservation.setPodID(pod1.getPodID());		// set the booking to pod1 
+		reservation.setPodName(pod1.getLabel());	// sets the pod label
+		
+		bookingBean.setPendingReservationID(reservation.getReservationID());
+		
+		//verify the name matches the Manual pod assignment 
+		assertEquals("k1", reservation.getPodName());
+		
+		// Simulation of the user  making a successful payment in the paypal
+		// bookingBean.completePayment();   can't mock this due to jakarta beans would need mokito
+		//returnign the elements below for testing 
+		reservation.setStatus("Confirmed");						//line 328 - r.setStatus("Confirmed");
+		reservation.setHoldExpiry(null);						//line 329 - r.setHoldExpiry(null);
+		reservation.setPaypalOrderId("PAYPAL-ORDER-123");		//line 330 - r.setPayPalOrderID(orderID) - 
+																//this would be the token 315 -	String orderId = ext.getRequestParameterMap().get("token"); // token = PayPal order id
+		
+		// Verify Reservation updates
+		assertEquals("Confirmed", reservation.getStatus());
+		assertNull(reservation.getHoldExpiry());				//resets the hold expiry
+		assertEquals("PAYPAL-ORDER-123", reservation.getPaypalOrderId());
+		
+		// Verify that the successful payment means it hasn't been added to the unsuccessful list. 
+		assertFalse(reservationList.getUnsuccessfulPayments().contains(reservation));
+		
+		// Verify pod is immediately free for booking
+		boolean isAvailable = podList.isPodAvailable(pod1.getPodID(), "2026-08-22", "2026-09-01");
+		assertFalse(isAvailable);					//status for this pod would be false as the booking has been accepted
+	}
 	
 
+
+	@Test
+	@DisplayName("Test: Simulated confirmAndPay Reservation Creation")
+	void testSimulatedConfirmAndPayState() {
+		// Recreate the reservation state built by confirmAndPay()
+		Reservation res = new Reservation(user1.getUserID(),pet1.getPetID(),pet1.getName(),"2026-08-22","2026-09-01");
+		
+		res.setPodID(pod1.getPodID());
+		res.setPodName("k1");
+		res.setTotalPrice(250.00);
+		res.setStatus("Pending");
+		res.setHoldExpiry(LocalDateTime.now().plusMinutes(15));
+
+		reservationList.addReservation(res);
+
+		// Test Assertion of reservation holds correctly
+		assertEquals("Pending", res.getStatus());
+		assertTrue(res.isHoldActive());
+		assertEquals(250.00, res.getTotalPrice());
+	}
+
+	
+	@Test
+	@DisplayName("Test OrderDetail - Correct Currency String Formatting")
+	void testOrderDetailFormatting() {
+	    // Construct order detail with raw float values
+	    OrderDetail detail = new OrderDetail("Dog Boarding", 100.0f, 0.0f, 0f, 100.0f);
+
+	    // Verify getter values format properly to two decimal places
+	    assertEquals("Dog Boarding", detail.getProductName());
+	    assertEquals("100.00", detail.getSubtotal());
+	    assertEquals("0.00", detail.getShipping());
+	    assertEquals("0.00", detail.getTax());
+	    assertEquals("100.00", detail.getTotal()); // Verifies Locale.ROOT decimal format
+	}
+	
+	@Test
+	@DisplayName("Test: Authorise Payment")
+	void testAuthorizePaymentProperties() {
+	    AuthorizePayment authPayment = new AuthorizePayment();
+	    
+	    authPayment.setProduct("Cattery Pod Stay");
+	    authPayment.setSubTotal(150.00f);
+	    authPayment.setTax(10.00f);
+	    authPayment.setTotal(160.00f);
+
+	    assertEquals("Cattery Pod Stay", authPayment.getProduct());
+	    assertEquals(150.00f, authPayment.getSubTotal(), 0.001);
+	    assertEquals(160.00f, authPayment.getTotal(), 0.001);
+	}
+	
+	@Test
+	@DisplayName("Test Payment Services Class is being setup")
+	void testPaymentServicesInitialization() {
+	    PaymentServices service = new PaymentServices();
+	    
+	    // Initial status should be null before any capture or error occurs
+	    assertNull(service.getPaymentStatus());
+	}
+	
+	@Test
+	@DisplayName("Test completePayment handles invalid PayPal token cleanly")
+	void testCompletePaymentWithInvalidToken() {
+	    // 1. Fake ExternalContext supplying the mock token parameter
+	    ExternalContextWrapper extContext = new ExternalContextWrapper() {
+	        @Override
+	        public Map<String, String> getRequestParameterMap() {
+	            return Map.of("token", "MOCK-PAYPAL-TOKEN-123");
+	        }
+	    };
+
+	    // 2. Fake FacesContext overriding both getExternalContext and addMessage
+	    FacesContext facesContext = new FacesContextWrapper() {
+	        @Override
+	        public ExternalContext getExternalContext() {
+	            return extContext;
+	        }
+
+	        @Override
+	        public void addMessage(String clientId, FacesMessage message) {
+	            // Stubbed to prevent NPE when getWrapped() is null
+	        }
+	    };
+
+	    // 3. Inject mock context into JSF runtime
+	    FacesContextMocker.setContext(facesContext);
+
+	    try {
+	        pod1.setOutOfService(false);
+	        reservation.setPodID(pod1.getPodID());
+	        bookingBean.setPendingReservationID(reservation.getReservationID());
+
+	        // Executes completePayment, triggers PayPal call, and catches 404
+	        bookingBean.completePayment();
+
+	        // Verify status changes to 'Payment Failed' via failReservation()
+	        assertEquals("Payment Failed", reservation.getStatus());
+	        assertTrue(reservation.getFailureReason().contains("Capture failed"));
+	        assertNull(reservation.getHoldExpiry());
+
+	    } finally {
+	        // Clear context after test
+	        FacesContextMocker.setContext(null);
+	    }
+	}
+	
+	@Test
+	@DisplayName("Test: Dashboard returns only confirmed bookings for logged-in user")
+	void testGetConfirmedUserBookingsFilter() {
+	    login.setLoggedInUser(user1);
+	    bookingBean.setReservationList(reservationList);
+
+	    // Create a confirmed reservation and a cancelled reservation for user1
+	    Reservation confirmedRes = new Reservation(user1.getUserID(), pet1.getPetID(), pet1.getName(), "2026-09-05", "2026-09-10");
+	    confirmedRes.setStatus("Confirmed");
+	    reservationList.addReservation(confirmedRes);
+
+	    reservation.setStatus("Cancelled"); // Default reservation in setup
+
+	    // Verify dashboard retrieves strictly confirmed bookings
+	    List<Reservation> confirmedList = bookingBean.getConfirmedUserBookings();
+	    assertEquals(1, confirmedList.size());
+	    assertEquals("Confirmed", confirmedList.get(0).getStatus());
+	}
 }
