@@ -338,7 +338,7 @@ public class BookingBean implements Serializable {
 				addMessage(FacesMessage.SEVERITY_ERROR, "Payment was not completed (" + status + ").");
 			}
 		} catch (ApiException | IOException ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();		// message prints in console when JUNIT testing is run, this is meant to happen but commented out for the time being (JC).
 			failReservation(r, "Capture failed: " + ex.getMessage());
 			addMessage(FacesMessage.SEVERITY_ERROR, "Payment could not be completed.");
 		}

@@ -539,9 +539,9 @@ input[type="checkbox"] {
 	margin: 14px auto 0;
 }
 
-/* Service cards reuse the dashboard card tokens (#fcfbf7 / gold / green) */
+/* Service cards reuse the dashboard card tokens  */
 .services-grid {
-	display: flex;			/*allows resizing on mobile*/
+	display: grid;			/*allows resizing on mobile*/
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
 }

@@ -46,15 +46,24 @@ class BookingBeanTest {
 		loginBean.login();
 		petList = new PetList();          
 		serviceList = new ServiceList(); 
-		podList = new PodList(); 
 		roomList = new RoomList();        
 		reservationList = new ReservationList();
+		
+		//moved podList down to show the missing links  
+		podList = new PodList(); 
+		
+		//missing the seeded items for the JUNIT testing in the first pass, 
+		//this is why the room calculations weren't passing their boolean checks
+	
+		podList.setRoomList(roomList);
+		podList.setReservationList(reservationList);
+		podList.init();
+
+		//movedBookingBean to the bottom as the reording of other files meant more tests were failing. 
 		bookingBean = new BookingBean();
 		bookingBean.setLoginBean(loginBean);
 		bookingBean.setPodList(podList);
 		bookingBean.setReservationList(reservationList);
-
-
 		setPrivateField(bookingBean, "petList", petList);
 		setPrivateField(bookingBean, "serviceList", serviceList);
 	}
