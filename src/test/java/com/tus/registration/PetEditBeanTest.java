@@ -431,4 +431,67 @@ class PetEditBeanTest {
                 outcome
         );
     }
+    
+    @Test
+    @DisplayName("Test: Cat Age Ranges")
+    void testCatAgeRanges() {
+
+        petEditBean.setSelectedPetID(pet2.getPetID());
+        pet2.setSpecies(Species.CAT);
+
+        List<SelectItem> ages = petEditBean.getAgeRanges();
+
+        assertEquals(5, ages.size());
+        assertEquals("Less than 1 year", ages.get(0).getLabel());
+        assertEquals("13+ years", ages.get(4).getLabel());
+    }
+
+
+    @Test
+    @DisplayName("Test: Bird Age Ranges")
+    void testBirdAgeRanges() {
+
+        pet1.setSpecies(Species.BIRD);
+        petEditBean.setSelectedPetID(pet1.getPetID());
+
+        List<SelectItem> ages = petEditBean.getAgeRanges();
+
+        assertEquals(5, ages.size());
+        assertEquals("1–5 years", ages.get(1).getLabel());
+        assertEquals("11–20 years", ages.get(3).getLabel());
+        assertEquals("21+ years", ages.get(4).getLabel());
+    }
+
+
+    @Test
+    @DisplayName("Test: Reptile Age Ranges")
+    void testReptileAgeRanges() {
+
+        pet1.setSpecies(Species.REPTILE);
+        petEditBean.setSelectedPetID(pet1.getPetID());
+
+        List<SelectItem> ages = petEditBean.getAgeRanges();
+
+        assertEquals(5, ages.size());
+        assertEquals("1–3 years", ages.get(1).getLabel());
+        assertEquals("8–15 years", ages.get(3).getLabel());
+        assertEquals("16+ years", ages.get(4).getLabel());
+    }
+
+
+    @Test
+    @DisplayName("Test: Fish Age Ranges")
+    void testFishAgeRanges() {
+
+        pet1.setSpecies(Species.FISH);
+        petEditBean.setSelectedPetID(pet1.getPetID());
+
+        List<SelectItem> ages = petEditBean.getAgeRanges();
+
+        assertEquals(4, ages.size());
+        assertEquals("1–2 years", ages.get(1).getLabel());
+        assertEquals("3–5 years", ages.get(2).getLabel());
+        assertEquals("6+ years", ages.get(3).getLabel());
+    }
+
 }

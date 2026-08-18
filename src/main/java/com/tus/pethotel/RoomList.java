@@ -193,4 +193,8 @@ public class RoomList implements Serializable {
 	public int getNumberOfRooms() {
 		return rooms.size();
 	}
+	
+	public void setPodList(PodList podList) {
+	    this.podList = podList;
+	}
 }

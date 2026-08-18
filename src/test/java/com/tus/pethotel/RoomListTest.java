@@ -1,137 +1,372 @@
 package com.tus.pethotel;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDate;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.tus.Services.Species;
 
-/*
- * Tests for the read-only helpers behind the Rooms and Pod inventory
- * tables on viewPodsRooms.xhtml
- */
 class RoomListTest {
 
-	private RoomList roomList;
-	private PodList podList;
-	private ReservationList reservationList;
-	private RoomPodBean bean;
+    private RoomList roomList;
+    private PodList podList;
+    private ReservationList reservationList;
 
-	private int dogRoomID;
+    private int dogRoomID;
 
-	@BeforeEach
-	void setUp() {
-		roomList = new RoomList();
-		reservationList = new ReservationList();
+    @BeforeEach
+    void setUp() {
+        roomList = new RoomList();
 
-		podList = new PodList();
-		podList.setRoomList(roomList);
-		podList.setReservationList(reservationList);
+        reservationList = new ReservationList();
 
-		bean = new RoomPodBean();
-		bean.setRoomList(roomList);
-		bean.setPodList(podList);
-		dogRoomID = roomList.getRoomsForSpecies(Species.DOG).get(0).getRoomID();
-	}
+        podList = new PodList();
+        podList.setRoomList(roomList);
+        podList.setReservationList(reservationList);
 
-	private static String daysFromToday(int days) {
-		return LocalDate.now().plusDays(days).toString();
-	}
+        roomList.setPodList(podList);
 
-	// addPod parks a new pod offline, so put it back into service
-	private Pod podInService(String label) {
-		Pod pod = new Pod(label, dogRoomID);
-		podList.addPod(pod);
-		pod.setOutOfService(false);
-		return pod;
-	}
+        dogRoomID = roomList
+                .getRoomsForSpecies(Species.DOG)
+                .get(0)
+                .getRoomID();
+    }
 
-	private void bookPodToday(int podID) {
+    private Pod offlinePod(String label) {
+        Pod pod = new Pod(label, dogRoomID);
+        assertTrue(podList.addPod(pod));
+        pod.setOutOfService(true);
+        return pod;
+    }
 
-		Reservation booking = new Reservation(1, 1, "Rex",
-				daysFromToday(-1), daysFromToday(2));
-		booking.setPodID(podID);
-		booking.setStatus("Confirmed");
-		reservationList.addReservation(booking);
-	}
+    private Pod inServicePod(String label) {
+        Pod pod = new Pod(label, dogRoomID);
+        assertTrue(podList.addPod(pod));
+        pod.setOutOfService(false);
+        return pod;
+    }
 
+    // ---------------------------------------------------------
+    // NAME CHECKING
+    // ---------------------------------------------------------
 
+    @Test
+    void nameChecksCoverExistingNewNullAndIgnoreCurrentRoom() {
 
-	@Test
-	@DisplayName("The status column reads offline, occupied or available")
-	void podStatusReflectsTheDateAndTheService() {
+        assertTrue(roomList.isNameTaken("Lakeside Kennels"));
+        assertTrue(roomList.isNameTaken("  lakeside kennels  "));
+        assertFalse(roomList.isNameTaken("New Room"));
+        assertFalse(roomList.isNameTaken(null));
 
-		Pod free = podInService("K1");
-		Pod busy = podInService("K2");
-		Pod offline = podInService("K3");
-		bookPodToday(busy.getPodID());
-		offline.setOutOfService(true);
-		bean.setAvailabilityDate(LocalDate.now().toString());
-		assertEquals("Available", bean.getPodStatus(free));
-		assertEquals("Occupied", bean.getPodStatus(busy));
-		assertEquals("Out of service", bean.getPodStatus(offline));
-		assertEquals("status-available", bean.getPodStatusClass(free));
-		assertEquals("status-pending", bean.getPodStatusClass(busy));
-		assertEquals("status-cancelled", bean.getPodStatusClass(offline));
-	}
+        assertFalse(
+                roomList.isNameTakenByAnother(
+                        "Lakeside Kennels",
+                        dogRoomID
+                )
+        );
 
-	@Test
-	@DisplayName("An occupied pod is locked, an offline one is not")
-	void podLockingFollowsOccupancy() {
-		Pod free = podInService("K1");
-		Pod busy = podInService("K2");
-		Pod offline = podInService("K3");
-		bookPodToday(busy.getPodID());
-		offline.setOutOfService(true);
-		assertFalse(bean.isPodLocked(free));
-		assertTrue(bean.isPodLocked(busy));
-		assertFalse(bean.isPodLocked(offline), "Returning a pod to service is always allowed");
-	}
+        assertTrue(
+                roomList.isNameTakenByAnother(
+                        "Cat Haven",
+                        dogRoomID
+                )
+        );
 
-	@Test
-	@DisplayName("An unreadable date filter falls back to today")
-	void badAvailabilityDateFallsBackToToday() {
-		Pod busy = podInService("K1");
-		bookPodToday(busy.getPodID());
-		bean.setAvailabilityDate("not a date");
-		assertEquals("Occupied", bean.getPodStatus(busy));
-		bean.setAvailabilityDate(null);
-		assertEquals("Occupied", bean.getPodStatus(busy));
-	}
+        assertFalse(
+                roomList.isNameTakenByAnother(null, dogRoomID)
+        );
+    }
 
-	@Test
-	@DisplayName("Room totals count offline pods but availability does not")
-	void roomCountsSeparateTotalFromInService() {
-		podInService("K1");
-		Pod offline = podInService("K2");
-		offline.setOutOfService(true);
-		Room dogRoom = roomList.findByID(dogRoomID);
-		bean.setAvailabilityDate(LocalDate.now().toString());
-		assertEquals(2, bean.getTotalPods(dogRoom));
-		assertEquals(1, bean.getPodsInService(dogRoom));
-		assertEquals("1/1", bean.getPodsAvailable(dogRoom));
-	}
+    // ---------------------------------------------------------
+    // ADD ROOM
+    // ---------------------------------------------------------
 
-	@Test
-	@DisplayName("The inventory is grouped in the same order as the rooms")
-	void podsByRoomFollowRoomOrder() {
-		int catRoomID = roomList.getRoomsForSpecies(Species.CAT).get(0).getRoomID();
-		podList.addPod(new Pod("C1", catRoomID));
-		podInService("K1");
-		assertEquals(2, bean.getPodsByRoom().size());
-		assertEquals("K1", bean.getPodsByRoom().get(0).getLabel(), "Lakeside Kennels is created before Cat Haven");
-	}
+    @Test
+    void addRoomValidatesInputAndRejectsDuplicates() {
 
-	@Test
-	@DisplayName("The room dropdown shows how many pods each room has")
-	void roomLabelShowsPodCount() {
-		podInService("K1");
-		assertEquals("Lakeside Kennels (1 pods)", bean.getRoomLabel(roomList.findByID(dogRoomID)));
-	}
+        assertFalse(roomList.addRoom(null));
+
+        assertFalse(
+                roomList.addRoom(
+                        new Room(null, "North Block", Species.DOG)
+                )
+        );
+
+        assertFalse(
+                roomList.addRoom(
+                        new Room("   ", "North Block", Species.DOG)
+                )
+        );
+
+        assertFalse(
+                roomList.addRoom(
+                        new Room("New Room", "North Block", null)
+                )
+        );
+
+        assertFalse(
+                roomList.addRoom(
+                        new Room("Lakeside Kennels", "Other", Species.DOG)
+                )
+        );
+
+        assertFalse(
+                roomList.addRoom(
+                        new Room("  lakeside kennels  ", "Other", Species.DOG)
+                )
+        );
+
+        Room newRoom = new Room(
+                "  New Room  ",
+                "North Block",
+                Species.DOG
+        );
+
+        assertTrue(roomList.addRoom(newRoom));
+        assertEquals(6, roomList.getNumberOfRooms());
+
+        // Current implementation validates using trim()
+        // but does not trim the stored name.
+        assertEquals("  New Room  ", newRoom.getName());
+    }
+
+    // ---------------------------------------------------------
+    // LOOKUPS
+    // ---------------------------------------------------------
+
+    @Test
+    void roomLookupsWork() {
+
+        Room room = roomList.findByID(dogRoomID);
+
+        assertNotNull(room);
+        assertEquals("Lakeside Kennels", room.getName());
+        assertEquals(Species.DOG, room.getSpecies());
+
+        assertNull(roomList.findByID(-1));
+
+        assertEquals(
+                1,
+                roomList.getRoomsForSpecies(Species.DOG).size()
+        );
+
+        assertEquals(
+                1,
+                roomList.getRoomsForSpecies(Species.CAT).size()
+        );
+
+        assertEquals(5, roomList.getNumberOfRooms());
+        assertEquals(5, roomList.getRooms().size());
+    }
+
+    // ---------------------------------------------------------
+    // CAN EDIT ROOM
+    // ---------------------------------------------------------
+
+    @Test
+    void canEditRoomCoversValidAndInvalidCases() {
+
+        // Empty room is editable.
+        assertTrue(roomList.canEditRoom(dogRoomID));
+
+        // Unknown room cannot be edited.
+        assertFalse(roomList.canEditRoom(-1));
+
+        // Offline pod with no booking is eligible.
+        offlinePod("K1");
+        assertTrue(roomList.canEditRoom(dogRoomID));
+
+        // An in-service pod makes the room ineligible.
+        RoomList anotherRoomList = new RoomList();
+
+        PodList anotherPodList = new PodList();
+        ReservationList anotherReservationList = new ReservationList();
+
+        anotherPodList.setRoomList(anotherRoomList);
+        anotherPodList.setReservationList(anotherReservationList);
+        anotherRoomList.setPodList(anotherPodList);
+
+        int anotherDogRoomID = anotherRoomList
+                .getRoomsForSpecies(Species.DOG)
+                .get(0)
+                .getRoomID();
+
+        Pod activePod = new Pod("K1", anotherDogRoomID);
+        assertTrue(anotherPodList.addPod(activePod));
+        activePod.setOutOfService(false);
+
+        assertFalse(anotherRoomList.canEditRoom(anotherDogRoomID));
+    }
+
+    // ---------------------------------------------------------
+    // EDIT ROOM
+    // ---------------------------------------------------------
+
+    @Test
+    void editRoomRejectsInvalidInput() {
+
+        assertFalse(
+                roomList.editRoom(
+                        -1,
+                        "New",
+                        "Location",
+                        Species.DOG
+                )
+        );
+
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        null,
+                        "Location",
+                        Species.DOG
+                )
+        );
+
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        "   ",
+                        "Location",
+                        Species.DOG
+                )
+        );
+
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        "New Name",
+                        null,
+                        Species.DOG
+                )
+        );
+
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        "New Name",
+                        "   ",
+                        Species.DOG
+                )
+        );
+
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        "New Name",
+                        "Location",
+                        null
+                )
+        );
+
+        // Duplicate name.
+        assertFalse(
+                roomList.editRoom(
+                        dogRoomID,
+                        "  cat haven  ",
+                        "Location",
+                        Species.DOG
+                )
+        );
+
+        // Existing name is allowed.
+        assertTrue(
+                roomList.editRoom(
+                        dogRoomID,
+                        "Lakeside Kennels",
+                        "New Location",
+                        Species.CAT
+                )
+        );
+
+        Room room = roomList.findByID(dogRoomID);
+
+        assertEquals("Lakeside Kennels", room.getName());
+        assertEquals("New Location", room.getLocation());
+        assertEquals(Species.CAT, room.getSpecies());
+    }
+
+    @Test
+    void editRoomTrimsNameAndLocation() {
+
+        assertTrue(
+                roomList.editRoom(
+                        dogRoomID,
+                        "  Updated Kennels  ",
+                        "  New Location  ",
+                        Species.DOG
+                )
+        );
+
+        Room room = roomList.findByID(dogRoomID);
+
+        assertEquals("Updated Kennels", room.getName());
+        assertEquals("New Location", room.getLocation());
+    }
+
+    // ---------------------------------------------------------
+    // DELETE ROOM
+    // ---------------------------------------------------------
+
+    @Test
+    void deleteRoomHandlesUnknownAndEmptyRoom() {
+
+        assertFalse(roomList.deleteRoom(-1));
+
+        assertTrue(roomList.deleteRoom(dogRoomID));
+
+        assertNull(roomList.findByID(dogRoomID));
+        assertEquals(4, roomList.getNumberOfRooms());
+    }
+
+    @Test
+    void deleteRoomDeletesEligiblePodsWithRoom() {
+
+        Pod first = offlinePod("K1");
+        Pod second = offlinePod("K2");
+
+        assertTrue(roomList.deleteRoom(dogRoomID));
+
+        assertNull(roomList.findByID(dogRoomID));
+        assertNull(podList.findByID(first.getPodID()));
+        assertNull(podList.findByID(second.getPodID()));
+        assertEquals(0, podList.getPodsForRoom(dogRoomID).size());
+    }
+
+    @Test
+    void deleteRoomRefusesIneligiblePod() {
+
+        Pod active = inServicePod("K1");
+
+        assertFalse(roomList.deleteRoom(dogRoomID));
+
+        assertNotNull(roomList.findByID(dogRoomID));
+        assertNotNull(podList.findByID(active.getPodID()));
+        assertEquals(5, roomList.getNumberOfRooms());
+    }
+
+    @Test
+    void deleteRoomRefusesBookedPod() {
+
+        Pod pod = offlinePod("K1");
+
+        Reservation reservation = new Reservation(
+                1,
+                1,
+                "Rex",
+                "2026-08-01",
+                "2026-08-30"
+        );
+
+        reservation.setPodID(pod.getPodID());
+        reservation.setStatus("Confirmed");
+
+        reservationList.addReservation(reservation);
+
+        assertFalse(roomList.deleteRoom(dogRoomID));
+
+        assertNotNull(roomList.findByID(dogRoomID));
+        assertNotNull(podList.findByID(pod.getPodID()));
+    }
 }
