@@ -469,7 +469,4 @@ public class BookingBean implements Serializable {
 	public void setPendingReservationID(int pendingReservationID) {
 	    this.pendingReservationID = pendingReservationID;
 	}
-	public void setLoginBean(LoginBean loginBean) {
-	    this.loginBean = loginBean;
-	}
 }

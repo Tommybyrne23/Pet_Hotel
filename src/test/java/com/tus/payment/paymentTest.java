@@ -211,27 +211,30 @@ class paymentTest {
 		//Set the booking bean list elements 
 		bookingBean.setPodList(podList);
 		bookingBean.setReservationList(reservationList);
-		
+	    bookingBean.setLoginBean(login); 					//Inject loginBean into bookingBean
+
 		//set a new default reservation 
 		reservation = new Reservation(user1.getUserID(),pet1.getPetID(),pet1.getName(), "2026-08-22", "2026-09-01");
 		reservationList.addReservation(reservation);
 		
 		
 	}
-	@Test
-	@DisplayName("List All User and Pet IDs")
-	void listAllIDs() {
-	    System.out.println("--- USERS ---");
-	    for (User u : userList.getUsers()) {
-	        System.out.println("ID: " + u.getUserID() + " | Name: " + u.getName());
-	    }
-
-	    System.out.println("--- PETS ---");
-	    for (Pet p : petList.getPets()) {
-	        System.out.println("Pet ID: " + p.getPetID() + " | Name: " + p.getName() + " | Owner User ID: " + p.getUserID());
-	    }
 	
-	}
+//had this to print test IDs and then used getters and setters instead. 	
+//	@Test
+//	@DisplayName("List All User and Pet IDs")
+//	void listAllIDs() {
+//	    System.out.println("--- USERS ---");
+//	    for (User u : userList.getUsers()) {
+//	        System.out.println("ID: " + u.getUserID() + " | Name: " + u.getName());
+//	    }
+//
+//	    System.out.println("--- PETS ---");
+//	    for (Pet p : petList.getPets()) {
+//	        System.out.println("Pet ID: " + p.getPetID() + " | Name: " + p.getName() + " | Owner User ID: " + p.getUserID());
+//	    }
+//	
+//	}
 	
 	@Test
 	@DisplayName("Verify User and Pet IDs")
@@ -355,6 +358,8 @@ class paymentTest {
 	@Test
 	@DisplayName("Test: Authorise Payment")
 	void testAuthorizePaymentProperties() {
+		
+		//tests AuthorisePayment.java will pass the correct informaiton, this will be called on in BookingBean
 	    AuthorizePayment authPayment = new AuthorizePayment();
 	    
 	    authPayment.setProduct("Cattery Pod Stay");
@@ -379,7 +384,7 @@ class paymentTest {
 	@Test
 	@DisplayName("Test completePayment handles invalid PayPal token cleanly")
 	void testCompletePaymentWithInvalidToken() {
-	    // 1. Fake ExternalContext supplying the mock token parameter
+	    // Fake ExternalContext supplying the mock token parameter
 	    ExternalContextWrapper extContext = new ExternalContextWrapper() {
 	        @Override
 	        public Map<String, String> getRequestParameterMap() {
@@ -387,7 +392,7 @@ class paymentTest {
 	        }
 	    };
 
-	    // 2. Fake FacesContext overriding both getExternalContext and addMessage
+	    // Fake FacesContext overriding both getExternalContext and addMessage
 	    FacesContext facesContext = new FacesContextWrapper() {
 	        @Override
 	        public ExternalContext getExternalContext() {
@@ -400,7 +405,7 @@ class paymentTest {
 	        }
 	    };
 
-	    // 3. Inject mock context into JSF runtime
+	    // Inject mock context into JSF runtime
 	    FacesContextMocker.setContext(facesContext);
 
 	    try {
@@ -425,19 +430,36 @@ class paymentTest {
 	@Test
 	@DisplayName("Test: Dashboard returns only confirmed bookings for logged-in user")
 	void testGetConfirmedUserBookingsFilter() {
+	
 	    login.setLoggedInUser(user1);
-	    bookingBean.setReservationList(reservationList);
 
-	    // Create a confirmed reservation and a cancelled reservation for user1
+
+	    // Create a confirmed reservation and add to list
 	    Reservation confirmedRes = new Reservation(user1.getUserID(), pet1.getPetID(), pet1.getName(), "2026-09-05", "2026-09-10");
 	    confirmedRes.setStatus("Confirmed");
 	    reservationList.addReservation(confirmedRes);
 
-	    reservation.setStatus("Cancelled"); // Default reservation in setup
+	    // Default reservation from setUp() remains 'Pending'
+	    reservation.setStatus("Cancelled");
 
-	    // Verify dashboard retrieves strictly confirmed bookings
+	    // Verify filter retrieves strictly confirmed bookings
 	    List<Reservation> confirmedList = bookingBean.getConfirmedUserBookings();
 	    assertEquals(1, confirmedList.size());
 	    assertEquals("Confirmed", confirmedList.get(0).getStatus());
 	}
+	
+	@Test
+	@DisplayName("Test: Cancel navigation resets bean form fields and redirects")
+	void testCancelResetsFormAndRedirects() {
+	    bookingBean.setSelectedPetID(pet1.getPetID());
+	    bookingBean.setCheckInDate("2026-08-22");
+	    
+	    String redirectOutcome = bookingBean.cancel();
+
+	    assertEquals("/userDashboard?faces-redirect=true", redirectOutcome);
+	    assertEquals(0, bookingBean.getSelectedPetID());
+	    assertNull(bookingBean.getCheckInDate());
+	    assertEquals(0.0, bookingBean.getTotalPrice());
+	}
+	
 }
