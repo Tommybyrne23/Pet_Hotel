@@ -50,11 +50,7 @@ class BookingBeanTest {
 		bookingBean.setPodList(podList);
 		bookingBean.setReservationList(reservationList);
 
-		// BookingBean has no setPetList()/setServiceList() test-support setters
-		// (unlike setPodList()/setLoginBean()/setReservationList()). Rather than
-		// change the bean without checking first, these two are injected via
-		// reflection - a test-only technique that makes zero changes to
-		// production code.
+
 		setPrivateField(bookingBean, "petList", petList);
 		setPrivateField(bookingBean, "serviceList", serviceList);
 	}
