@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
 import java.util.List;
-
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,12 @@ import com.tus.Services.Service;
 import com.tus.Services.ServiceList;
 import com.tus.Services.Species;
 import com.tus.pethotel.Pet;
+import com.tus.pethotel.Pod;
 import com.tus.pethotel.PetList;
 import com.tus.pethotel.PodList;
 import com.tus.pethotel.Reservation;
 import com.tus.pethotel.ReservationList;
+import com.tus.pethotel.RoomList;
 import com.tus.pethotel.User;
 import com.tus.pethotel.UserList;
 
@@ -29,6 +31,7 @@ class BookingBeanTest {
 	ServiceList serviceList;
 	PodList podList;
 	ReservationList reservationList;
+	RoomList roomList;
 	User customer;
 
 	@BeforeEach
@@ -43,7 +46,8 @@ class BookingBeanTest {
 		loginBean.login();
 		petList = new PetList();          
 		serviceList = new ServiceList(); 
-		podList = new PodList();          
+		podList = new PodList(); 
+		roomList = new RoomList();        
 		reservationList = new ReservationList();
 		bookingBean = new BookingBean();
 		bookingBean.setLoginBean(loginBean);
@@ -132,7 +136,7 @@ class BookingBeanTest {
 	}
 
 	@Test
-	@DisplayName(" pet and pod are selected but dates are missing, when calculatePrice is called, then it is blocked")
+	@DisplayName("Pet and pod are selected but dates are missing, when calculatePrice is called, then it is blocked")
 	void calculatingPriceWithMissingDatesIsBlocked() {
 		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
 		petList.addPet(buddy);
@@ -227,5 +231,140 @@ class BookingBeanTest {
 		assertNull(bookingBean.getCheckInDate());
 		assertNull(bookingBean.getCheckOutDate());
 	}
+
+	@Test
+	@DisplayName("Valid pet, pod and dates with no extras, when calculatePrice is called then the total price is calculated as pod rate x nights")
+	void calculatingPriceWithPodOnlySucceeds() {
+		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
+		petList.addPet(buddy);
+		bookingBean.setSelectedPetID(buddy.getPetID());
+		Service dogPod = serviceList.getPodsForSpecies("Dog").get(0); // "Dog Boarding", €35.00/night
+		bookingBean.setSelectedPodID(dogPod.getServiceID());
+		bookingBean.setCheckInDate(LocalDate.now().plusDays(10).toString());
+		bookingBean.setCheckOutDate(LocalDate.now().plusDays(15).toString()); // 5 nights
+		String outcome = bookingBean.calculatePrice();
+		assertNull(outcome);
+		assertTrue(bookingBean.isPriceCalculated());
+		assertEquals(175.00, bookingBean.getTotalPrice(), 0.001); // 35.00 x 5 nights
+	}
+
+	@Test
+	@DisplayName("Given valid pet, pod, dates and extras (per-night and one-off),when calculatePrice is called, then the total price includes all of them")
+	void calculatingPriceWithExtrasSucceeds() {
+		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
+		petList.addPet(buddy);
+		bookingBean.setSelectedPetID(buddy.getPetID());
+		Service dogPod = serviceList.getPodsForSpecies("Dog").get(0); // €35.00/night
+		bookingBean.setSelectedPodID(dogPod.getServiceID());
+		Service dailyWalks = serviceList.findByName("Daily Walks");   // €10.00/night
+		Service grooming = serviceList.findByName("Grooming");        // €15.00 one-off
+		bookingBean.setSelectedExtraIDs(new Integer[] {
+				dailyWalks.getServiceID(), grooming.getServiceID() });
+		bookingBean.setCheckInDate(LocalDate.now().plusDays(10).toString());
+		bookingBean.setCheckOutDate(LocalDate.now().plusDays(15).toString()); // 5 nights
+		String outcome = bookingBean.calculatePrice();
+		// Then: (35.00 x 5) + (10.00 x 5) + 15.00 one-off = 240.00
+		assertNull(outcome);
+		assertTrue(bookingBean.isPriceCalculated());
+		assertEquals(240.00, bookingBean.getTotalPrice(), 0.001);
+	}
+
+	@Test
+	@DisplayName("No pods exist yet for the pet's species, when calculatePrice is called, then it is blocked with a specific message")
+	void calculatingPriceWhenNoPodsExistForSpeciesIsBlocked() throws Exception {
+		// zero pods for every species, unlike the shared podList from setUp()
+		PodList emptyPodList = new PodList();
+		emptyPodList.setRoomList(roomList);
+		emptyPodList.setReservationList(reservationList);
+		bookingBean.setPodList(emptyPodList);
+		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
+		petList.addPet(buddy);
+		bookingBean.setSelectedPetID(buddy.getPetID());
+		Service dogPod = serviceList.getPodsForSpecies("Dog").get(0);
+		bookingBean.setSelectedPodID(dogPod.getServiceID());
+		bookingBean.setCheckInDate(LocalDate.now().plusDays(10).toString());
+		bookingBean.setCheckOutDate(LocalDate.now().plusDays(15).toString());
+		String outcome = bookingBean.calculatePrice();
+		assertNull(outcome);
+		assertFalse(bookingBean.isPriceCalculated());
+	}
+
+	@Test
+	@DisplayName("every pod for the pet's species is already booked for those dates,when calculatePrice is called, then it is blocked")
+	void calculatingPriceWhenAllPodsAreTakenForDatesIsBlocked() {
+		String checkIn = LocalDate.now().plusDays(10).toString();
+		String checkOut = LocalDate.now().plusDays(15).toString();
+		// for exactly these dates, so none are left free
+		List<Pod> catPods = podList.getPodsForSpecies(Species.CAT);
+		for (Pod pod : catPods) {
+			Reservation occupied = new Reservation(999, 1, "Someone Else's Cat", checkIn, checkOut);
+			occupied.setPodID(pod.getPodID());
+			occupied.setStatus("Confirmed");
+			reservationList.addReservation(occupied);
+		}
+
+		Pet luna = new Pet(customer.getUserID(), "Luna", Species.CAT, "Siamese", "2 years", null);
+		petList.addPet(luna);
+		bookingBean.setSelectedPetID(luna.getPetID());
+
+		Service catPod = serviceList.getPodsForSpecies("Cat").get(0);
+		bookingBean.setSelectedPodID(catPod.getServiceID());
+
+		bookingBean.setCheckInDate(checkIn);
+		bookingBean.setCheckOutDate(checkOut);
+
+		// When
+		String outcome = bookingBean.calculatePrice();
+
+		// Then
+		assertNull(outcome);
+		assertFalse(bookingBean.isPriceCalculated());
+	}
+
+
+
+	@Test
+	@DisplayName("Given free pods exist for the dates entered, getPodAvailability Note reports how many")
+	void podAvailabilityNoteReportsFreePodCount() {
+		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
+		petList.addPet(buddy);
+		bookingBean.setSelectedPetID(buddy.getPetID());
+		bookingBean.setCheckInDate(LocalDate.now().plusDays(10).toString());
+		bookingBean.setCheckOutDate(LocalDate.now().plusDays(15).toString());
+		String note = bookingBean.getPodAvailabilityNote();
+		assertEquals("6 dog pod(s) free for those dates.", note);
+	}
+
+	@Test
+	@DisplayName("no pods are free for the dates entered, getPodAvailability Note says so")
+	void podAvailabilityNoteReportsNoneFree() {
+		String checkIn = LocalDate.now().plusDays(10).toString();
+		String checkOut = LocalDate.now().plusDays(15).toString();
+		List<Pod> catPods = podList.getPodsForSpecies(Species.CAT);
+		for (Pod pod : catPods) {
+			Reservation occupied = new Reservation(999, 1, "Someone Else's Cat", checkIn, checkOut);
+			occupied.setPodID(pod.getPodID());
+			occupied.setStatus("Confirmed");
+			reservationList.addReservation(occupied);
+		}
+
+		Pet luna = new Pet(customer.getUserID(), "Luna", Species.CAT, "Siamese", "2 years", null);
+		petList.addPet(luna);
+		bookingBean.setSelectedPetID(luna.getPetID());
+		bookingBean.setCheckInDate(checkIn);
+		bookingBean.setCheckOutDate(checkOut);
+		String note = bookingBean.getPodAvailabilityNote();
+		assertEquals("No cat pods are free for those dates.", note);
+	}
+
+	@Test
+	@DisplayName("Given dates have not been entered yet, getPodAvailabilityNote returns an empty string")
+	void podAvailabilityNoteIsBlankBeforeDatesAreEntered() {
+		Pet buddy = new Pet(customer.getUserID(), "Buddy", Species.DOG, "Golden Retriever", "3 years", null);
+		petList.addPet(buddy);
+		bookingBean.setSelectedPetID(buddy.getPetID());
+		assertEquals("", bookingBean.getPodAvailabilityNote());
+	}
+
 }
 
