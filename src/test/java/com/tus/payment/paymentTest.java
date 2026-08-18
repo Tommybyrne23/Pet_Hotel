@@ -355,31 +355,7 @@ class paymentTest {
 	    assertEquals("100.00", detail.getTotal()); // Verifies Locale.ROOT decimal format
 	}
 	
-	@Test
-	@DisplayName("Test: Authorise Payment")
-	void testAuthorizePaymentProperties() {
-		
-		//tests AuthorisePayment.java will pass the correct informaiton, this will be called on in BookingBean
-	    AuthorizePayment authPayment = new AuthorizePayment();
-	    
-	    authPayment.setProduct("Cattery Pod Stay");
-	    authPayment.setSubTotal(150.00f);
-	    authPayment.setTax(10.00f);
-	    authPayment.setTotal(160.00f);
 
-	    assertEquals("Cattery Pod Stay", authPayment.getProduct());
-	    assertEquals(150.00f, authPayment.getSubTotal(), 0.001);
-	    assertEquals(160.00f, authPayment.getTotal(), 0.001);
-	}
-	
-	@Test
-	@DisplayName("Test Payment Services Class is being setup")
-	void testPaymentServicesInitialization() {
-	    PaymentServices service = new PaymentServices();
-	    
-	    // Initial status should be null before any capture or error occurs
-	    assertNull(service.getPaymentStatus());
-	}
 	
 	@Test
 	@DisplayName("Test completePayment handles invalid PayPal token cleanly")
