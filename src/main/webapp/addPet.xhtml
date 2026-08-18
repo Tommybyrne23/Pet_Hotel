@@ -4,7 +4,13 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:p="http://primefaces.org/ui">
+      
+<f:metadata>
+	<!-- Only logged-in users can make a booking -->
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
 <h:head>
+
     <h:outputStylesheet library="css" name="registration.css" />
     <link rel="icon"
           type="image/png"
