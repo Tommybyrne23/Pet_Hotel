@@ -10,15 +10,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tus.Services.ChargeType;
-import com.tus.Services.Service;
-import com.tus.Services.ServiceList;
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.PetList;
 import com.tus.pethotel.Reservation;
 import com.tus.pethotel.ReservationList;
 import com.tus.pethotel.User;
-import com.tus.Services.Species;
+import com.tus.services.ChargeType;
+import com.tus.services.Service;
+import com.tus.services.ServiceList;
+import com.tus.services.Species;
 import com.tus.pethotel.Pod;
 import com.tus.pethotel.PodList;
 

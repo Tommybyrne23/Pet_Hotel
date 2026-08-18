@@ -1,9 +1,10 @@
 package com.tus.pethotel;
 
-import com.tus.Services.Species;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.tus.services.Species;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;

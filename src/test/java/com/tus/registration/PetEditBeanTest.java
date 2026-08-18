@@ -8,11 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.tus.Services.Species;
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.PetList;
 import com.tus.pethotel.User;
 import com.tus.pethotel.UserList;
+import com.tus.services.Species;
 
 import jakarta.faces.model.SelectItem;
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tus.Services.Species;
+import com.tus.services.Species;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;

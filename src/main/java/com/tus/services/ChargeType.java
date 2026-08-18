@@ -1,4 +1,4 @@
-package com.tus.Services;
+package com.tus.services;
 
 public enum ChargeType {
 

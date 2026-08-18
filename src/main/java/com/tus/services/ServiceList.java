@@ -1,4 +1,4 @@
-package com.tus.Services;
+package com.tus.services;
 
 import java.io.Serializable;
 import java.util.ArrayList;

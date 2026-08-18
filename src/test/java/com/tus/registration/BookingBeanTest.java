@@ -9,9 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.tus.Services.Service;
-import com.tus.Services.ServiceList;
-import com.tus.Services.Species;
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.Pod;
 import com.tus.pethotel.PetList;
@@ -21,6 +18,9 @@ import com.tus.pethotel.ReservationList;
 import com.tus.pethotel.RoomList;
 import com.tus.pethotel.User;
 import com.tus.pethotel.UserList;
+import com.tus.services.Service;
+import com.tus.services.ServiceList;
+import com.tus.services.Species;
 
 class BookingBeanTest {
 

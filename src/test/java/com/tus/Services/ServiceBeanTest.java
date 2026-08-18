@@ -14,6 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.tus.services.ChargeType;
+import com.tus.services.Service;
+import com.tus.services.ServiceBean;
+import com.tus.services.ServiceCategory;
+import com.tus.services.ServiceList;
+
 /* Tests for the admin "add a service" form.*/
 
 class ServiceBeanTest {

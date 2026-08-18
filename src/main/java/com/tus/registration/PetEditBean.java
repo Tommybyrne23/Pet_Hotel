@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.tus.pethotel.Pet;
 import com.tus.pethotel.PetList;
-import com.tus.Services.Species;
+import com.tus.services.Species;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;

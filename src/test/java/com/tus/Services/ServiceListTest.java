@@ -13,6 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.tus.services.ChargeType;
+import com.tus.services.Service;
+import com.tus.services.ServiceCategory;
+import com.tus.services.ServiceList;
+import com.tus.services.Species;
+
 /* Tests for the service collection. */
 class ServiceListTest {
 

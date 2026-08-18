@@ -2,7 +2,7 @@ package com.tus.pethotel;
 
 import java.io.Serializable;
 
-import com.tus.Services.Species;
+import com.tus.services.Species;
 
 public class Pet implements Serializable {
 
