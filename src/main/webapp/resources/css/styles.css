@@ -920,3 +920,34 @@ input[type="checkbox"] {
 .testimonial-scroll > .manage-card {
 	scroll-snap-align: start;
 }
+
+/* ---- Testimonial stars and avatar ---- */
+
+.testimonial-stars {
+	margin: 0 0 10px 0;
+	font-size: 18px;
+	letter-spacing: 3px;
+	color: #f1c40f;
+}
+
+.testimonial-person {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.testimonial-avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.testimonial-person .manage-card-title {
+	margin-bottom: 2px;
+}
+
+.testimonial-person .manage-card-desc {
+	margin-bottom: 0;
+}
