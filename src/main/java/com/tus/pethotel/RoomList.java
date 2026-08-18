@@ -122,6 +122,69 @@ public class RoomList implements Serializable {
 
 	    return true;
 	}
+	
+	public boolean canEditRoom(int roomID) {
+
+	    Room room = findByID(roomID);
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    List<Pod> roomPods = podList.getPodsForRoom(roomID);
+
+	    // Every pod in the room must satisfy the same rules
+	    // as a pod being deleted.
+	    for (Pod pod : roomPods) {
+
+	        if (!podList.canDeletePod(pod.getPodID())) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+
+
+	public boolean editRoom(int roomID, String newName,
+	        String newLocation, Species newSpecies) {
+
+	    Room room = findByID(roomID);
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    // Name is required
+	    if (newName == null || newName.trim().isEmpty()) {
+	        return false;
+	    }
+
+	    // Location is required
+	    if (newLocation == null || newLocation.trim().isEmpty()) {
+	        return false;
+	    }
+
+	    // Species is required
+	    if (newSpecies == null) {
+	        return false;
+	    }
+
+	    newName = newName.trim();
+	    newLocation = newLocation.trim();
+
+	    // Room names must be unique, but allow the room
+	    // to keep its existing name.
+	    if (isNameTakenByAnother(newName, roomID)) {
+	        return false;
+	    }
+
+	    room.setName(newName);
+	    room.setLocation(newLocation);
+	    room.setSpecies(newSpecies);
+
+	    return true;
+	}
 
 	public ArrayList<Room> getRooms() {
 		return rooms;

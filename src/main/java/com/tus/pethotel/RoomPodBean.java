@@ -29,6 +29,15 @@ public class RoomPodBean implements Serializable {
 	private String roomName;
 	private String roomLocation;
 	private Species roomSpecies;
+
+	// Room currently being edited
+	private int editingRoomID = 0;
+
+	// Temporary values used while editing a room
+	private String editRoomName;
+	private String editRoomLocation;
+	private Species editRoomSpecies;
+
 	// Table filter, not part of either form. Defaults to today.
 	private String availabilityDate = LocalDate.now().toString();
 
@@ -399,6 +408,133 @@ public class RoomPodBean implements Serializable {
 	    return null;
 	}
 	
+	public String startEditRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    // A room can only be edited if every pod in it satisfies
+	    // the same rules as deleting that pod.
+	    if (!roomList.canEditRoom(room.getRoomID())) {
+
+	        FacesContext context = FacesContext.getCurrentInstance();
+
+	        if (context != null) {
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Room " + room.getName()
+	                        + " cannot be edited. All pods in the room "
+	                        + "must be out of service and have no bookings "
+	                        + "within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+
+	        return null;
+	    }
+
+	    editingRoomID = room.getRoomID();
+
+	    editRoomName = room.getName();
+	    editRoomLocation = room.getLocation();
+	    editRoomSpecies = room.getSpecies();
+
+	    return null;
+	}
+	
+	public boolean isEditingRoom(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    return room.getRoomID() == editingRoomID;
+	}
+	
+	public String saveRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    if (editRoomName == null || editRoomName.trim().isEmpty()) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditNameInput",
+	            "A room name is required."
+	        );
+	    }
+
+	    if (editRoomLocation == null || editRoomLocation.trim().isEmpty()) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditLocationInput",
+	            "An area or location is required."
+	        );
+	    }
+
+	    if (editRoomSpecies == null) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditSpeciesInput",
+	            "Choose which animal this room is for."
+	        );
+	    }
+
+	    String newName = editRoomName.trim();
+	    String newLocation = editRoomLocation.trim();
+
+	    // Room names must be unique, excluding the room being edited.
+	    if (roomList.isNameTakenByAnother(
+	            newName,
+	            room.getRoomID())) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditNameInput",
+	            "A room with that name already exists."
+	        );
+	    }
+
+	    boolean edited = roomList.editRoom(
+	        room.getRoomID(),
+	        newName,
+	        newLocation,
+	        editRoomSpecies
+	    );
+
+	    if (!edited) {
+	        addError("The room could not be updated.");
+	        return null;
+	    }
+
+	    editingRoomID = 0;
+	    editRoomName = null;
+	    editRoomLocation = null;
+	    editRoomSpecies = null;
+
+	    addSuccess("Room " + room.getName() + " has been updated.");
+
+	    return null;
+	}
+	
+	public String cancelRoomEdit() {
+
+	    editingRoomID = 0;
+	    editRoomName = null;
+	    editRoomLocation = null;
+	    editRoomSpecies = null;
+
+	    return null;
+	}
+	
 	// GETTERS AND SETTERS
 
 	public String getRoomName() {
@@ -461,5 +597,37 @@ public class RoomPodBean implements Serializable {
 
 	public void setAvailabilityDate(String availabilityDate) {
 		this.availabilityDate = availabilityDate;
+	}
+	
+	public int getEditingRoomID() {
+	    return editingRoomID;
+	}
+
+	public void setEditingRoomID(int editingRoomID) {
+	    this.editingRoomID = editingRoomID;
+	}
+
+	public String getEditRoomName() {
+	    return editRoomName;
+	}
+
+	public void setEditRoomName(String editRoomName) {
+	    this.editRoomName = editRoomName;
+	}
+
+	public String getEditRoomLocation() {
+	    return editRoomLocation;
+	}
+
+	public void setEditRoomLocation(String editRoomLocation) {
+	    this.editRoomLocation = editRoomLocation;
+	}
+
+	public Species getEditRoomSpecies() {
+	    return editRoomSpecies;
+	}
+
+	public void setEditRoomSpecies(Species editRoomSpecies) {
+	    this.editRoomSpecies = editRoomSpecies;
 	}
 }
