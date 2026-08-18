@@ -23,7 +23,6 @@ public class ReservationSearchBean implements Serializable {
     @Inject
     private UserList userList;
 
-    
     LocalDate today = LocalDate.now();		//use this reference to search for todays date
     
     // Search filter parameters
@@ -35,10 +34,8 @@ public class ReservationSearchBean implements Serializable {
     private String searchPodName;			//search by the PodName 
     private LocalDate searchCheckInDate;	//search the date the pet checks in 
     private LocalDate searchCheckOutDate;	//search the date the pet checks out
-    
 
-
-	// Holds the filtered list displayed in the UI table
+    // Holds the filtered list displayed in the UI table
     private List<Reservation> filteredReservations;
 
     @PostConstruct
@@ -62,7 +59,7 @@ public class ReservationSearchBean implements Serializable {
         }
 
         filteredReservations = reservationList.getReservations().stream()			//brings in each fiultered response, one by one
-        	.filter(r -> matchesPetID(r))
+            .filter(r -> matchesPetID(r))
             .filter(r -> matchesPetName(r))											// r declared as a reservationList with "->"
             .filter(r -> matchesPodName(r))
             .filter(r -> matchesCustomerID(r))
@@ -82,13 +79,12 @@ public class ReservationSearchBean implements Serializable {
         return petIdStr.contains(searchPetID.trim());
     }
 
-    
     private boolean matchesPetName(Reservation r) {
-    	if (searchPetName == null || searchPetName.isBlank()) {
-    		return true;
-    	}
-    	return r.getPetName() != null && 
-    			r.getPetName().toLowerCase().contains(searchPetName.trim().toLowerCase());			//search allows for partial matching (bud would match Buddy and also Buddington....should an animal be called something)
+        if (searchPetName == null || searchPetName.isBlank()) {
+            return true;
+        }
+        return r.getPetName() != null && 
+               r.getPetName().toLowerCase().contains(searchPetName.trim().toLowerCase());			//search allows for partial matching (bud would match Buddy and also Buddington....should an animal be called something)
     }
 
     private boolean matchesPodName(Reservation r) {
@@ -108,47 +104,49 @@ public class ReservationSearchBean implements Serializable {
         return userIdStr.contains(searchCustomerID.trim());
     }
 
-    
     private boolean matchesCustomerName(Reservation r) {
         if (searchCustomerName == null || searchCustomerName.isBlank()) {
             return true;
         }
         
+        if (userList == null) {
+            return false;
+        }
+
         String customerName = userList.getUserNameById(r.getUserID());
         return customerName != null && 
                customerName.toLowerCase().contains(searchCustomerName.trim().toLowerCase());
     }
-    
     
     private boolean matchesCustomerEmail(Reservation r) {
         if (searchCustomerEmail == null || searchCustomerEmail.isBlank()) {
             return true;
         }
         
+        if (userList == null) {
+            return false;
+        }
+
         User customer = userList.findByUserID(r.getUserID());
         return customer != null && customer.getEmail() != null && 
                customer.getEmail().toLowerCase().contains(searchCustomerEmail.trim().toLowerCase());
     }
 
-    
-    
     private boolean matchesCheckInDate(Reservation r) {
-    	if (searchCheckInDate == null) {
-    		return true;
-    	}
-    	return r.getCheckInDate() != null && 
-    			r.getCheckInDate().trim().equals(searchCheckInDate.toString());			//search matches against PrimeFaces LocalDate object
+        if (searchCheckInDate == null) {
+            return true;
+        }
+        return r.getCheckInDate() != null && 
+               r.getCheckInDate().trim().equals(searchCheckInDate.toString());			//search matches against PrimeFaces LocalDate object
     }
-    
     
     private boolean matchesCheckOutDate(Reservation r) {
-    	if (searchCheckOutDate == null) {
-    		return true;
-    	}
-    	return r.getCheckOutDate() != null && 
-    			r.getCheckOutDate().trim().equals(searchCheckOutDate.toString());			//search matches against PrimeFaces LocalDate object
+        if (searchCheckOutDate == null) {
+            return true;
+        }
+        return r.getCheckOutDate() != null && 
+               r.getCheckOutDate().trim().equals(searchCheckOutDate.toString());			//search matches against PrimeFaces LocalDate object
     }
-    
     
     // --- GETTERS AND SETTERS ---
 
@@ -175,53 +173,52 @@ public class ReservationSearchBean implements Serializable {
     public void setFilteredReservations(List<Reservation> filteredReservations) {
         this.filteredReservations = filteredReservations;
     }
-    
 
     public String getSearchCustomerID() {
-		return searchCustomerID;
-	}
+        return searchCustomerID;
+    }
 
-	public void setSearchCustomerID(String searchCustomerID) {
-		this.searchCustomerID = searchCustomerID;
-	}
+    public void setSearchCustomerID(String searchCustomerID) {
+        this.searchCustomerID = searchCustomerID;
+    }
 
-	public String getSearchCustomerName() {
-		return searchCustomerName;
-	}
+    public String getSearchCustomerName() {
+        return searchCustomerName;
+    }
 
-	public void setSearchCustomerName(String searchCustomerName) {
-		this.searchCustomerName = searchCustomerName;
-	}
+    public void setSearchCustomerName(String searchCustomerName) {
+        this.searchCustomerName = searchCustomerName;
+    }
 
-	public String getSearchCustomerEmail() {
-		return searchCustomerEmail;
-	}
+    public String getSearchCustomerEmail() {
+        return searchCustomerEmail;
+    }
 
-	public void setSearchCustomerEmail(String searchCustomerEmail) {
-		this.searchCustomerEmail = searchCustomerEmail;
-	}
+    public void setSearchCustomerEmail(String searchCustomerEmail) {
+        this.searchCustomerEmail = searchCustomerEmail;
+    }
 
-	public String getSearchPetID() {
-		return searchPetID;
-	}
+    public String getSearchPetID() {
+        return searchPetID;
+    }
 
-	public void setSearchPetID(String searchPetID) {
-		this.searchPetID = searchPetID;
-	}
+    public void setSearchPetID(String searchPetID) {
+        this.searchPetID = searchPetID;
+    }
 
-	public LocalDate getSearchCheckInDate() {
-		return searchCheckInDate;
-	}
+    public LocalDate getSearchCheckInDate() {
+        return searchCheckInDate;
+    }
 
-	public void setSearchCheckInDate(LocalDate searchCheckIn) {
-		this.searchCheckInDate = searchCheckIn;
-	}
+    public void setSearchCheckInDate(LocalDate searchCheckIn) {
+        this.searchCheckInDate = searchCheckIn;
+    }
 
-	public LocalDate getSearchCheckOutDate() {
-		return searchCheckOutDate;
-	}
+    public LocalDate getSearchCheckOutDate() {
+        return searchCheckOutDate;
+    }
 
-	public void setSearchCheckOutDate(LocalDate searchCheckout) {
-		this.searchCheckOutDate = searchCheckout;
-	}
+    public void setSearchCheckOutDate(LocalDate searchCheckout) {
+        this.searchCheckOutDate = searchCheckout;
+    }
 }
