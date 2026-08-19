@@ -1011,4 +1011,115 @@ class RoomPodBeanTest {
 
         assertEquals(Species.CAT, bean.getEditRoomSpecies());
     }
+    
+    // ---------------------------------------------------------
+    // ROOM POD SERVICE STATUS
+    // ---------------------------------------------------------
+
+    @Test
+    @DisplayName("A room is locked when a pod is occupied on the selected date")
+    void roomIsLockedWhenPodIsOccupiedOnSelectedDate() {
+
+        Pod pod = addPod("K99", dogRoomID);
+        pod.setOutOfService(false);
+
+        confirmedBooking(pod.getPodID(), 5, 7);
+
+        bean.setAvailabilityDate(daysFromToday(5));
+
+        assertTrue(bean.isRoomLocked(dogRoom));
+    }
+
+    @Test
+    @DisplayName("A room is not locked when no pod is occupied on the selected date")
+    void roomIsNotLockedWhenNoPodIsOccupied() {
+
+        Pod pod = addPod("K99", dogRoomID);
+        pod.setOutOfService(false);
+
+        bean.setAvailabilityDate(daysFromToday(5));
+
+        assertFalse(bean.isRoomLocked(dogRoom));
+    }
+
+    @Test
+    @DisplayName("A null room is never locked")
+    void nullRoomIsNotLocked() {
+
+        assertFalse(bean.isRoomLocked(null));
+    }
+
+
+    // ---------------------------------------------------------
+    // BULK ROOM POD TOGGLE
+    // ---------------------------------------------------------
+
+    @Test
+    @DisplayName("A room with in-service pods can take all pods out of service")
+    void roomCanTakeAllPodsOutOfService() {
+
+        Pod first = addPod("K99", dogRoomID);
+        Pod second = addPod("K100", dogRoomID);
+
+        first.setOutOfService(false);
+        second.setOutOfService(false);
+
+        bean.setAvailabilityDate(daysFromToday(5));
+
+        assertFalse(bean.allPodsOutOfService(dogRoom));
+
+        assertNull(bean.toggleRoomPodsOutOfService(dogRoom));
+
+        assertTrue(first.isOutOfService());
+        assertTrue(second.isOutOfService());
+        assertTrue(bean.allPodsOutOfService(dogRoom));
+    }
+
+    @Test
+    @DisplayName("A room with all pods out of service can return all pods to service")
+    void roomCanReturnAllPodsToService() {
+
+        Pod first = addPod("K99", dogRoomID);
+        Pod second = addPod("K100", dogRoomID);
+
+        // Pods are created out of service by default.
+        assertTrue(first.isOutOfService());
+        assertTrue(second.isOutOfService());
+        assertTrue(bean.allPodsOutOfService(dogRoom));
+
+        bean.setAvailabilityDate(daysFromToday(5));
+
+        assertNull(bean.toggleRoomPodsOutOfService(dogRoom));
+
+        assertFalse(first.isOutOfService());
+        assertFalse(second.isOutOfService());
+        assertFalse(bean.allPodsOutOfService(dogRoom));
+    }
+    
+    @Test
+    @DisplayName("A room with no pods is not considered all out of service")
+    void roomWithNoPodsIsNotAllOutOfService() {
+
+        assertFalse(bean.allPodsOutOfService(dogRoom));
+    }
+
+    @Test
+    @DisplayName("A null room cannot bulk toggle pods")
+    void toggleRoomPodsWithNullDoesNothing() {
+
+        assertNull(bean.toggleRoomPodsOutOfService(null));
+    }
+
+    @Test
+    @DisplayName("A room with mixed pod status is not all out of service")
+    void roomWithMixedPodStatusIsNotAllOutOfService() {
+
+        Pod first = addPod("K99", dogRoomID);
+        Pod second = addPod("K100", dogRoomID);
+
+        first.setOutOfService(true);
+        second.setOutOfService(false);
+
+        assertFalse(bean.allPodsOutOfService(dogRoom));
+    }
 }
