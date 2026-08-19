@@ -89,7 +89,12 @@
 								 styleClass="btn-card-logout"
 								 action="#{RefundBean.processRefund(booking.reservationID)}"
 								 onclick="return confirm('Are you sure you want to cancel this booking?\nPlease note refunds are only possible up to 48 hours before the check in date');" />
-		
+				
+				<!--  	shows a message in the cell when the refund window has closed 
+						if the booking is within the 48hour window .					-->
+						
+				<h:outputText value="Cancellation window has closed"
+              rendered="#{booking.status eq 'Confirmed' and not RefundBean.isRefundAllowed(booking.reservationID)}" />
 				</h:column>
 			</h:dataTable>
 		</h:form>	
