@@ -547,6 +547,47 @@ public class RoomPodBean implements Serializable {
 	    return null;
 	}
 	
+	public int getDogPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.DOG);
+	}
+
+	public int getCatPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.CAT);
+	}
+
+	public int getBirdPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.BIRD);
+	}
+
+	public int getReptilePodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.REPTILE);
+	}
+
+	public int getFishPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.FISH);
+	}
+
+	private int getPodsAvailableForSpecies(Species species) {
+
+	    String date = availabilityDate;
+
+	    // If no date has been selected, use today
+	    if (date == null || date.isBlank()) {
+	        date = LocalDate.now().toString();
+	    }
+
+	    // Count availability for one night/day
+	    String nextDay = LocalDate.parse(date)
+	            .plusDays(1)
+	            .toString();
+
+	    return podList.countAvailablePods(
+	            species,
+	            date,
+	            nextDay
+	    );
+	}
+	
 	// GETTERS AND SETTERS
 
 	public String getRoomName() {
