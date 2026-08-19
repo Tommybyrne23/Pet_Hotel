@@ -732,6 +732,18 @@ input[type="checkbox"] {
 	outline-offset: 2px;
 }
 
+.nav-link-active {
+	background-color: #f4f9f5;
+	border-color: #f4f9f5;
+	color: #1e5631;
+}
+
+.nav-link-active:hover {
+	background-color: #ffffff;
+	border-color: #ffffff;
+	color: #1e5631;
+}
+
 .btn-nav-register {
 	background-color: #C96C4A;
 	color: #ffffff !important;

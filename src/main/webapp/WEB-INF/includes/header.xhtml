@@ -15,33 +15,64 @@
 
 			<!-- Navigation Links -->
 			<ul class="navbar-menu">
-				<li class="nav-item"><h:link styleClass="nav-link" outcome="/index" value="Home" /></li>
-			
+				<li class="nav-item"><h:link
+						styleClass="nav-link #{view.viewId eq '/index.xhtml' ? 'nav-link-active' : ''}"
+						outcome="/index" value="Home" /></li>
 
 				<!-- Signed-in customers -->
-				<ui:fragment rendered="#{LoginBean.loggedIn and not LoginBean.admin and not LoginBean.attendant}">
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/userDashboard" value="Dashboard" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/manageProfile" value="Manage Profile" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/makeBooking" value="New Booking" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/UserViewBookings" value="My Bookings" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
+				<ui:fragment
+					rendered="#{LoginBean.loggedIn and not LoginBean.admin and not LoginBean.attendant}">
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/userDashboard.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/userDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/user/manageProfile.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/user/manageProfile" value="Manage Profile" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/user/makeBooking.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/user/makeBooking" value="New Booking" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/user/UserViewBookings.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/user/UserViewBookings" value="My Bookings" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/contactUs.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/contactUs" value="Contact Us" /></li>
 				</ui:fragment>
 
 				<!-- Administrators -->
 				<ui:fragment rendered="#{LoginBean.admin}">
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/adminDashboard" value="Dashboard" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/userList" value="Users" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/petManagement" value="Pets" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/bookings/onsite" value="On Site" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/viewPodsRooms" value="Pods &amp; Rooms" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/manageServices" value="Prices &amp; Services" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/adminDashboard.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/adminDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/userList.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/userList" value="Users" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/petManagement.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/petManagement" value="Pets" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/bookings/onsite.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/bookings/onsite" value="On Site" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/viewPodsRooms.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/viewPodsRooms" value="Pods &amp; Rooms" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/manageServices.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/manageServices" value="Prices &amp; Services" /></li>
 				</ui:fragment>
-				
+
 				<!-- Attendants -->
-				<ui:fragment rendered="#{LoginBean.attendant and not LoginBean.admin}">
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/attendantDashboard" value="Dashboard" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/petManagement" value="Pets" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/bookings/onsite" value="On Site" /></li>
+				<ui:fragment
+					rendered="#{LoginBean.attendant and not LoginBean.admin}">
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/attendantDashboard.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/attendantDashboard" value="Dashboard" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/petManagement.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/petManagement" value="Pets" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/bookings/allBookings.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/bookings/onsite" value="On Site" /></li>
 				</ui:fragment>
 			</ul>
 
@@ -50,9 +81,15 @@
 				<!-- Signed-out visitors -->
 				<ui:fragment rendered="#{not LoginBean.loggedIn}">
 					<ul class="navbar-menu">
-						<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
-						<li class="nav-item"><h:link styleClass="nav-link btn-nav-register" outcome="/login" value="Login" /></li>
-						<li class="nav-item"><h:link styleClass="nav-link btn-nav-register" outcome="/registration" value="Register" /></li>
+						<li class="nav-item"><h:link
+								styleClass="nav-link #{view.viewId eq '/contactUs.xhtml' ? 'nav-link-active' : ''}"
+								outcome="/contactUs" value="Contact Us" /></li>
+						<li class="nav-item"><h:link
+								styleClass="nav-link btn-nav-register #{view.viewId eq '/login.xhtml' ? 'nav-link-active' : ''}"
+								outcome="/login" value="Login" /></li>
+						<li class="nav-item"><h:link
+								styleClass="nav-link btn-nav-register" outcome="/registration"
+								value="Register" /></li>
 					</ul>
 				</ui:fragment>
 
