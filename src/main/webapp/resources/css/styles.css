@@ -1,5 +1,5 @@
-
 body {
+	min-height: 100vh;
 	background-color: beige;
 	font-family: Arial, sans-serif;
 	color: #000000;
@@ -768,6 +768,8 @@ input[type="checkbox"] {
   /* Shared site footer styling */
   
 .site-footer {
+	position: sticky;
+	top: 100vh;
 	background-color: #1e5631;
 	color: #f4f9f5;
 	padding: 25px 20px;
