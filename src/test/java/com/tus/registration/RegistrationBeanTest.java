@@ -35,8 +35,8 @@ class RegistrationBeanTest {
 	void testAccountRegistrationSuccess() {
 		bean.getUser().setName("Mary");
 		bean.getUser().setEmail("mary@gmail.com");
-		bean.getUser().setPassword("pass123");
-		bean.setConfirmPassword("pass123");				//had to add this function to create the user
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1234");				//had to add this function to create the user
 		String outcome = bean.register();
 		assertEquals("login?faces-redirect=true", outcome);
 		assertNotNull(userList.findByEmail("mary@gmail.com"));	//check to see if the email has been stored in the array. If it hasn't then the usser hasn't been added.
@@ -50,8 +50,8 @@ class RegistrationBeanTest {
 		assertNotNull(userList.findByEmail("admin@3apets.ie"));	//confirming the email address is already in the list 
 		bean.getUser().setName("Admin");				
 		bean.getUser().setEmail("admin@3apets.ie");
-		bean.getUser().setPassword("pass123");
-		bean.setConfirmPassword("pass123");	
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1234");
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		 
@@ -61,8 +61,8 @@ class RegistrationBeanTest {
 	void testPasswordCheckFail() {
 		bean.getUser().setName("Thiago");				
 		bean.getUser().setEmail("thiago@tus.ie");
-		bean.getUser().setPassword("pass123");
-		bean.setConfirmPassword("pass124");	
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1235");
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		assertNull(userList.findByEmail("thiago@tus.ie"));			//confirms user hasn't been added to the list 
@@ -72,8 +72,8 @@ class RegistrationBeanTest {
 	void testBlankNameField() {
 		bean.getUser().setName("");				
 		bean.getUser().setEmail("thiago@tus.ie");
-		bean.getUser().setPassword("pass123");
-		bean.setConfirmPassword("pass123");	
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1234");
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		assertNull(userList.findByEmail("thiago@tus.ie"));			//confirms user hasn't been added to the list 
@@ -83,8 +83,8 @@ class RegistrationBeanTest {
 	void testBlankEmailField() {
 		bean.getUser().setName("Thiago");				
 		bean.getUser().setEmail("");							
-		bean.getUser().setPassword("pass123");				
-		bean.setConfirmPassword("pass123");	
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1234");
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		assertNull(userList.findByEmail(""));			//confirms user hasn't been added to the list 
@@ -95,8 +95,8 @@ class RegistrationBeanTest {
 	void testEmailHasTextNoAT() {
 		bean.getUser().setName("Thiago");				
 		bean.getUser().setEmail("thiago.tus.ie");						
-		bean.getUser().setPassword("pass123");				
-		bean.setConfirmPassword("pass123");	
+		bean.getUser().setPassword("pass1234");
+		bean.setConfirmPassword("pass1234");
 		String outcome = bean.register(); 						//test the register bean function, return the value as a string for testing. 
 		assertNull(outcome);									// if successful this would be a redirection link
 		assertNull(userList.findByEmail(""));			//confirms user hasn't been added to the list 
@@ -107,8 +107,8 @@ class RegistrationBeanTest {
 	void testResetForm(){
 		bean.getUser().setName("Tommy");
 		bean.getUser().setEmail("tommy@birr.com");
-		bean.getUser().setPassword("birrisgreat");
-		bean.setConfirmPassword("birrisgreat");
+		bean.getUser().setPassword("birr1234");
+		bean.setConfirmPassword("birr1234");
 		
 		User firstEntry = bean.getUser();					//record the entries we're putting in the bean on the form 
 		
