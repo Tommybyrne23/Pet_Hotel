@@ -29,6 +29,12 @@ public class RoomPodBean implements Serializable {
 	private String roomName;
 	private String roomLocation;
 	private Species roomSpecies;
+	
+	// Number of pods to automatically create for the room
+	private int numberOfPods = 0;
+
+	// Prefix used when automatically naming pods, e.g. A -> A1, A2, A3
+	private String podPrefix;
 
 	// Room currently being edited
 	private int editingRoomID = 0;
@@ -56,27 +62,149 @@ public class RoomPodBean implements Serializable {
 
 	public String addRoom() {
 
-		if (roomName == null || roomName.trim().isEmpty()) {
-			return blocked(ROOM_FORM_ID, "roomNameInput", "A room name is required.");
-		}
+	    // ---------------------------------------------------------
+	    // VALIDATE ROOM
+	    // ---------------------------------------------------------
 
-		if (roomLocation == null || roomLocation.trim().isEmpty()) {
-			return blocked(ROOM_FORM_ID, "roomLocationInput", "An area or location is required.");
-		}
+	    if (roomName == null || roomName.trim().isEmpty()) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomNameInput",
+	            "A room name is required."
+	        );
+	    }
 
-		if (roomSpecies == null) {
-			return blocked(ROOM_FORM_ID, "roomSpeciesInput", "Choose which animal this room is for.");
-		}
+	    if (roomLocation == null || roomLocation.trim().isEmpty()) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomLocationInput",
+	            "An area or location is required."
+	        );
+	    }
 
-		Room room = new Room(roomName.trim(), roomLocation.trim(), roomSpecies);
+	    if (roomSpecies == null) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomSpeciesInput",
+	            "Choose which animal this room is for."
+	        );
+	    }
 
-		if (!roomList.addRoom(room)) {
-			return blocked(ROOM_FORM_ID, "roomNameInput", "A room with that name already exists.");
-		}
+	    // ---------------------------------------------------------
+	    // VALIDATE NUMBER OF PODS
+	    // ---------------------------------------------------------
 
-		addSuccess(room.getName() + " has been added. Add pods to it below.");
+	    if (numberOfPods < 0 || numberOfPods > 20) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "numberOfPodsInput",
+	            "The number of pods must be between 0 and 20."
+	        );
+	    }
 
-		return reset();
+	    // ---------------------------------------------------------
+	    // VALIDATE POD PREFIX WHEN PODS ARE BEING CREATED
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods > 0) {
+
+	        if (podPrefix == null || podPrefix.trim().isEmpty()) {
+	            return blocked(
+	                ROOM_FORM_ID,
+	                "podPrefixInput",
+	                "A pod name/prefix is required when adding pods."
+	            );
+	        }
+
+	        // Keep the generated labels simple and predictable.
+	        // For example: A -> A1, A2, A3.
+	        if (!podPrefix.trim().matches("[A-Za-z]+")) {
+	            return blocked(
+	                ROOM_FORM_ID,
+	                "podPrefixInput",
+	                "The pod name/prefix should contain letters only."
+	            );
+	        }
+	    }
+
+	    // ---------------------------------------------------------
+	    // CREATE THE ROOM
+	    // ---------------------------------------------------------
+
+	    Room room = new Room(
+	        roomName.trim(),
+	        roomLocation.trim(),
+	        roomSpecies
+	    );
+
+	    if (!roomList.addRoom(room)) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomNameInput",
+	            "A room with that name already exists."
+	        );
+	    }
+
+	    // ---------------------------------------------------------
+	    // CREATE THE PODS
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods > 0) {
+
+	        String prefix = podPrefix.trim();
+
+	        for (int i = 1; i <= numberOfPods; i++) {
+
+	            String label = prefix + i;
+
+	            Pod pod = new Pod(
+	                label,
+	                room.getRoomID()
+	            );
+
+	            if (!podList.addPod(pod)) {
+
+	                // The room has already been created at this point.
+	                // Normally this should not happen because the labels
+	                // are checked by PodList, but report it clearly if it does.
+	                addError(
+	                    "Room " + room.getName()
+	                    + " was created, but pod " + label
+	                    + " could not be added."
+	                );
+
+	                return null;
+	            }
+	        }
+	    }
+
+	    // ---------------------------------------------------------
+	    // SUCCESS MESSAGE
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods == 0) {
+
+	        addSuccess(
+	            room.getName()
+	            + " has been added with no pods."
+	        );
+
+	    } else {
+
+	        addSuccess(
+	            room.getName()
+	            + " has been added with "
+	            + numberOfPods
+	            + " pods: "
+	            + podPrefix.trim()
+	            + "1 to "
+	            + podPrefix.trim()
+	            + numberOfPods
+	            + "."
+	        );
+	    }
+
+	    return reset();
 	}
 
 	// ADDING A POD
@@ -175,13 +303,17 @@ public class RoomPodBean implements Serializable {
 
 	public String reset() {
 
-		roomName = null;
-		roomLocation = null;
-		roomSpecies = null;
-		podLabel = null;
-		podRoomID = null;
+	    roomName = null;
+	    roomLocation = null;
+	    roomSpecies = null;
 
-		return "viewPodsRooms?faces-redirect=true";
+	    numberOfPods = 0;
+	    podPrefix = null;
+
+	    podLabel = null;
+	    podRoomID = null;
+
+	    return "viewPodsRooms?faces-redirect=true";
 	}
 
 
@@ -682,5 +814,21 @@ public class RoomPodBean implements Serializable {
 
 	public void setEditRoomSpecies(Species editRoomSpecies) {
 	    this.editRoomSpecies = editRoomSpecies;
+	}
+	
+	public int getNumberOfPods() {
+	    return numberOfPods;
+	}
+
+	public void setNumberOfPods(int numberOfPods) {
+	    this.numberOfPods = numberOfPods;
+	}
+
+	public String getPodPrefix() {
+	    return podPrefix;
+	}
+
+	public void setPodPrefix(String podPrefix) {
+	    this.podPrefix = podPrefix;
 	}
 }
