@@ -2,7 +2,7 @@
 body {
 	background-color: beige;
 	font-family: Arial, sans-serif;
-	color: #4E342E;
+	color: #000000;
 	margin: 0;
 	padding: 0;
 }
@@ -364,7 +364,7 @@ input[type="checkbox"] {
 
 .manage-card-desc {
 	font-size: 14px;
-	color: #555555;
+	color: #000000;
 	line-height: 1.4;
 	margin-bottom: 20px;
 }
@@ -653,7 +653,7 @@ input[type="checkbox"] {
 	text-align: center;
 	font-size: 1.1em;
 	line-height: 1.6;
-	color: #4E342E;
+	color: #000000;
 }
 
 
@@ -990,7 +990,7 @@ input[type="checkbox"] {
 	margin: 16px 0 0 0;
 	padding-left: 20px;
 	line-height: 1.9;
-	color: #4E342E;
+	color: #000000;
 	font-size: 15px;
 }
 
@@ -1001,7 +1001,7 @@ input[type="checkbox"] {
 	font-size: 15px;
 	font-style: italic;
 	line-height: 1.7;
-	color: #4E342E;
+	color: #000000;
 }
 
 /* ---- Horizontally scrolling testimonials ---- */
