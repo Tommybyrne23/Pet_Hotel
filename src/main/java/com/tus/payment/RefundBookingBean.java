@@ -61,22 +61,23 @@ public class RefundBookingBean implements java.io.Serializable {
 	 * as a FacesMessage.
 	 */
 
-	public String processRefund(int ReservationID) {
-		Reservation r = reservationList.findByID(ReservationID);
+	public String processRefund(int reservationID) {
+		Reservation r = reservationList.findByID(reservationID);
 		//if no reservation is foudn report message 
 		if (r == null) {
 			return addError("No booking was found for that booking ID");
 		}
 		// safety check 
 		//if the booking status isn't confirmed do not allow the refund to be processed any further
-		if (!"Confirmed".equalsIgnoreCase(r.getStatus())) {
+		
+		if (!(r.getStatus().equalsIgnoreCase("Confirmed"))) {
 			return addError("Refunds are only available ");
 		}
 
 		//check if the refund is eligible (time is greater than 48 hours)
 		RefundCheck refundCheck = new RefundCheck(reservationList);
 		//if the check returns false, add an error message 
-		if(!refundCheck.isRefundAllowed(ReservationID)) {
+		if(!refundCheck.isRefundAllowed(reservationID)) {
 			return addError("Refunds and cancellations are only available more than 48 hours before the checkin date.");
 		}
 
@@ -128,6 +129,41 @@ public class RefundBookingBean implements java.io.Serializable {
 
 	}
 
+	/*
+	 * AC2 - No button when payment is not refundable. 
+	 * If a booking has been confirmed from outside of paypal (could be historical, through a previous
+	 * payment processor. Any refunds have to be made manually by the 3A team.
+	 * 
+	 * more or less the same conditions as the process refund checks without calling paypal. 
+	 */
+	public boolean isRefundable(int reservationID) {
+		Reservation r = reservationList.findByID(reservationID);
+		if (r == null) {
+			return false;
+		}
+		// safety check 
+		//if the booking status isn't confirmed do not allow the refund to be processed any further
+		if (!(r.getStatus().equalsIgnoreCase("Confirmed"))) {
+			return false;
+		}
+		
+		//check if the refund is eligible (time is greater than 48 hours)
+		RefundCheck refundCheck = new RefundCheck(reservationList);
+		//if the check returns false, add an error message 
+		if(!refundCheck.isRefundAllowed(reservationID)) {
+			return false;
+		}
+		//does the booking have a PAYPAL CAPTURE ID
+		String captureID = r.getPaypalCaptureId(); 
+		if (captureID == null || captureID.isBlank()) {
+			return false;
+		}
+		return true;
+		
+	}
+	
+	
+	
 	private String addError(String summary) {
 		addMessage(FacesMessage.SEVERITY_ERROR, summary);
 		return null;
@@ -139,6 +175,9 @@ public class RefundBookingBean implements java.io.Serializable {
 			context.addMessage(null, new FacesMessage(severity, summary, null));
 		}
 	}
+	
+	
+	
 	// Getter for the booking page to block refunds who's check in date is less than 
 	// 48 hours from the check in date (@2pm, allowing some leeway)
 	public boolean isRefundAllowed(int reservationId) {
