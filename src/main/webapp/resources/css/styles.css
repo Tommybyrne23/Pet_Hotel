@@ -261,7 +261,7 @@ input[type="checkbox"] {
 .dashboard-title {
 	font-size: 36px;
 	font-weight: 800;
-	color: #2c3e50;
+	color: #000000;
 	margin-bottom: 6px;
 	display: inline-block;
 	position: relative;
@@ -279,7 +279,7 @@ input[type="checkbox"] {
 
 .dashboard-subtitle {
 	font-size: 16px;
-	color: #555555;
+	color: #000000;
 	margin-bottom: 25px;
 }
 
@@ -324,13 +324,13 @@ input[type="checkbox"] {
 .metric-value {
 	font-size: 28px;
 	font-weight: 800;
-	color: #2c3e50;
+	color: #000000;
 	line-height: 1.1;
 }
 
 .metric-label {
 	font-size: 13px;
-	color: #666666;
+	color: #000000;
 	margin-top: 4px;
 	font-weight: 600;
 }
