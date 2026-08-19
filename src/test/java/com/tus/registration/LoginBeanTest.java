@@ -117,4 +117,36 @@ class LoginBeanTest {
 	assertFalse(loginBean.isLoggedIn());
 	
 	}
+	
+	@Test
+	@DisplayName("Test: Customer denied admin access")
+	void testCustomerDeniedAdminAccess() {
+
+	    loginBean.setEmail("user@3apets.ie");
+	    loginBean.setPassword("user123");
+
+	    loginBean.login();
+
+	    String result = loginBean.checkAdminAccess();
+
+	    assertEquals("/userDashboard?faces-redirect=true", result);
+	    assertTrue(loginBean.isLoggedIn());
+	    assertEquals("user@3apets.ie", loginBean.getLoggedInUser().getEmail());
+	}
+	
+	@Test
+	@DisplayName("Test: Customer denied attendant access")
+	void testCustomerDeniedAttendantAccess() {
+
+	    loginBean.setEmail("user@3apets.ie");
+	    loginBean.setPassword("user123");
+
+	    loginBean.login();
+
+	    String result = loginBean.checkAttendantAccess();
+
+	    assertEquals("/userDashboard?faces-redirect=true", result);
+	    assertTrue(loginBean.isLoggedIn());
+	    assertEquals("user@3apets.ie", loginBean.getLoggedInUser().getEmail());
+	}
 }
