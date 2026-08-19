@@ -40,10 +40,8 @@
 				<!-- Attendants -->
 				<ui:fragment rendered="#{LoginBean.attendant and not LoginBean.admin}">
 					<li class="nav-item"><h:link styleClass="nav-link" outcome="/attendantDashboard" value="Dashboard" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/manageProfile" value="Manage Profile" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/makeBooking" value="New Booking" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/user/UserViewBookings" value="My Bookings" /></li>
-					<li class="nav-item"><h:link styleClass="nav-link" outcome="/contactUs" value="Contact Us" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/petManagement" value="Pets" /></li>
+					<li class="nav-item"><h:link styleClass="nav-link" outcome="/admin/bookings/onsite" value="On Site" /></li>
 				</ui:fragment>
 			</ul>
 
