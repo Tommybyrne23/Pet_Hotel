@@ -429,10 +429,12 @@ input[type="checkbox"] {
 .table-card {
 	background-color: #ffffff;
 	border-radius: 16px;
-	padding: 30px;
+	padding: 22px;					/* reduced from 30 as pods table was overflowing  */
 	max-width: 1000px;
 	margin: 20px auto;
 	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+	box-sizing: border-box;
+	overflow-x: auto;				/* added overflow on the table to hepl with pods and rooms */
 }
 
 .productTable {
@@ -451,7 +453,7 @@ input[type="checkbox"] {
 	font-weight: 700;
 	font-size: 14px;
 	text-align: left;
-	padding: 16px 20px;
+	padding: 12px 12px;				/* padding reduced to fix the pod table extending past the div container */
 	border-bottom: 2px solid #e9ecef;
 }
 
