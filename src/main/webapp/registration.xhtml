@@ -35,7 +35,10 @@
 				<div class="form-field">
 					<h:outputLabel for="emailInput" value="Email" />
 					<h:inputText id="emailInput" value="#{RegistrationBean.user.email}"
-						required="true" requiredMessage="Email is required." />
+						required="true" requiredMessage="Email is required."
+						validatorMessage="Enter a valid email address, for example name@example.com">
+						<f:validateRegex pattern="^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$" />
+					</h:inputText>
 					<h:message for="emailInput" errorClass="field-error" />
 				</div>
 
