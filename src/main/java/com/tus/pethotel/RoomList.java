@@ -1,6 +1,7 @@
 package com.tus.pethotel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,6 +183,66 @@ public class RoomList implements Serializable {
 	    room.setName(newName);
 	    room.setLocation(newLocation);
 	    room.setSpecies(newSpecies);
+
+	    return true;
+	}
+	
+	public boolean isRoomLocked(int roomID, String selectedDate) {
+
+	    if (selectedDate == null || selectedDate.isBlank()) {
+	        return false;
+	    }
+
+	    List<Pod> roomPods = podList.getPodsForRoom(roomID);
+
+	    for (Pod pod : roomPods) {
+
+	        if (podList.isPodOccupied(
+	                pod.getPodID(),
+	                selectedDate,
+	                LocalDate.parse(selectedDate).plusDays(1).toString())) {
+
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+	
+	public boolean toggleRoomPodsOutOfService(int roomID, String selectedDate) {
+
+	    Room room = findByID(roomID);
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    List<Pod> roomPods = podList.getPodsForRoom(roomID);
+
+	    if (roomPods.isEmpty()) {
+	        return false;
+	    }
+
+	    // If at least one pod is currently in service,
+	    // this is a "take all offline" operation.
+	    boolean takingOffline = false;
+
+	    for (Pod pod : roomPods) {
+	        if (!pod.isOutOfService()) {
+	            takingOffline = true;
+	            break;
+	        }
+	    }
+
+	    // Only check occupancy when taking pods offline.
+	    if (takingOffline && isRoomLocked(roomID, selectedDate)) {
+	        return false;
+	    }
+
+	    // Bulk toggle all pods.
+	    for (Pod pod : roomPods) {
+	        pod.setOutOfService(takingOffline);
+	    }
 
 	    return true;
 	}

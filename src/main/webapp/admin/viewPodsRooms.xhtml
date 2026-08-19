@@ -398,6 +398,15 @@
 							            immediate="true" />
 							
 							    </h:panelGroup>
+							    
+							    <h:commandButton
+								    styleClass="btn-card-outline"
+								    value="#{RoomPodBean.allPodsOutOfService(room) ? 'Return all to service' : 'Take all offline'}"
+								    action="#{RoomPodBean.toggleRoomPodsOutOfService(room)}"
+								    disabled="#{not RoomPodBean.allPodsOutOfService(room) and RoomPodBean.isRoomLocked(room)}"
+								    title="#{not RoomPodBean.allPodsOutOfService(room) and RoomPodBean.isRoomLocked(room)
+								        ? 'A pod in this room has a pet on the selected date and cannot be taken offline.'
+								        : ''}" />
 							
 							</h:column>
 					

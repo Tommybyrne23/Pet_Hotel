@@ -720,6 +720,65 @@ public class RoomPodBean implements Serializable {
 	    );
 	}
 	
+	public boolean isRoomLocked(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    return roomList.isRoomLocked(
+	        room.getRoomID(),
+	        availabilityDate
+	    );
+	}
+	
+	public String toggleRoomPodsOutOfService(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    boolean changed = roomList.toggleRoomPodsOutOfService(
+	        room.getRoomID(),
+	        availabilityDate
+	    );
+
+	    if (!changed) {
+
+	        FacesContext.getCurrentInstance().addMessage(
+	            null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                "Pods could not be updated.",
+	                "At least one pod in this room has a pet on the selected date."
+	            )
+	        );
+	    }
+
+	    return null;
+	}
+	
+	public boolean allPodsOutOfService(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    List<Pod> pods = podList.getPodsForRoom(room.getRoomID());
+
+	    if (pods.isEmpty()) {
+	        return false;
+	    }
+
+	    for (Pod pod : pods) {
+	        if (!pod.isOutOfService()) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+	
 	// GETTERS AND SETTERS
 
 	public String getRoomName() {
