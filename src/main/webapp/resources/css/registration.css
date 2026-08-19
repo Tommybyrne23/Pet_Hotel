@@ -301,3 +301,40 @@
 	}
 	
 }
+
+.site-footer {
+	background-color: #1e5631;
+	color: #f4f9f5;
+	padding: 25px 20px;
+	text-align: center;
+	font-size: 14px;
+	margin-top: 40px;
+}
+
+.footer-container {
+	max-width: 1000px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.footer-brand {
+	font-size: 18px;
+	font-weight: 800;
+	color: #ffffff;
+	margin-bottom: 2px;
+}
+
+.footer-address,
+.footer-contact {
+	color: #e2ede5;
+	line-height: 1.4;
+}
+
+.footer-hours {
+	color: #f1c40f;
+	font-weight: 600;
+	margin-top: 4px;
+	font-size: 13px;
+}

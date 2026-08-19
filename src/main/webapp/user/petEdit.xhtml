@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 
@@ -18,7 +18,7 @@
 
 
 <h:body styleClass="reg-page">
-
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
     <!-- Load the user's pets when the page opens -->
     <f:metadata>
         <f:event
@@ -322,7 +322,7 @@
         </div>
 
     </div>
-
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
 
 </html>
