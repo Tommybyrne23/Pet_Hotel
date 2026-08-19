@@ -92,10 +92,12 @@ public class ProfileBean implements Serializable {
 			hasError = true;
 		}
 
-		if (newPassword == null || newPassword.length() < 6) {
-			addFacesMessage("profileForm:newPasswordInput", FacesMessage.SEVERITY_ERROR,
-					"New password must be at least 6 characters long.");
-			hasError = true;
+		if (newPassword == null || !newPassword.matches(
+		        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$")) {
+		    addFacesMessage("profileForm:newPasswordInput", FacesMessage.SEVERITY_ERROR,
+		            "Password must be at least 8 characters and include an uppercase letter, "
+		            + "a lowercase letter, a number, and a symbol.");
+		    hasError = true;
 		}
 
 
