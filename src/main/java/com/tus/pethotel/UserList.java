@@ -9,14 +9,12 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 
 @Named("userList")
-@ApplicationScoped			// use application scoped for this to run on the server  
+@ApplicationScoped			  
 public class UserList implements Serializable {
-    private static final long serialVersionUID = 1L; 	// so it matches the registration and user bean
+    private static final long serialVersionUID = 1L; 	
 
-    // set the array list from the User method so we can create users 
     private ArrayList<User> users;
 
-    // create the user List array 
     public UserList() {
         this.users = new ArrayList<>();
         users.add(new User("Admin User", "admin@3apets.ie", "admin123", Role.ADMIN));
@@ -24,12 +22,10 @@ public class UserList implements Serializable {
         users.add(new User("Customer User", "user@3apets.ie", "user123", Role.CUSTOMER));
     }
 
-    // how big is the size of the array 
     public int getNumberOfUsers() {
         return users.size();
     }
 
-    // count for number of registered customersis the size of the array 
     public int getNumberOfCustomers() {
     	int count=0;
     	for (User u : users) {
@@ -45,14 +41,13 @@ public class UserList implements Serializable {
     public boolean isEmailRegistered(String email) {
         if (email == null) return false;						// there is no email entered, it can't match.
 
-        // enhanced loop to search through the variable
         for (User existingUser : users) {						// create a loop to search through the users registered to the account. 
             if (email.equalsIgnoreCase(existingUser.getEmail())) {
                 return true;
             }
         }
-        return false; 											// false statement for loop
-    } // end isEmailRegistered method
+        return false; 										
+    }
 
     // adds user to the list only if the email is not already being used
     public boolean addUser(User user) {
@@ -91,9 +86,8 @@ public class UserList implements Serializable {
         return users;
     }
 
-    /**
-     * Finds a user's name given their user ID.
-     */
+    // Finds a user's name given their user ID.
+    
     public String getUserNameById(int userID) {
         if (users == null) {
             return "Unknown";
@@ -125,7 +119,7 @@ public class UserList implements Serializable {
      * JSF automatically updates the user object roles bound to the selectOneMenu components.
      */
     public String saveRoleChanges() {
-        // Adds the success message to FacesContext to satisfy Acceptance Criteria 1
+    
         FacesContext.getCurrentInstance().addMessage(null, 
             new FacesMessage(
                 FacesMessage.SEVERITY_INFO, 
@@ -134,7 +128,6 @@ public class UserList implements Serializable {
             )
         );
 
-        // Returning null keeps the user on the same page and displays the confirmation message
         return null;
     }
 }

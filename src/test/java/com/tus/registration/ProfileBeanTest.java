@@ -80,11 +80,11 @@ class ProfileBeanTest {
 	@DisplayName("Matching password")
 	void changingPasswordWithValidMatchingNewPasswordSucceeds() {
 		profileBean.setOldPassword("password");       
-		profileBean.setNewPassword("newPass123");     
-		profileBean.setConfirmPassword("newPass123"); 
+		profileBean.setNewPassword("newPass123@");     
+		profileBean.setConfirmPassword("newPass123@"); 
 		String outcome = profileBean.changePassword();
 		assertNull(outcome);
-		assertEquals("newPass123", loggedInUser.getPassword());
+		assertEquals("newPass123@", loggedInUser.getPassword());
 		assertNull(profileBean.getOldPassword());
 		assertNull(profileBean.getNewPassword());
 		assertNull(profileBean.getConfirmPassword());
@@ -94,7 +94,7 @@ class ProfileBeanTest {
 	@DisplayName("New password and confirm password do not match")
 	void changingPasswordWithMismatchedConfirmationIsBlocked() {
 		profileBean.setOldPassword("password");
-		profileBean.setNewPassword("newPass123");
+		profileBean.setNewPassword("newPass123@");
 		profileBean.setConfirmPassword("differentPass456"); 
 		String outcome = profileBean.changePassword();
 		assertNull(outcome);
@@ -128,8 +128,8 @@ class ProfileBeanTest {
 	@DisplayName("Given the current password entered is incorrect then the password is not changed")
 	void changingPasswordWithWrongCurrentPasswordIsBlocked() {
 		profileBean.setOldPassword("wrongCurrentPassword");
-		profileBean.setNewPassword("newPass123");
-		profileBean.setConfirmPassword("newPass123");
+		profileBean.setNewPassword("newPass123@");
+		profileBean.setConfirmPassword("newPass123@");
 		String outcome = profileBean.changePassword();
 		assertNull(outcome);
 		assertEquals("password", loggedInUser.getPassword()); // unchanged
@@ -139,8 +139,8 @@ class ProfileBeanTest {
 	@DisplayName("Given the current password field is left blankmthen the password is not changed")
 	void changingPasswordWithBlankCurrentPasswordIsBlocked() {
 		profileBean.setOldPassword("");
-		profileBean.setNewPassword("newPass123");
-		profileBean.setConfirmPassword("newPass123");
+		profileBean.setNewPassword("newPass123@");
+		profileBean.setConfirmPassword("newPass123@");
 		String outcome = profileBean.changePassword();
 		assertNull(outcome);
 		assertEquals("password", loggedInUser.getPassword()); // unchanged

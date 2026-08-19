@@ -25,7 +25,6 @@
 		<h:panelGrid columns="1" styleClass="account"
 			style="max-width: 450px;">
 
-			<!-- Messages - plain text, no styled box -->
 			<h:messages />
 
 			<!-- If user has no pets, show message -->
@@ -116,11 +115,9 @@
 
 				<br />
 
-				<!-- AC2: Calculate Price button -->
 				<h:commandButton value="Calculate Price"
 					action="#{BookingBean.calculatePrice}" />
 
-				<!-- AC2: Show total price after calculation -->
 				<h:panelGroup rendered="#{BookingBean.priceCalculated}"
 					layout="block" styleClass="message-box">
 					<h:messages globalOnly="true" errorClass="error-messages"
@@ -132,7 +129,6 @@
 					</h:outputText>
 				</h:panelGroup>
 
-				<!-- AC3: Confirm Booking button -->
 				<h:panelGroup rendered="#{BookingBean.priceCalculated}">
 					<h:commandButton value="Confirm Booking"
 						action="#{BookingBean.confirmAndPay}" />

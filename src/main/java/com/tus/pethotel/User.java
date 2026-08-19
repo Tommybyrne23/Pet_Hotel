@@ -7,8 +7,8 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private static int uuID = 0 ;		//make the unique user ID static so that object ++
-	private int userID;					// we 
+	private static int uuID = 0 ;		
+	private int userID;					
 	private String name;
 	private String email;
 	private String password;
