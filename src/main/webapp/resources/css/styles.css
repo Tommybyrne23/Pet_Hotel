@@ -472,7 +472,7 @@ input[type="checkbox"] {
 
 .productTable td {
 	padding: 16px 20px;
-	color: #333333;
+	color: #000000;
 	font-size: 14px;
 	border: none;
 	border-bottom: 1px solid #f1f3f5;
@@ -536,7 +536,7 @@ input[type="checkbox"] {
 
 /* Intro paragraph: slate-grey instead of the old brown #4E342E */
 .home-hero .intro {
-	color: #555555;
+	color: #000000;
 	max-width: 720px;
 	margin: 14px auto 0;
 }
@@ -583,7 +583,7 @@ input[type="checkbox"] {
 	border-top: 1px solid #eae7dd;
 	padding-top: 12px;
 	font-size: 14px;
-	color: #444444;
+	color: #000000;
 	line-height: 1.6;
 }
 
@@ -602,7 +602,7 @@ input[type="checkbox"] {
 }
 
 .service-prices .price-note {
-	color: #777777;
+	color: #000000;
 	font-size: 12px;
 }
 
