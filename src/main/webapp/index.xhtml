@@ -19,12 +19,12 @@
             if (element.style.display === "none") {
 
                 element.style.display = "block";
-                button.textContent = "Hide Services ▲";
+                button.textContent = "Hide services \u25B2";
 
             } else {
 
                 element.style.display = "none";
-                button.textContent = "View Services &amp; Prices ▼";
+                button.textContent = "View services &amp; prices \u25BC";
 
             }
         }
@@ -87,8 +87,13 @@
 					<div id="dogServices" class="service-prices" style="display: none;">
 						<ui:repeat value="#{serviceList.getServicesForSpecies('Dog')}" var="service">
 							<p>
-								<span class="price-name">#{service.name}</span> &#8212;
-								<span class="price-tag">&#8364;#{service.price}</span>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
 								<h:outputText styleClass="price-note" value=" per night"
 									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
 								<h:outputText styleClass="price-note" value=" one-off"
@@ -116,8 +121,13 @@
 					<div id="catServices" class="service-prices" style="display: none;">
 						<ui:repeat value="#{serviceList.getServicesForSpecies('Cat')}" var="service">
 							<p>
-								<span class="price-name">#{service.name}</span> &#8212;
-								<span class="price-tag">&#8364;#{service.price}</span>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
 								<h:outputText styleClass="price-note" value=" per night"
 									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
 								<h:outputText styleClass="price-note" value=" one-off"
@@ -145,8 +155,13 @@
 					<div id="reptileServices" class="service-prices" style="display: none;">
 						<ui:repeat value="#{serviceList.getServicesForSpecies('Reptile')}" var="service">
 							<p>
-								<span class="price-name">#{service.name}</span> &#8212;
-								<span class="price-tag">&#8364;#{service.price}</span>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
 								<h:outputText styleClass="price-note" value=" per night"
 									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
 								<h:outputText styleClass="price-note" value=" one-off"
@@ -174,8 +189,13 @@
 					<div id="birdServices" class="service-prices" style="display: none;">
 						<ui:repeat value="#{serviceList.getServicesForSpecies('Bird')}" var="service">
 							<p>
-								<span class="price-name">#{service.name}</span> &#8212;
-								<span class="price-tag">&#8364;#{service.price}</span>
+								<span class="price-name">#{service.name}</span> - <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
 								<h:outputText styleClass="price-note" value=" per night"
 									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
 								<h:outputText styleClass="price-note" value=" one-off"
@@ -203,8 +223,13 @@
 					<div id="fishServices" class="service-prices" style="display: none;">
 						<ui:repeat value="#{serviceList.getServicesForSpecies('Fish')}" var="service">
 							<p>
-								<span class="price-name">#{service.name}</span> &#8212;
-								<span class="price-tag">&#8364;#{service.price}</span>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
 								<h:outputText styleClass="price-note" value=" per night"
 									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
 								<h:outputText styleClass="price-note" value=" one-off"
