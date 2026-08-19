@@ -119,6 +119,7 @@ public class PaymentServices {
 	 * API Call used to process a refund on PayPal using the CaptureID)
 	 * template being adapted from captureOrder above
 	 *	 https://github.com/paypal/PayPal-Java-Server-SDK/blob/main/src/main/java/com/paypal/sdk/models/RefundCapturedPaymentInput.java
+	 *	Class is Refund instead of Order
 	 */
 	 
 	

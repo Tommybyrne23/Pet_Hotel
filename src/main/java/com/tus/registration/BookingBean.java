@@ -111,8 +111,6 @@ public class BookingBean implements Serializable {
 
     // Calculate the total price based on dates and services.
     
- 
-
 	public Pet getSelectedPet() {
 		for (Pet pet : getUserPets()) {
 			if (pet.getPetID() == selectedPetID) {

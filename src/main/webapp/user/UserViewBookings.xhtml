@@ -22,7 +22,6 @@
 		<div class="dashboard-title">My Bookings</div>
 
 		<h:form>
-
 			<h:outputText
 				value="Number of bookings: #{BookingBean.userBookings.size()}" />
 
@@ -34,8 +33,13 @@
 				<h:outputText value="You have no bookings yet." />
 				<br />
 				<h:link outcome="makeBooking" value="Make a Booking" />
+			
+			<!--  Faces Messages will appear in here -->
 			</h:panelGroup>
-
+			<h:panelGroup layout="block" styleClass="messagebox">
+				<h:messages globalOnly="true" infoStyle="color:green" errorStyle="color:red" />
+				</h:panelGroup>	
+			
 			<!-- Bookings table -->
 			<h:dataTable value="#{BookingBean.userBookings}" var="booking"
 				rendered="#{not empty BookingBean.userBookings}"
@@ -71,16 +75,31 @@
 					<f:facet name="header">Status</f:facet>
 				#{booking.status}
 			</h:column>
-
+				<h:column>
+				<f:facet name="header">Cancel</f:facet>
+				 
+				 <!-- Using the logout button class to indicate a red cancel button 
+				 	  rather than a green button which is more inviting 
+				 		
+				 	  Message onclick gives a popup browser asking for confirmation 
+				 	  to proceed to paypal. If the refund process doesn't work status 
+				 	  will remain confirmed!  -->
+				<h:commandButton value="Cancel Booking" 
+								 rendered="#{booking.status eq 'Confirmed' and RefundBean.isRefundAllowed(booking.reservationID)}"
+								 styleClass="btn-card-logout"
+								 action="#{RefundBean.processRefund(booking.reservationID)}"
+								 onclick="return confirm('Are you sure you want to cancel this booking?\nPlease note refunds are only possible up to 48 hours before the check in date');" />
+		
+				</h:column>
 			</h:dataTable>
-
+		</h:form>	
 			<br />
 			<h:form>
 				<h:commandButton value="Back to Dashboard"
 					styleClass="btn-green-outline" />
 
 			</h:form>
-		</h:form>
+		
 	</div>
 	<ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
