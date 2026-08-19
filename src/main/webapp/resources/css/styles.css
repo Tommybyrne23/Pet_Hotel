@@ -673,7 +673,8 @@ input[type="checkbox"] {
 .navbar-container {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-start;
+	gap: 8px;
 	max-width: 1200px;
 	margin: 0 auto;
 }
@@ -686,6 +687,7 @@ input[type="checkbox"] {
 	color: #ffffff;
 	font-size: 18px;
 	font-weight: 800;
+	margin-right: auto;
 }
 
 .navbar-brand img {
