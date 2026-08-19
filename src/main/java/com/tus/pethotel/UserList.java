@@ -29,6 +29,18 @@ public class UserList implements Serializable {
         return users.size();
     }
 
+    // count for number of registered customersis the size of the array 
+    public int getNumberOfCustomers() {
+    	int count=0;
+    	for (User u : users) {
+    		if (u.getRole() == Role.CUSTOMER) {
+    			
+    		count++;
+    		}
+    	}
+    	return count;
+    }
+
     // check if an email is already registered in the collection 
     public boolean isEmailRegistered(String email) {
         if (email == null) return false;						// there is no email entered, it can't match.
