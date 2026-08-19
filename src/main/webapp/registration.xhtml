@@ -52,6 +52,13 @@
 							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$" />
 					</h:inputSecret>
 					<h:message for="passwordInput" errorClass="field-error" />
+
+					<ul class="pw-rules">
+						<li>At least 8 characters</li>
+						<li>One uppercase and one lowercase letter</li>
+						<li>One number</li>
+						<li>One special character, e.g. ! ? # €</li>
+					</ul>
 				</div>
 
 				<div class="form-field">
