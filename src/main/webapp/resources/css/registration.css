@@ -303,6 +303,8 @@
 }
 
 .site-footer {
+	position: sticky;
+	top: 100vh;
 	background-color: #1e5631;
 	color: #f4f9f5;
 	padding: 25px 20px;
