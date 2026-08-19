@@ -95,7 +95,10 @@
 
 			<h:column>
 				<f:facet name="header">Price</f:facet>
-				&#8364;#{booking.totalPrice}
+				&#8364;	<!-- convert the number from a single decimal to 2 decimals  -->
+					<h:outputText value="#{booking.totalPrice}">
+    				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+					</h:outputText>
 			</h:column>
 
 			<h:column>

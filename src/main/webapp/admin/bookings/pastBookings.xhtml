@@ -71,8 +71,12 @@
 					<h:column>
 						<f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
 					<h:column>
-						<f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
-				<h:column>
+						<f:facet name="header">Price</f:facet>€
+						<!-- convert the number from a single decimal to 2 decimals  -->
+						<h:outputText value="#{booking.totalPrice}">
+    					<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+						</h:outputText></h:column>
+					<h:column>
 					<f:facet name="header">Pet Requirements</f:facet>#{petList.getRequirements(booking.petID)}</h:column>
 				<h:column>
 						<f:facet name="header">Status</f:facet>#{booking.status}</h:column>
