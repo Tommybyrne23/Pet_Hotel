@@ -461,6 +461,15 @@ public class PodList implements Serializable {
 	    return false;
 	}
 	
+	public String getRoomNameForPod(int podID) {
+	    Pod pod = findByID(podID);
+	    if (pod == null) {
+	        return "";
+	    }
+	    Room room = roomList.findByID(pod.getRoomID());
+	    return room == null ? "" : room.getName();				
+	}
+	
 
 	public ArrayList<Pod> getPods() {
 		return pods;

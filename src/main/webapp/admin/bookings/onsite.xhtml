@@ -62,7 +62,9 @@
 					<h:column>
 						<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
 					<h:column>
-						<f:facet name="header">Pet</f:facet>#{booking.podName}</h:column>
+						<f:facet name="header">Pod</f:facet>#{booking.podName}</h:column>
+					<h:column>
+		   				<f:facet name="header">Room</f:facet>#{podList.getRoomNameForPod(booking.podID)}</h:column>
 					<h:column>
 						<f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
 					<h:column>

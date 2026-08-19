@@ -62,7 +62,9 @@
                      rowClasses="productTableOddRow, productTableEvenRow">
            <h:column><f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
 					<h:column><f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
-					<h:column><f:facet name="header">Pet</f:facet>#{booking.podName}</h:column>
+					<h:column><f:facet name="header">Pod</f:facet>#{booking.podName}</h:column>
+					<h:column>
+   				<f:facet name="header">Room</f:facet>#{podList.getRoomNameForPod(booking.podID)}</h:column>
 					<h:column><f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
 					<h:column><f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
 					<h:column><f:facet name="header">Price</f:facet>€#{booking.totalPrice}</h:column>
