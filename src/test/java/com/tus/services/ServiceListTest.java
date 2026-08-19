@@ -1,4 +1,4 @@
-package com.tus.services;
+package com.tus.Services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

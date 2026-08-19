@@ -31,7 +31,11 @@ public class Reservation implements Serializable {
     private String paypalOrderId;          // PayPal order id, for admin reconciliation
     private String failureReason;          // why a payment ended up cancelled/failed/expired
     private LocalDateTime statusUpdatedAt; // when the status last changed
+    private String paypalCaptureId;   		// this ID is captured when payment is confirmed 
+    										//and then needed if we need to issue a refund later, 
+    										//this value is sent to the refund processor. 
 
+  
     // extras chosen, stored as text so the booking still reads correctly
     // if an admin later renames or reprices a service
     private List<String> extras = new ArrayList<>();
@@ -187,6 +191,14 @@ public class Reservation implements Serializable {
                 && holdExpiry.isAfter(LocalDateTime.now());
     }
 
+    public String getPaypalCaptureId(){ 
+    	return paypalCaptureId; 
+    }
+
+    public void   setPaypalCaptureId(String id) {
+    	this.paypalCaptureId = id; 
+    }
+    
 /* -----------------------------------------
  *
  * Formatting for date and time so it is 
