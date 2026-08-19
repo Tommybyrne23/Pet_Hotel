@@ -13,14 +13,17 @@ public class RefundCheck {
 	 * Refund check, search the reservationID and capture the checkinDate, 
 	 * if the time to check in is less than 48 hours. 
 	 * 
-	 * Do not allow the payment to be processed. 
-	 * 	AND return a message saying "refunds are only available 48hours before check in date. 
+	 * Do not allow the payment to be processed (method returns false). 
 	 * 
-	 * otherwise send the approve the payment and send the details to PayPal API
+	 * 
+	 * AND return a message saying "refunds are only available 48hours before check in date. 
+	 * (this will be done in the paypal check) 
+	 * 
+	 * 
+	 * otherwise return true to approve the payment and send the details to PayPal API
 	 */
 
 	private ReservationList reservationList;
-	private Reservation reservation;
 	LocalDateTime checkInDate;
 	LocalDateTime timeNow = LocalDateTime.now();
 
@@ -34,12 +37,16 @@ public class RefundCheck {
 				return false; 		//if reservation ID is not returned there is no booking. 
 				}
 			LocalDate checkInDay = LocalDate.parse(r.getCheckInDate());
-			LocalDateTime checkInDateTime = checkInDay.atStartOfDay();
+			LocalDateTime checkInDateTime = checkInDay.atTime(14,0);		// set time for 14:00 check in time.
 			
-			long hoursUntilCheckIn = ChronoUnit.HOURS.between(timeNow, checkInDateTime);
 			
-			return hoursUntilCheckIn >= 48;
+			//ChronoUnit is an Enum used to identify standard measure of time. 
+			//refernce https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/ChronoUnit.html
+			long hoursUntilCheckIn = ChronoUnit.HOURS.between(timeNow, checkInDateTime);	
 			
+			// if the value is 48 hours or over, the check passes as true, a refund can pass.
+			// otherwise return false. Too close to 
+			return hoursUntilCheckIn >= 48; 				
 			
 	}
 

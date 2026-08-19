@@ -328,7 +328,8 @@ public class BookingBean implements Serializable {
 				r.setStatus("Confirmed");
 				r.setHoldExpiry(null);
 				r.setPaypalOrderId(orderId);
-				r.setStatusUpdatedAt(LocalDateTime.now());
+				r.setPaypalCaptureId(PaymentServices.extractCaptureID(order));	//calls on the paymentServices java file to extract the CaptureID we need to process a booking
+				r.setStatusUpdatedAt(LocalDateTime.now());						//sets the time to now for when the booking wa confirmed  
 				addMessage(FacesMessage.SEVERITY_INFO, "Payment complete! A booking has been confirmed for "
 						+ r.getPetName() + "\n From "+ r.getCheckInDate()+ "\nto "+ r.getCheckOutDate() + "\nTotal: \u20AC" + String.format("%.2f", r.getTotalPrice()));
 				resetForm();
@@ -345,6 +346,9 @@ public class BookingBean implements Serializable {
 	}
 	
 	
+
+
+
 	public void cancelPayment() {
 		Reservation r = reservationList.findByID(pendingReservationID);
 		if (r !=null && "Pending".equalsIgnoreCase(r.getStatus())){
