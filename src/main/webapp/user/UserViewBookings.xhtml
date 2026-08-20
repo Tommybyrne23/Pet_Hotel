@@ -101,7 +101,7 @@
               					 rendered="#{booking.status eq 'Confirmed' and not RefundBean.isRefundAllowed(booking.reservationID)}" />
 
 				<!-- Still in time, but not refundable -> no payment reference on file -->
-				<h:outputText 	 value="Contact us to cancel"
+				<h:outputText 	 value="Contact us to cancel	"
               					 rendered="#{booking.status eq 'Confirmed' and RefundBean.isRefundAllowed(booking.reservationID) and not RefundBean.isRefundable(booking.reservationID)}" />
 				</h:column>
 			</h:dataTable>
