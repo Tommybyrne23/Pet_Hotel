@@ -160,9 +160,9 @@ public class BookingBean implements Serializable {
 		if (selectedPetID == 0) {
 			return addError("Please select a pet.");
 		}
-
-		if (selectedPodID == 0) {
-			return addError("Please select a pod for your pet's stay.");
+		//check if a pod is available for the booking
+		if (getPodService() == null) {
+			return addError("Sorry. We do not have a pod available for your selected dates.");
 		}
 
 		if (checkInDate == null || checkInDate.trim().isEmpty()
@@ -202,7 +202,8 @@ public class BookingBean implements Serializable {
 			}
 
 			// The pod is always charged per night
-			double total = serviceList.findByID(selectedPodID).getPrice() * nights;
+			double total = getPodService().getPrice() * nights; // The pod is always charged per night
+					
 
 			// Each extra is charged either per night or once for the whole stay
 			for (Service extra : getSelectedExtras()) {
@@ -228,9 +229,12 @@ public class BookingBean implements Serializable {
 		}
 
 		Pet pet = getSelectedPet();
-		Service pod = serviceList.findByID(selectedPodID);
+		Service pod = getPodService();
 		User user = loginBean.getLoggedInUser();
 
+		if (pod == null) {
+			return addError("We do not have a boarding listing for that pet/nat the moment. Please contact us to arrange a stay.");
+		}
 		// Re-checked rather than trusting the check at calculate time, since
 		// another customer may have taken the last pod in between
 		Pod allocatedPod = podList.findAvailablePod(pet.getSpecies(),
@@ -420,6 +424,12 @@ public class BookingBean implements Serializable {
 		return free + " " + pet.getSpecies().getLabel().toLowerCase()
 				+ " pod(s) free for those dates.";
 	}
+	
+	// The boarding listing for the selected pet's species.  
+		public Service getPodService() {
+			List<Service> pods = getAvailablePods();
+			return pods.isEmpty() ? null : pods.get(0);
+		}
 
 	public int getSelectedPetID() { 
 		return selectedPetID; 
@@ -471,4 +481,6 @@ public class BookingBean implements Serializable {
 	public void setPendingReservationID(int pendingReservationID) {
 	    this.pendingReservationID = pendingReservationID;
 	}
+	
+	
 }

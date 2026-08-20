@@ -30,7 +30,6 @@ import com.tus.payment.OrderDetail;
 
 
 //impot Java utilities
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -201,12 +200,6 @@ class paymentTest {
 		pod9.setOutOfService(false);
 		pod10.setOutOfService(false);
 		
-		// 	FOR REFERENCE 
-		//	pods 1-3 = Dog 
-		//	pods 3-6 = Cat 
-		//	P7 		 = Reptile, 
-		//	P8 		 = Bird
-		//	P9 - 10	 = FIsh
 		
 		//Set the booking bean list elements 
 		bookingBean.setPodList(podList);

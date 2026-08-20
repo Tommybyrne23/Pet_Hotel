@@ -77,18 +77,14 @@
 					<h:panelGroup rendered="#{not empty BookingBean.availablePods}"
 						layout="block">
 
-						<!-- A booking must have exactly one pod -->
-						<h:outputLabel value="Select Pod:" />
-						<h:selectOneMenu id="podSelect"
-							value="#{BookingBean.selectedPodID}">
-
-							<f:selectItem itemLabel="-- Select a Pod --" itemValue="0" />
-
-							<f:selectItems value="#{BookingBean.availablePods}" var="pod"
-								itemLabel="#{pod.name} - &#8364;#{pod.price} per night"
-								itemValue="#{pod.serviceID}" />
-
-						</h:selectOneMenu>
+											
+					<!-- Updated 
+							The customer doesn't need to assign/select or register their pet into a pod
+							the nightly rate should show up instead with the pod availability for that specieis.   -->
+							<h:outputLabel value="Boarding:" />
+						<h:outputText
+							value="#{BookingBean.podService.name} - &#8364;#{BookingBean.podService.price} per night"
+							style="display: block; margin: 4px 0; font-weight: bold;" />
 						
 						<h:outputText value="#{BookingBean.podAvailabilityNote}"
 							rendered="#{not empty BookingBean.podAvailabilityNote}"

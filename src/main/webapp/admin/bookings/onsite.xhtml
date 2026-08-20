@@ -61,8 +61,8 @@
 						<f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
 					<h:column>
 						<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
-					<h:column>
-						<f:facet name="header">Pod</f:facet>#{booking.podName}</h:column>
+					<h:column>	
+						<f:facet name="header">Pod</f:facet>#{podList.findByID(booking.podID).label}</h:column>
 					<h:column>
 		   				<f:facet name="header">Room</f:facet>#{podList.getRoomNameForPod(booking.podID)}</h:column>
 					<h:column>

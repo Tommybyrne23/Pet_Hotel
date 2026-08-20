@@ -24,7 +24,7 @@ import com.paypal.sdk.models.Refund;
  * 
  * Its more than 48 hours, capture the PapyalCapture ID and send this to the Portal   
  *
- * If the cancellation/refundis processed  succesfully from Payapl Return the booking status to Refunded. 
+ * If the cancellation/refund is processed  succesfully from Payapl Return the booking status to Refunded. 
  * 
  * Bean Flow:
  * 
