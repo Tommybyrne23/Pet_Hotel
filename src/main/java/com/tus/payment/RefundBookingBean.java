@@ -51,7 +51,7 @@ public class RefundBookingBean implements java.io.Serializable {
 
 	@Inject	private ReservationList reservationList;
 	@Inject	private PaymentServices paymentServices;
-	@Inject	private PodList podlist;
+	
 
 	/*
 	 * Called from the page with the id of the booking to refund, e.g.
