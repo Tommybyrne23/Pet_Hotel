@@ -10,7 +10,7 @@
 	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
 </f:metadata>
 <h:head>
-
+	<h:outputStylesheet library="css" name="styles.css" />
     <h:outputStylesheet library="css" name="registration.css" />
     <link rel="icon"
           type="image/png"
@@ -30,7 +30,7 @@
 </h:head>
 
 <h:body styleClass="reg-page">
-
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
     <div class="reg-split">
 
         <!-- PET REGISTRATION FORM -->

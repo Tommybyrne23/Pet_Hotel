@@ -71,8 +71,11 @@
 							styleClass="nav-link #{view.viewId eq '/admin/petManagement.xhtml' ? 'nav-link-active' : ''}"
 							outcome="/admin/petManagement" value="Pets" /></li>
 					<li class="nav-item"><h:link
-							styleClass="nav-link #{view.viewId eq '/admin/bookings/allBookings.xhtml' ? 'nav-link-active' : ''}"
+							styleClass="nav-link #{view.viewId eq '/admin/bookings/onsite.xhtml' ? 'nav-link-active' : ''}"
 							outcome="/admin/bookings/onsite" value="On Site" /></li>
+					<li class="nav-item"><h:link
+							styleClass="nav-link #{view.viewId eq '/admin/bookings/allBookings.xhtml' ? 'nav-link-active' : ''}"
+							outcome="/admin/bookings/allBookings" value="Reservations" /></li>
 				</ui:fragment>
 			</ul>
 
