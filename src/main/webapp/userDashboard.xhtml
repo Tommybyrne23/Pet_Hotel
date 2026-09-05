@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+    <!-- Checks the user is an admin before the view is rendered -->
+    <f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<link rel="icon" type="image/png"
+		href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
+	<title>User Dashboard</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
+
+		<!-- Page Header -->
+		<div class="dashboard-title">User Dashboard</div>
+		<div class="dashboard-subtitle">
+			Ahoy there, <strong>#{LoginBean.loggedInUser.name}</strong>
+			(#{LoginBean.loggedInUser.role.label}).
+		</div>
+		
+		
+       <!-- Section Title -->
+		<div class="section-title">Your pets</div>
+
+		<!-- User's Registered Pets Table -->
+		<h:dataTable
+			value="#{petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			var="pet"
+			rendered="#{not empty petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			styleClass="productTable" headerClass="productTableHeader"
+			rowClasses="productTableOddRow, productTableEvenRow">
+
+			<h:column>
+				<f:facet name="header">Pet ID</f:facet>
+        #{pet.petID}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Pet Name</f:facet>
+        #{pet.name}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Species / Type</f:facet>
+        #{pet.species}
+    </h:column>
+
+			<h:column>
+				<f:facet name="header">Special Requirements</f:facet>
+        #{petList.getRequirements(pet.petID)}
+    </h:column>
+
+		</h:dataTable>
+		
+		
+		
+       <!-- Section Title -->
+		<div class="section-title">Your Bookings</div>
+		
+		<!-- Bookings table -->
+<h:dataTable value="#{BookingBean.confirmedUserBookings}"
+    var="booking"
+    rendered="#{not empty BookingBean.confirmedUserBookings}"
+    styleClass="productTable"
+    headerClass="productTableHeader"
+    rowClasses="productTableOddRow, productTableEvenRow">
+
+			<h:column>
+				<f:facet name="header">Booking No.</f:facet>
+				#{booking.reservationID}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Pet</f:facet>
+				#{booking.petName}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Check-In</f:facet>
+				#{booking.checkInDate}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Check-Out</f:facet>
+				#{booking.checkOutDate}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Price</f:facet>
+				&#8364;	<!-- convert the number from a single decimal to 2 decimals  -->
+					<h:outputText value="#{booking.totalPrice}">
+    				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+					</h:outputText>
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Status</f:facet>
+			#{booking.status}
+			</h:column>
+
+		</h:dataTable>
+
+		<!-- Empty State Message -->
+		<h:outputText value="You do not have any pets registered yet."
+			rendered="#{empty petList.getPetsByUserId(LoginBean.loggedInUser.userID)}"
+			style="font-weight: bold; color: #777; display: block; margin: 15px 0;" />
+		<!-- Manage Section Title -->
+        <div class="section-title">Manage Account</div>
+
+        <!-- Management Actions Grid -->
+        <h:form id="dashboardForm">
+            <div class="manage-grid">
+		
+		 <!-- Customers & Accounts -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">View/Edit Profile</div>
+                        <div class="manage-card-desc">View my user account and make changes to my profile.</div>
+                    </div>
+                    <h:commandButton value="Edit My Profile"
+                                     styleClass="btn-card-action"
+                                     action="user/manageProfile?faces-redirect=true"/>
+                </div>
+		
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Add a Pet </div>
+                        <div class="manage-card-desc">Add a pet to your account</div>
+                    </div>
+                    <h:commandButton value="Add Pet"
+                                     styleClass="btn-card-action"
+                                   action="addPet?faces-redirect=true"/>
+                </div>
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Edit Your Pet </div>
+                        <div class="manage-card-desc">Keep your pet details up to date</div>
+                    </div>
+                    <h:commandButton value="Edit Pet"
+                                     styleClass="btn-card-action"
+                                   action="/user/petEdit?faces-redirect=true"/>
+                </div>
+		
+		
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">New booking</div>
+                        <div class="manage-card-desc">Make a new booking for your pet to come aboard the Ark</div>
+                    </div>
+                    <h:commandButton value="Make a booking"
+                                     styleClass="btn-card-action"
+                   					 action="user/makeBooking?faces-redirect=true" />
+                </div>
+		
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">View all bookings</div>
+                        <div class="manage-card-desc">View all your confirmed bookings.</div>
+                    </div>
+                    <h:commandButton value="View all booking"
+                                     styleClass="btn-card-action"
+                   					action="user/UserViewBookings?faces-redirect=true" />
+                </div>
+		
+		<!-- Logout Card -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title" style="color: #c0392b;">Session</div>
+                        <div class="manage-card-desc">End your current session and logout of your account securely.</div>
+                    </div>
+                    <h:commandButton value="Logout"
+                                     styleClass="btn-card-logout"
+                                     action="#{LoginBean.logout}"/>
+                </div>
+	
+
+		</div>
+	</h:form> 
+	</div>
+    <ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

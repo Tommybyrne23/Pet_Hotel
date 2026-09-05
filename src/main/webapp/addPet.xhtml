@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+<f:metadata>
+	<!-- Only logged-in users can make a booking -->
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+    <h:outputStylesheet library="css" name="registration.css" />
+    <link rel="icon"
+          type="image/png"
+          href="#{request.contextPath}/images/AdamsArkAndAvery.ico" />
+    <title>Pet Registration</title>
+
+    <script>
+        function updateCharacterCount(textarea) {
+            if (textarea.value.length > 200) {
+                textarea.value = textarea.value.substring(0, 200);
+            }
+
+            document.getElementById('requirementsCounter').textContent =
+                textarea.value.length + ' / 200 characters';
+        }
+    </script>
+</h:head>
+
+<h:body styleClass="reg-page">
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
+    <div class="reg-split">
+
+        <!-- PET REGISTRATION FORM -->
+        <div class="reg-panel"
+             style="flex: 1; width: 100%;">
+
+            <h:form id="registrationForm"
+                    styleClass="reg-form"
+                    style="max-width: 500px; margin: 0 auto;">
+
+                <h1 class="reg-brand">3A Pet Hotel</h1>
+
+                <h2 class="reg-welcome">
+                    Register your pet for their stay.
+                </h2>
+
+                <!-- MESSAGES -->
+
+                <h:panelGroup layout="block"
+                              styleClass="message-box">
+
+                    <h:messages
+                        errorClass="error-messages"
+                        infoClass="success-messages" />
+
+                </h:panelGroup>
+
+
+                <!-- PET NAME -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="petNameInput"
+                        value="Pet Name" />
+
+                    <h:inputText
+                        id="petNameInput"
+                        value="#{petRegistrationBean.pet.name}"
+                        required="true"
+                        requiredMessage="Name is required." />
+
+                    <h:message
+                        for="petNameInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- SPECIES -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="speciesInput"
+                        value="Species" />
+
+                    <h:selectOneMenu
+                        id="speciesInput"
+                        value="#{petRegistrationBean.pet.species}"
+                        required="true"
+                        requiredMessage="Species is required.">
+
+                        <f:selectItem
+                            itemLabel="-- Select Species --"
+                            itemValue=""
+                            noSelectionOption="true" />
+
+                        <f:selectItem
+                            itemLabel="Dog"
+                            itemValue="DOG" />
+
+                        <f:selectItem
+                            itemLabel="Cat"
+                            itemValue="CAT" />
+
+                        <f:selectItem
+                            itemLabel="Bird"
+                            itemValue="BIRD" />
+
+                        <f:selectItem
+                            itemLabel="Reptile"
+                            itemValue="REPTILE" />
+
+                        <f:selectItem
+                            itemLabel="Fish"
+                            itemValue="FISH" />
+
+                        <f:ajax
+                            execute="@this"
+                            listener="#{petRegistrationBean.speciesChanged}"
+                            render="ageInput" />
+
+                    </h:selectOneMenu>
+
+                    <h:message
+                        for="speciesInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- BREED -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="breedInput"
+                        value="Breed" />
+
+                    <h:inputText
+                        id="breedInput"
+                        value="#{petRegistrationBean.pet.breed}"
+                        required="true"
+                        requiredMessage="Breed is required." />
+
+                    <h:message
+                        for="breedInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- AGE -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="ageInput"
+                        value="Age" />
+
+                    <h:selectOneMenu
+                        id="ageInput"
+                        value="#{petRegistrationBean.pet.age}"
+                        required="true"
+                        requiredMessage="Age is required.">
+
+                        <f:selectItem
+                            itemLabel="-- Select Age --"
+                            itemValue=""
+                            noSelectionOption="true" />
+
+                        <f:selectItems
+                            value="#{petRegistrationBean.ageRanges}" />
+
+                    </h:selectOneMenu>
+
+                    <h:message
+                        for="ageInput"
+                        errorClass="field-error" />
+
+                </div>
+
+
+                <!-- ADDITIONAL REQUIREMENTS -->
+
+                <div class="form-field">
+
+                    <h:outputLabel
+                        for="requirementsInput"
+                        value="Additional Requirements" />
+
+                    <h:inputTextarea
+                        id="requirementsInput"
+                        value="#{petRegistrationBean.pet.requirements}"
+                        rows="5"
+                        cols="40"
+                        maxlength="200"
+                        onkeyup="updateCharacterCount(this)" />
+
+                    <span id="requirementsCounter">
+                        0 / 200 characters
+                    </span>
+
+                    <h:message
+                        for="requirementsInput"
+                        errorClass="field-error" />
+                        
+                </div>
+
+				<!-- VACCINATION -->
+				
+				<div class="form-field">
+				
+				    <h:outputLabel
+				        for="vaccinatedInput"
+				        value="Vaccination Status" />
+				
+					<div class="vaccination-option">
+					
+					    <h:outputLabel
+					        for="vaccinatedInput"
+					        value="I confirm that my pet is vaccinated. (required)" />
+					
+					    <h:selectBooleanCheckbox
+					        id="vaccinatedInput"
+					        value="#{petRegistrationBean.vaccinated}"
+					        required="true"
+					        requiredMessage="Your pet must be vaccinated to register." />
+					
+					</div>
+				
+				    <h:message
+				        for="vaccinatedInput"
+				        errorClass="field-error" />
+				
+				</div>
+
+                <!-- BUTTONS -->
+
+                <h:commandButton
+                    value="Register"
+                    styleClass="btn-green"
+                    action="#{petRegistrationBean.register}" />
+
+                <h:commandButton
+                    value="Reset"
+                    styleClass="btn-green-outline"
+                    immediate="true"
+                    action="#{petRegistrationBean.reset}" />
+
+
+                <div class="reg-divider">
+                    or
+                </div>
+
+
+                <!-- RETURN TO DASHBOARD -->
+
+                <h:button
+                    outcome="userDashboard"
+                    value="Return to Dashboard"
+                    styleClass="btn-green" />
+
+            </h:form>
+
+        </div>
+
+    </div>
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

@@ -1,106 +1,364 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets">
+
 <h:head>
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
+
 	<h:outputStylesheet library="css" name="styles.css" />
+	<link rel="icon" type="image/svg+xml"
+		href="#{request.contextPath}/images/3a-logo-badge.svg" />
 	<title>Adam's Ark and Avery</title>
+	<!-- Collapsible Services JavaScript -->
+	<h:outputScript target="head">
+        function toggleServices(id) {
+
+            const element = document.getElementById(id);
+            const button = document.getElementById(id + "-button");
+
+            if (element.style.display === "none") {
+
+                element.style.display = "block";
+                button.textContent = "Hide services \u25B2";
+
+            } else {
+
+                element.style.display = "none";
+                button.textContent = "View services &amp; prices \u25BC";
+
+            }
+        }
+    </h:outputScript>
 </h:head>
 <h:body>
-<!-- Dummy button for registration and login -->
-<div class="button" style="text-align:right">
-    <h:button outcome="login" value="Login" styleClass="nav-btn"/>
-    <br />
-    <h:button outcome="registration" value="Register" styleClass="nav-btn"/>
-</div>
-<h1>Adams Ark and Avery</h1>
-	<p class="intro">
-	Whether you're away for a day, a weekend, or an extended holiday,
-	<br /> 
-	our dedicated team is committed to providing a safe, comfortable, and caring environment for every pet in our care.
-	</p>
-<!-- Services displayed here -->
-<h2>Services</h2>
-<!-- Services formatted to work with the CSS file -->
-<div class="service-left">
-	<!-- Services for dogs -->
-	<img src="images/dog.jpg" alt="Dog Boarding" />
-    <div class="service-text">
-        <h3>Dog Boarding</h3>
-        <p>
-            Our spacious dog boarding facilities provide a safe and comfortable environment for dogs of all breeds and sizes. 
-            <br />
-            Each guest receives daily exercise, regular feeding, fresh water, and plenty of attention from our experienced staff.
-            <br />
-            We aim to make every stay enjoyable, whether ist's for a weekend or an extended holiday.
-        </p>
-    </div>
-</div>
-<div class="service-right">
-	<!-- Services for cats -->
-	<img src="images/cat.jpg" alt="Cat Boarding" />
-    <div class="service-text">
-        <h3>Cat Boarding</h3>
-        <p>
-            Our cat accommodation offers a quiet and relaxing environment designed to reduce stress while you're away.
-            <br />
-            Each cat has its own clean, comfortable space for daily feeding, fresh litter, and regular care from our team.
-            <br />
-            We strive to ensure every feline guest feels secure and well looked after.
-        </p>
-    </div>
-</div>
-<div class="service-left">
-	<!-- Services for reptiles -->
-	<img src="images/reptile.jpg" alt="Reptile Boarding" />
-    <div class="service-text">
-        <h3>Reptile Boarding</h3>
-        <p>
-            Our reptile boarding service is designed to meet the specialised needs of reptiles and other exotic pets.
-            <br />
-            Enclosures are maintained with appropriate heating, lighting, and humidity where required.
-            <br />
-            Our trained staff ensure feeding schedules and habitat conditions are carefully followed throughout your pet's stay.
-        </p>
-    </div>
-</div>
-<div class="service-right">
-	<!-- Services for birds -->
-	<img src="images/bird.jpg" alt="Bird Boarding" />
-    <div class="service-text">
-        <h3>Bird Boarding</h3>
-        <p>
-            We provide spacious, hygienic cages suitable for a variety of bird species.
-            <br />
-            Birds are cared for with daily feeding, fresh water, cage cleaning, and regular interaction where appropriate.
-            <br />
-            Our staff work to maintain a calm environment that supports your bird's health and wellbeing.
-        </p>
-    </div>
-</div>
-<!-- Contact Details section - displays 3A business contact information for customers -->
-<h2>Contact Details</h2>
-	<p class="contact">
-	    <!-- Business name and address -->
-	    <strong>Adam's Ark and Avery (3A Pet Hotel)</strong>
-	    <br />
-	    <!-- Street address -->
-	    12 Zoological Park Road
-	    <br />
-	    <!-- City and county -->
-	    Dublin 8, Ireland
-	    <br /><br />
-	    <!-- Phone contact -->
-	    Phone: 01 456 7890
-	    <br />
-	    <!-- Mobile contact -->
-	    Mobile: 087 777 5656
-	    <br />
-	    <!-- Email contact - customers can use this to make enquiries -->
-	    Email: info@3apetshotel.ie
-	    <br /><br />
-	    <!-- Opening hours for customer reference -->
-	    Opening Hours: Monday to Sunday, 8am to 8pm
-	</p>
+
+	<!-- INTRODUCTION -->
+	<div class="service-left">
+		<div>
+			<h1>
+				<img src="images/3a-logo.svg" alt="3A Pet Hotel" class="site-logo" />
+			</h1>
+		</div>
+		<div>
+			<p class="intro">Whether you're away for a day, a weekend, or an
+				extended holiday, our dedicated team is committed to providing a
+				safe, comfortable, and caring environment for every pet in our care.
+			</p>
+		</div>
+	</div>
+
+	<div class="hero-slideshow">
+		<h:graphicImage value="/images/DogPool.webp"
+			alt="A couple checkin-in their dog at the hotel" />
+		<h:graphicImage value="/images/catHotel.webp"
+			alt="Dogs playing in a mini pool" />
+		<h:graphicImage value="/images/aviary2.jpg"
+			alt="Some birds in an aviary" />
+		<h:graphicImage value="/images/aquariam1.jpg"
+			alt="Cat pods in a pet hotel" />
+		<h:graphicImage value="/images/dogKing.avif"
+			alt="An aquarium at 3A Pet Hotel" />
+		<h:graphicImage value="/images/catHotel2.webp"
+			alt="Some pets playing in a pet playground" />
+		<div class="hero-caption">Welcome to 3A Pet Hotel</div>
+	</div>
+
+
+	<!-- SERVICES -->
+	<div class="dashboard-wrapper">
+
+		<div class="section-title">Our Services</div>
+
+		<div class="services-grid">
+
+			<!-- DOGS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/dog.jpg" alt="Dog Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Dog Boarding</div>
+					<div class="manage-card-desc">Our spacious dog boarding facilities
+						provide a safe and comfortable environment for dogs of all breeds
+						and sizes, with daily exercise, regular feeding, fresh water and
+						plenty of attention from our experienced staff.</div>
+
+					<button type="button" class="btn-card-outline" id="dogServices-button"
+						onclick="toggleServices('dogServices')">View services &amp; prices &#9660;</button>
+
+					<div id="dogServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Dog')}" var="service">
+							<p>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
+			</div>
+
+			<!-- CATS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/cat.jpg" alt="Cat Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Cat Boarding</div>
+					<div class="manage-card-desc">Our cat accommodation offers a quiet
+						and relaxing environment designed to reduce stress while you're
+						away, with a clean, comfortable space, daily feeding, fresh litter
+						and regular care from our team.</div>
+
+					<button type="button" class="btn-card-outline" id="catServices-button"
+						onclick="toggleServices('catServices')">View services &amp; prices &#9660;</button>
+
+					<div id="catServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Cat')}" var="service">
+							<p>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
+			</div>
+
+			<!-- REPTILES -->
+			<div class="service-card">
+				<h:graphicImage value="/images/reptile.jpg" alt="Reptile Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Reptile Boarding</div>
+					<div class="manage-card-desc">Our reptile boarding service meets the
+						specialised needs of reptiles and exotic pets, with enclosures
+						maintained at the appropriate heating, lighting and humidity, and
+						feeding schedules carefully followed throughout the stay.</div>
+
+					<button type="button" class="btn-card-outline" id="reptileServices-button"
+						onclick="toggleServices('reptileServices')">View services &amp; prices &#9660;</button>
+
+					<div id="reptileServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Reptile')}" var="service">
+							<p>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
+			</div>
+
+			<!-- BIRDS -->
+			<div class="service-card">
+				<h:graphicImage value="/images/bird.jpg" alt="Bird Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Bird Boarding</div>
+					<div class="manage-card-desc">We provide spacious, hygienic cages
+						suitable for a variety of bird species, with daily feeding, fresh
+						water, cage cleaning and regular interaction to support your bird's
+						health and wellbeing.</div>
+
+					<button type="button" class="btn-card-outline" id="birdServices-button"
+						onclick="toggleServices('birdServices')">View services &amp; prices &#9660;</button>
+
+					<div id="birdServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Bird')}" var="service">
+							<p>
+								<span class="price-name">#{service.name}</span> - <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
+			</div>
+
+			<!-- FISH -->
+			<div class="service-card">
+				<h:graphicImage value="/images/fish.jpg" alt="Fish Boarding" />
+				<div class="service-card-body">
+					<div class="manage-card-title">Aquatic Boarding</div>
+					<div class="manage-card-desc">Our aquatic boarding service provides a
+						clean, carefully monitored environment for freshwater and tropical
+						fish, with filtration, daily feeding and water conditions checked
+						throughout the stay to keep every fish healthy and comfortable.</div>
+
+					<button type="button" class="btn-card-outline" id="fishServices-button"
+						onclick="toggleServices('fishServices')">View services &amp; prices &#9660;</button>
+
+					<div id="fishServices" class="service-prices" style="display: none;">
+						<ui:repeat value="#{serviceList.getServicesForSpecies('Fish')}" var="service">
+							<p>
+								<span class="price-name">#{service.name} - </span> <span
+									class="price-tag"> <h:outputText
+										value="#{service.price}">
+										<f:convertNumber type="currency" currencySymbol="&#8364;"
+											minFractionDigits="2" maxFractionDigits="2" />
+									</h:outputText>
+								</span>
+								<h:outputText styleClass="price-note" value=" per night"
+									rendered="#{service.chargeType eq 'PER_NIGHT'}" />
+								<h:outputText styleClass="price-note" value=" one-off"
+									rendered="#{service.chargeType eq 'ONE_OFF'}" />
+								<br /> #{service.description}
+							</p>
+						</ui:repeat>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="table-card">
+		<div class="card-container">
+			<div class="map-column">
+				<iframe class="map-frame"
+					title="Map showing the location of 3A Pet Hotel" loading="lazy"
+					referrerpolicy="strict-origin-when-cross-origin"
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d76213.82787771567!2d-6.457959167933594!3d53.34894627064052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48670dbade48282d%3A0x7de11697b1bb69d9!2sMemorial%20Park!5e0!3m2!1sen!2sus!4v1787007184855!5m2!1sen!2sus">
+				</iframe>
+			</div>
+
+			<div class="map-details">
+				<div class="section-title">Good to know</div>
+				<ul>
+					<li>All pets must be up to date on vaccinations.</li>
+					<li>Only 30 minutes from Dublin Airport.</li>
+					<li>Check-In is at 14:00. Check-Out is at 11:00.</li>
+					<li>Personalised diets and care are welcome.</li>
+					<li>Book and pay online in a few minutes</li>
+					<li>Free car parking available on site.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="dashboard-wrapper">
+		<div class="section-title">What our customers say</div>
+
+		<div class="manage-grid testimonial-scroll">
+			<div class="manage-card">
+				<p class="testimonial-stars" aria-label="Rated 5 out of 5">★★★★★</p>
+				<p class="testimonial-quote">"Buddy came home happier than when
+					he left. The photo updates every day meant I never once worried
+					while we were away."</p>
+				<div class="testimonial-person">
+					<h:graphicImage value="/images/dog1.jpg" alt="A small dog."
+						styleClass="testimonial-avatar" />
+					<div class="manage-card-title">Sarah M.</div>
+					<div class="manage-card-desc">Dog owner, Dublin</div>
+				</div>
+			</div>
+
+			<div class="manage-card">
+				<p class="testimonial-stars" aria-label="Rated 5 out of 5">★★★★★</p>
+				<p class="testimonial-quote">"Finding somewhere that would take
+					a bearded dragon was impossible until we found 3A. The reptile pods
+					are spotless."</p>
+				<div class="testimonial-person">
+					<h:graphicImage value="/images/reptile1.jpg"
+						alt="A bearded dragon." styleClass="testimonial-avatar" />
+					<div class="manage-card-title">Declan O'Brien</div>
+					<div class="manage-card-desc">Reptile owner, Athlone</div>
+				</div>
+			</div>
+
+			<div class="manage-card">
+				<p class="testimonial-stars" aria-label="Rated 5 out of 5">★★★★★</p>
+				<p class="testimonial-quote">"Booking took two minutes and the
+					grooming extra was worth every cent. Rosie has never looked
+					better."</p>
+				<div class="testimonial-person">
+					<h:graphicImage value="/images/cat1.jpg" alt="A ginger cat."
+						styleClass="testimonial-avatar" />
+					<div class="manage-card-title">Rachel O'Shea</div>
+					<div class="manage-card-desc">Cat owner, Cork</div>
+				</div>
+			</div>
+
+			<div class="manage-card">
+				<p class="testimonial-stars" aria-label="Rated 5 out of 5">★★★★★</p>
+				<p class="testimonial-quote">"The aviary facilities are
+					world-class, 3A really stands out for bird safety and animal
+					enrichment."</p>
+				<div class="testimonial-person">
+					<h:graphicImage value="/images/bird1.jpg" alt="An exotic bird."
+						styleClass="testimonial-avatar" />
+					<div class="manage-card-title">Aoife Kelly</div>
+					<div class="manage-card-desc">Bird owner, Waterford</div>
+				</div>
+			</div>
+
+			<div class="manage-card">
+				<p class="testimonial-stars" aria-label="Rated 5 out of 5">★★★★★</p>
+				<p class="testimonial-quote">"I was worried about sharky's
+					personalised diet while I was on holidays, but 3As care has made
+					him more active than ever.""</p>
+				<div class="testimonial-person">
+					<h:graphicImage value="/images/fish1.jpg" alt="A orange fish."
+						styleClass="testimonial-avatar" />
+					<div class="manage-card-title">Evan Ryan</div>
+					<div class="manage-card-desc">Fish owner, Limerick</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 
+  
+    <h2>Contact Details</h2>
+    <p class="contact">
+        <strong>Adam's Ark and Avery (3A Pet Hotel)</strong>
+        <br />
+        12 Zoological Park Road
+        <br />
+        Dublin 8, Ireland
+        <br />
+        <br />
+        Phone: 01 456 7890
+        <br />
+        Mobile: 087 777 5656
+        <br />
+        Email: info@3apetshotel.ie
+        <br />
+        <br />
+        Opening Hours: Monday to Sunday, 8am to 8pm
+    </p> -->
+
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
 </h:body>
 </html>

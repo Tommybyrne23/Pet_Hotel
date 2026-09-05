@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+    <f:viewAction action="#{LoginBean.checkAttendantAccess}" />
+</f:metadata>
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Confirmed Bookings</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-title">Confirmed Bookings</div>
+
+    <!-- Stat Cards -->
+    <div class="card-container">
+        <h:link outcome="onsite.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Pets On Site</div>
+                <div class="stat-number">#{reservationList.activeBookings.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="upcomingBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Upcoming</div>
+                <div class="stat-number">#{reservationList.futureReservations.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="pastBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Past Bookings</div>
+                <div class="stat-number">#{reservationList.pastReservations.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="allBookings.xhtml" styleClass="card-link">
+            <div class="stat-card active">
+                <div class="stat-title">Total Bookings</div>
+                <div class="stat-number">#{reservationList.numberOfReservations}</div>
+            </div>
+        </h:link>
+    </div>
+
+    <center>
+        <p>
+            Total system bookings: <strong>#{reservationList.numberOfReservations}</strong>
+        </p>
+
+        <!-- SEARCH FORM AND FILTERED TABLE -->
+        <h:form id="bookingSearchForm">
+            <!-- Displays silent conversion or validation errors -->
+            <h:messages id="searchMessages" style="color: red; list-style-type: none;" />
+
+            <!-- Search Inputs Panel -->
+            <div class="search-panel">
+                <h:panelGrid columns="4" cellpadding="6" style="margin: 0 auto; text-align: left;">
+
+                    <h:outputLabel for="custID" value="Customer ID:" />
+                    <h:inputText id="custID" value="#{reservationSearch.searchCustomerID}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="custName" value="Customer Name:" />
+                    <h:inputText id="custName" value="#{reservationSearch.searchCustomerName}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="custEmail" value="Customer Email:" />
+                    <h:inputText id="custEmail" value="#{reservationSearch.searchCustomerEmail}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="petID" value="Pet ID:" />
+                    <h:inputText id="petID" value="#{reservationSearch.searchPetID}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="petName" value="Pet Name:" />
+                    <h:inputText id="petName" value="#{reservationSearch.searchPetName}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="podName" value="Pod Type:" />
+                    <h:inputText id="podName" value="#{reservationSearch.searchPodName}">
+                        <f:ajax event="keyup" listener="#{reservationSearch.filter()}" execute="@form" render="tableContainer" delay="300" />
+                    </h:inputText>
+
+                    <h:outputLabel for="checkIn" value="Check In:" />
+                    <p:datePicker id="checkIn"
+                                  value="#{reservationSearch.searchCheckInDate}"
+                                  pattern="yyyy-MM-dd" showIcon="true" showButtonBar="true">
+                        <p:ajax event="dateSelect" listener="#{reservationSearch.filter()}" process="@form" update="tableContainer" />
+                        <p:ajax event="change" listener="#{reservationSearch.filter()}" process="@form" update="tableContainer" />
+                    </p:datePicker>
+
+                    <h:outputLabel for="checkOut" value="Check Out:" />
+                    <p:datePicker id="checkOut"
+                                  value="#{reservationSearch.searchCheckOutDate}"
+                                  pattern="yyyy-MM-dd" showIcon="true" showButtonBar="true">
+                        <p:ajax event="dateSelect" listener="#{reservationSearch.filter()}" process="@form" update="tableContainer" />
+                        <p:ajax event="change" listener="#{reservationSearch.filter()}" process="@form" update="tableContainer" />
+                    </p:datePicker>
+
+                </h:panelGrid>
+            </div>
+
+            <!-- TABLE CONTAINER AJAX TARGET -->
+            <h:panelGroup id="tableContainer" layout="block">
+                
+                <h:dataTable value="#{reservationSearch.filteredReservations}" var="booking"
+                             rendered="#{not empty reservationSearch.filteredReservations}"
+                             styleClass="productTable" headerClass="productTableHeader"
+                             rowClasses="productTableOddRow, productTableEvenRow">
+
+                    <h:column>
+                        <f:facet name="header">Booking #</f:facet>
+                        #{booking.reservationID}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Customer ID</f:facet>
+                        #{booking.userID}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Customer Name</f:facet>
+                        #{userList.getUserNameById(booking.userID)}
+                    </h:column>
+<!-- 
+                    <h:column>
+                        <f:facet name="header">Pet ID</f:facet>
+                        #{booking.petID}
+                    </h:column> -->
+
+                    <h:column><f:facet name="header">Pet</f:facet>
+                        #{booking.petName}
+                    </h:column>
+
+              		<h:column>	<f:facet name="header">Pod</f:facet>#{podList.findByID(booking.podID).label}</h:column>
+					<h:column>
+   						<f:facet name="header">Room</f:facet>#{podList.getRoomNameForPod(booking.podID)}</h:column>
+                    <h:column>
+                        <f:facet name="header">Check In</f:facet>
+                        #{booking.formattedCheckInDate}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Check Out</f:facet>
+                        #{booking.formattedCheckOutDate}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Price</f:facet>
+                        €<h:outputText value="#{booking.totalPrice}">
+    				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+					</h:outputText>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Pet Requirements</f:facet>
+                        #{petList.getRequirements(booking.petID)}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Status</f:facet>
+                        #{booking.status}
+                    </h:column>
+
+                </h:dataTable>
+
+                <h:outputText value="No bookings match the search criteria."
+                              rendered="#{empty reservationSearch.filteredReservations}"
+                              style="font-weight: bold; color: #777;" />
+
+            </h:panelGroup>
+        </h:form>
+
+        <br /><br />
+
+			<h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
+		</center>
+</div>
+<br />
+<ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

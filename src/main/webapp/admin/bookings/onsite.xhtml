@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{LoginBean.checkAttendantAccess}" />
+</f:metadata>
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Pets On Site</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+<div class="dashboard-wrapper">
+    <div class="dashboard-title">Who's Aboard</div>
+
+    <div class="card-container">
+        <h:link outcome="onsite.xhtml" styleClass="card-link">
+            <div class="stat-card active">
+                <div class="stat-title">Pets On Site</div>
+                <div class="stat-number">#{reservationList.activeBookings.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="upcomingBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Upcoming</div>
+                <div class="stat-number">#{reservationList.futureReservations.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="pastBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Past Bookings</div>
+                <div class="stat-number">#{reservationList.pastReservations.size()}</div>
+            </div>
+        </h:link>
+
+        <h:link outcome="allBookings.xhtml" styleClass="card-link">
+            <div class="stat-card">
+                <div class="stat-title">Total Bookings</div>
+                <div class="stat-number">#{reservationList.numberOfReservations}</div>
+            </div>
+        </h:link>
+    </div>
+
+    <center>
+        <p>Pets currently boarding with us</p>
+        
+        <h:dataTable value="#{reservationList.activeBookings}" var="booking"
+                     rendered="#{not empty reservationList.activeBookings}"
+                     styleClass="productTable" headerClass="productTableHeader"
+                     rowClasses="productTableOddRow, productTableEvenRow">
+   					 <h:column>
+						<f:facet name="header">Booking #</f:facet>#{booking.reservationID}</h:column>
+					<h:column>
+						<f:facet name="header">Customer Name</f:facet>#{userList.getUserNameById(booking.userID)}</h:column>
+					<h:column>
+						<f:facet name="header">Pet</f:facet>#{booking.petName}</h:column>
+					<h:column>	
+						<f:facet name="header">Pod</f:facet>#{podList.findByID(booking.podID).label}</h:column>
+					<h:column>
+		   				<f:facet name="header">Room</f:facet>#{podList.getRoomNameForPod(booking.podID)}</h:column>
+					<h:column>
+						<f:facet name="header">Check In</f:facet>#{booking.checkInDate}</h:column>
+					<h:column>
+						<f:facet name="header">Check Out</f:facet>#{booking.checkOutDate}</h:column>
+					<h:column>
+						<f:facet name="header">Price</f:facet>€	<!-- convert the number from a single decimal to 2 decimals  -->
+					<h:outputText value="#{booking.totalPrice}">
+    				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+					</h:outputText></h:column>
+				<h:column>
+					<f:facet name="header">Pet Requirements</f:facet>#{petList.getRequirements(booking.petID)}</h:column>
+				<h:column>
+						<f:facet name="header">Status</f:facet>#{booking.status}</h:column>
+        </h:dataTable>
+
+        <h:outputText value="No pets currently on-site." rendered="#{empty reservationList.activeBookings}" />
+            
+        <br /><br />
+
+       			<h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
+    </center>
+    
+</div>
+    <br />
+    <ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

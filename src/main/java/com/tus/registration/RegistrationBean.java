@@ -25,6 +25,8 @@ public class RegistrationBean implements Serializable {
 	//allows us to inject the bean into the Userlist array object identified in the user list array.
 	@Inject
 	private UserList userList;
+	
+	private String confirmPassword;
 
 	@PostConstruct
 	public void init() {
@@ -40,28 +42,64 @@ public class RegistrationBean implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	//registers the user before redirecting to the sample webpage.
-	public String register() {
-		boolean success = userList.addUser(user);		//use the boolean in Userlist to check if the user was added to the array list 
-
-		if (!success) {									// if not successful 
-			FacesContext.getCurrentInstance().addMessage("registrationForm:emailInput", 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-							"Email address is already registered.", null)
-					);
-			return null; 								// Stay on the registration page so they can fix the issue 
-		}
-
-		//if it is successful then the user was in the boolean userList.addUser(user) so we don't need to do anything else 
-
-		user = new User(); 					// reset the form to allow for the next registration, clears any data stored in the system 
-		return "index?faces-redirect=true";  // redirects to the index page 
+	
+	public String getConfirmPassword() {
+	    return confirmPassword;
 	}
 
+	public void setConfirmPassword(String confirmPassword) {
+	    this.confirmPassword = confirmPassword;
+	}
+
+	//refactored testing so facesmessage is moved to a different method.
+	public String register() {
+		if (user.getName() == null || user.getName().trim().isEmpty()) {
+			addFacesMessage("registrationForm:nameInput", "Your name is required.");					//return faces message 
+	        return null;
+		}
+		
+	    if (user.getEmail() == null || user.getEmail().trim().isEmpty() || !user.getEmail().contains("@")) {									//check email is not null, even though this is already checked in jakarta faces 
+	        addFacesMessage("registrationForm:emailInput", "Email address is required.");					//return faces message 
+	        return null;
+	    }
+
+		
+	    if (!PasswordValidator.checkPasswordsMatch(user.getPassword(), confirmPassword)) {
+	        addFacesMessage("registrationForm:confirmPasswordInput", "Passwords do not match.");			//send the faces message to the method below
+	        return null;																					//returns a null string for JUNIT testing 
+	    }
+
+	    boolean success = userList.addUser(user);
+
+	    if (!success) {
+	        addFacesMessage("registrationForm:emailInput", "Email address is already registered.");			//same here, message goes to addFaces Message s
+	        return null;																					//validation has failed, returns null for JUNIT purposes. 
+	    }
+
+	    user = new User();
+	    confirmPassword = null;
+	    return "login?faces-redirect=true";
+	}
+
+	// small private helper — avoids repeating the null-check twice											//this is a manual test on the registration dashboard.
+	private void addFacesMessage(String clientId, String summary) {
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    if (context != null) {
+	        context.addMessage(clientId, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+	    }
+	}
+
+	//method resets the form 
 	public String reset() {
 	    user = new User();
+	    confirmPassword = null;
 	    return "registration?faces-redirect=true";
 	}
+	
+	//this is used for testing 
+	public void setUserList(UserList userList) {
+		this.userList = userList;
+	}
+	
 }
 

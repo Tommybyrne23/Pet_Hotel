@@ -1,74 +1,1076 @@
 body {
+	min-height: 100vh;
 	background-color: beige;
 	font-family: Arial, sans-serif;
+	color: #000000;
+	margin: 0;
+	padding: 0;
 }
-/*Align headings in the center and add a line beneath it*/
+
+/* Center headings and add a bottom accent line */
 h1 {
-	text-align:center;
+	text-align: center;
 	border-bottom: 4px solid #6D4C41;
 }
 
-/*Align subheadings in the center and add a line beneath it*/
 h2 {
-	text-align:center;
-    border-bottom: 2px solid #6D4C41;
+	text-align: center;
+	border-bottom: 2px solid #6D4C41;
+}
+
+/* Buttons and controls */
+.btn-green50 {
+	display: block;
+	width: 50%;
+	padding: 13px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #2C5F2D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.2s ease;
+}
+
+.btn-green,								/* only difference will be the width on btn-green50 (50%)*/
+.btn-green50 {
+	display: block;
+	padding: 13px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #2C5F2D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.2s ease;
+}
+.btn-green50{
+	width:50%;
+}
+.btn-green{
+	width:100%;
+}
+
+.btn-green:hover,
+.btn-green50:hover {
+	background-color: #234A24;
+}
+.btngreen:active,
+.btn-green50:active {
+	background-color: #1C3B1D;
+}
+
+.button {
+	background-color: #C96C4A;
+	border-radius: 12px;
+	color: white;
+	padding: 10px 18px;
+	border: none;
+	cursor: pointer;
+}
+
+.button:hover {
+	background-color: #A65237;
+}
+
+/* 
+	COMMAND BUTTON
+	This was used in the old admin dashboard, 
+	keeping it so we have it at least for reference
+	on the other dashbaords 
+*/
+
+.commandButton {
+  background-color: #538f3b;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+}
+ 
+
+
+/* Form inputs and message boxes */
+.form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 20px;
+	max-width: 400px;
+}
+
+.form-field label {
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 0.02em;
+	color: #4E342E;
+}
+
+.form-field input[type="text"],
+.form-field textarea,
+.form-field select {
+	padding: 12px 14px;
+	font-size: 15px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input[type="text"]:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+	outline: none;
+	border-color: #2C5F2D;
+	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
+}
+
+/* Custom green accent for radio buttons and checkboxes */
+input[type="radio"],
+input[type="checkbox"] {
+	accent-color: #2C5F2D;
+}
+
+.message-box {
+	margin-bottom: 20px;
+}
+
+.message-box ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Alert boxes for form feedback */
+.error-messages {
+	display: block;
+	background-color: #fdecea;
+	border-left: 4px solid #c0392b;
+	color: #922b21;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+.success-messages {
+	display: block;
+	background-color: #eaf6ec;
+	border-left: 4px solid #27804a;
+	color: #1d6138;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+/* Form container panel */
+.form-panel {
+	background-color: #ffffff;
+	border-radius: 10px;
+	padding: 30px 35px;
+	max-width: 500px;
+	margin: 0 auto 30px auto;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 
-/*Add colour and border to the buttons*/
-button {
-    background-color: #C96C4A;
-    border-radius: 12px;
-    color: white;
+/* 	-----------------------------------------
+		Stat cards navigation strip for 
+		OnSite, Past, and Upcoming pages    
+	-----------------------------------------*/
+	
+.card-container {
+	display: flex;
+	gap: 15px;
+	justify-content: space-between;
+	max-width: 1000px;
+	margin: 20px auto;
 }
 
-button:hover {
-    background-color: #A65237;
+.card-link {
+	flex: 1;
+	text-decoration: none;
 }
 
-/*Make contact information be centered*/
+.stat-card {
+	background-color: #27ae60;
+	color: #ffffff;
+	padding: 18px 12px;
+	border-radius: 8px;
+	text-align: center;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.stat-card:hover {
+	transform: translateY(-4px);
+	background-color: #219150;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Highlights the current active page card */
+.stat-card.active {
+	background-color: #1e8449;
+	border: 2px solid #ffffff;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.stat-title {
+	font-size: 13px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 6px;
+	color: #f4f9f5;
+}
+
+.stat-number {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+/*	----------------------------------- 
+
+		Dashboard Layout Formatting   
+
+	-----------------------------------	*/
+.dashboard-wrapper {
+	max-width: 1100px;
+	margin: 30px auto;
+	padding: 0 20px;
+}
+
+/* Yellow gold accent lines under headings */
+.dashboard-title {
+	font-size: 36px;
+	font-weight: 800;
+	color: #000000;
+	margin-bottom: 6px;
+	display: inline-block;
+	position: relative;
+}
+
+.dashboard-title::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 8px;
+	background-color: #f1c40f;
+	border-radius: 4px;
+	margin-top: -2px;
+}
+
+.dashboard-subtitle {
+	font-size: 16px;
+	color: #000000;
+	margin-bottom: 25px;
+}
+
+.section-title {
+	font-size: 24px;
+	font-weight: 700;
+	color: #2c3e50;
+	margin: 35px 0 15px 0;
+	display: inline-block;
+	position: relative;
+}
+
+.section-title::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 6px;
+	background-color: #f1c40f;
+	border-radius: 3px;
+	margin-top: -1px;
+}
+
+/* Dashboard metric summary row */
+
+.metrics-row {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 25px;
+	flex-wrap: wrap;
+}
+
+.metric-card {
+	flex: 1;
+	min-width: 130px;
+	background-color: #ffffff;
+	border-radius: 14px;
+	padding: 18px 12px;
+	text-align: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.metric-value {
+	font-size: 28px;
+	font-weight: 800;
+	color: #000000;
+	line-height: 1.1;
+}
+
+.metric-label {
+	font-size: 13px;
+	color: #000000;
+	margin-top: 4px;
+	font-weight: 600;
+}
+
+/* Dashboard manage actions grid */
+
+.manage-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+}
+
+.manage-card {
+	background-color: #fcfbf7;
+	border-radius: 16px;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	border: 1px solid #eae7dd;
+	min-height: 160px;
+}
+
+.manage-card-title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1e5631;
+	margin-bottom: 10px;
+}
+
+.manage-card-desc {
+	font-size: 14px;
+	color: #000000;
+	line-height: 1.4;
+	margin-bottom: 20px;
+}
+
+
+/* Action button styles */
+.btn-card-action {
+	background-color: #1e5631;
+	color: #ffffff;
+	border: none;
+	border-radius: 25px;
+	padding: 10px 22px;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	align-self: flex-start;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-card-action:hover {
+	background-color: #143d22;
+	transform: translateY(-1px);
+}
+
+.btn-card-outline {
+	background-color: transparent;
+	color: #1e5631;
+	border: 2px solid #1e5631;
+	border-radius: 25px;
+	padding: 8px 20px;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	align-self: flex-start;
+	transition: all 0.2s ease;
+}
+
+.btn-card-outline:hover {
+	background-color: #1e5631;
+	color: #ffffff;
+}
+
+.btn-card-logout {
+	background-color: transparent;
+	color: #c0392b;
+	border: 2px solid #c0392b;
+	border-radius: 25px;
+	padding: 8px 20px;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	align-self: flex-start;
+	transition: all 0.2s ease;
+}
+
+.btn-card-logout:hover {
+	background-color: #c0392b;
+	color: #ffffff;
+}
+
+/* Modern data tables and pill status badges */
+.table-card {
+	background-color: #ffffff;
+	border-radius: 16px;
+	padding: 22px;					/* reduced from 30 as pods table was overflowing  */
+	max-width: 1000px;
+	margin: 20px auto;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+	box-sizing: border-box;
+	overflow-x: auto;				/* added overflow on the table to hepl with pods and rooms */
+}
+
+.productTable {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0 auto;
+	border: none;
+	background-color: #ffffff;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.productTableHeader {
+	background-color: #f8f9fa;
+	color: #2c3e50;
+	font-weight: 700;
+	font-size: 14px;
+	text-align: left;
+	padding: 12px 12px;				/* padding reduced to fix the pod table extending past the div container */
+	border-bottom: 2px solid #e9ecef;
+}
+
+.productTable tr {
+	transition: background-color 0.15s ease;
+}
+
+.productTable tr:hover {
+	background-color: #f8f9fa;
+}
+
+.productTableOddRow,
+.productTableEvenRow {
+	background-color: #ffffff;
+}
+
+.productTable td {
+	padding: 16px 20px;
+	color: #000000;
+	font-size: 14px;
+	border: none;
+	border-bottom: 1px solid #f1f3f5;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.productTable tr:last-child td {
+	border-bottom: none;
+}
+
+/* Status pill badges for bookings and pods */
+.status-confirmed,
+.status-available {
+	display: inline-block;
+	background-color: #d1e7dd;
+	color: #0f5132;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+.status-pending {
+	display: inline-block;
+	background-color: #fff3cd;
+	color: #664d03;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+.status-cancelled {
+	display: inline-block;
+	background-color: #f8d7da;
+	color: #842029;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 6px 16px;
+	border-radius: 50px;
+	text-align: center;
+}
+
+
+/* ------------------------------------------------------------
+   
+   	   			Homepage styles updated to
+   	    	 	match the admin dashboard
+   
+   ------------------------------------------------------------ */
+
+.home-hero {
+	text-align: center;
+	margin: 34px auto 6px;
+	max-width: 1100px;
+	padding: 0 20px;
+}
+
+/* Intro paragraph: slate-grey instead of the old brown #4E342E */
+.home-hero .intro {
+	color: #000000;
+	max-width: 720px;
+	margin: 14px auto 0;
+}
+
+/* Service cards reuse the dashboard card tokens  */
+.services-grid {
+	display: grid;			/*allows resizing on mobile*/
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+}
+
+.service-card {
+	background-color: #fcfbf7;
+	border: 1px solid #eae7dd;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+
+.service-card img {
+	width: 100%;
+	height: 170px;
+	object-fit: cover;
+	display: block;
+}
+
+.service-card-body {
+	padding: 22px;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.service-card-body .manage-card-desc {
+	flex: 1;
+}
+
+.service-prices {
+	margin-top: 14px;
+	border-top: 1px solid #eae7dd;
+	padding-top: 12px;
+	font-size: 14px;
+	color: #000000;
+	line-height: 1.6;
+}
+
+.service-prices p {
+	margin: 0 0 10px 0;
+}
+
+.service-prices .price-name {
+	font-weight: 700;
+	color: #1e5631;
+}
+
+.service-prices .price-tag {
+	font-weight: 700;
+	color: #2c3e50;
+}
+
+.service-prices .price-note {
+	color: #000000;
+	font-size: 12px;
+}
+
+@media (max-width: 900px) {
+	.services-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+
+
+
+/* ---------------------------------
+
+	Page content and services layout 
+
+   --------------------------------- */
 .contact {
-    text-align: center;
+	text-align: center;
 }
 
 .service-left,
 .service-right {
-    display: flex; /*Make images and text appear side by side*/
-    align-items: flex-start; /*Test aligns with the top of the image*/
-    gap: 30px; /*Space between image and text*/
-    margin: 40px auto; /*Vertical spacing*/
-    width: 90%; /*Keep content from the edges of the page*/
+	display: flex;
+	margin: 40px auto;
+	border-radius: 10px;
+	align-items: flex-start;
+	gap: 30px;
+	width: 90%;
+	line-height: 1.5;
 }
 
 .service-right {
-    flex-direction: row-reverse; /*Force content to the right of the page*/
+	flex-direction: row-reverse;
+	background-color: tan;
 }
 
-/*Make images one uniform size, doesn't stretch images but crops them
-so best if images are a correct ratio size*/
 .service-left img,
 .service-right img {
-    width: 250px;
-    height: 180px;
-    border-radius: 10px;
-    object-fit: cover;
+	width: 250px;
+	height: 180px;
+	border-radius: 10px;
+	object-fit: cover;
 }
 
-/*Keeps text to the left size of the page*/
-.service-text {
-    flex: 1;
+.intro {
+	text-align: center;
+	font-size: 1.1em;
+	line-height: 1.6;
+	color: #000000;
 }
 
-.register-grid {
-    margin: 0 auto;
+
+/*----------------------------
+
+	Navigation bar styling 
+
+------------------------------*/
+
+/* Navigation bar layout and styling */
+.app-navbar {
+	background-color: #1e5631;
+	padding: 10px 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/*The registration form box*/
-.register-box {
-    width: 400px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #FFF8F0;
-    border: 2px solid #6D4C41;
-    border-radius: 12px;
+.navbar-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 8px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.navbar-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	text-decoration: none;
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: 800;
+	margin-right: auto;
+}
+
+.navbar-brand img {
+	height: 36px;
+	width: auto;
+	border-radius: 4px;
+}
+
+.navbar-menu {
+	display: flex;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 8px;
+}
+
+.nav-item {
+	margin: 0;
+}
+
+.nav-link {
+	color: #f4f9f5;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 8px 12px;
+	border-radius: 6px;
+	background-color: rgba(255, 255, 255, 0.10);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.22);
+	border-color: rgba(255, 255, 255, 0.45);
+	color: #ffffff;
+}
+
+.nav-link:focus-visible {
+	outline: 2px solid #ffffff;
+	outline-offset: 2px;
+}
+
+.nav-link-active {
+	background-color: #f4f9f5;
+	border-color: #f4f9f5;
+	color: #1e5631;
+}
+
+.nav-link-active:hover {
+	background-color: #ffffff;
+	border-color: #ffffff;
+	color: #1e5631;
+}
+
+.btn-nav-register {
+	background-color: #C96C4A;
+	color: #ffffff !important;
+}
+
+.btn-nav-register:hover {
+	background-color: #A65237 !important;
+}
+
+.navbar-user-section {
+	display: flex;
+	align-items: center;
+}
+
+.navbar-logout-form {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+}
+
+.navbar-text {
+	color: #f4f9f5;
+	font-size: 13px;
+}
+
+.logout-link {
+	color: #ffcdd2 !important;
+}
+
+.logout-link:hover {
+	color: #ffffff !important;
+	background-color: #c0392b !important;
+}
+
+/* --------------------
+
+	Footer Styling 
+
+    --------------------*/
+    
+  /* Shared site footer styling */
+  
+.site-footer {
+	position: sticky;
+	top: 100vh;
+	background-color: #1e5631;
+	color: #f4f9f5;
+	padding: 25px 20px;
+	text-align: center;
+	font-size: 14px;
+	margin-top: 40px;
+}
+
+.footer-container {
+	max-width: 1000px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.footer-brand {
+	font-size: 18px;
+	font-weight: 800;
+	color: #ffffff;
+	margin-bottom: 2px;
+}
+
+.footer-address,
+.footer-contact {
+	color: #e2ede5;
+	line-height: 1.4;
+}
+
+.footer-hours {
+	color: #f1c40f;
+	font-weight: 600;
+	margin-top: 4px;
+	font-size: 13px;
+}
+
+
+/* -----------------------------------------------------------
+
+   SEARCH PANEL & FILTER INPUTS (Unified with login styling)
+
+   ----------------------------------------------------------- */
+
+.search-panel {
+	background-color: #ffffff;
+	border: 1px solid #eae7dd;
+	border-radius: 14px;
+	padding: 20px 25px;
+	max-width: 950px;
+	margin: 25px auto;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-panel label {
+	font-size: 14px;
+	font-weight: bold;
+	color: #4E342E;
+}
+
+/* Standard Text Inputs */
+.search-panel input[type="text"],
+.search-panel .ui-inputfield {
+	width: 100%;
+	padding: 10px 12px;
+	font-size: 14px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-panel input[type="text"]:focus,
+.search-panel .ui-inputfield.ui-state-focus {
+	outline: none;
+	border-color: #2C5F2D !important;
+	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15) !important;
+}
+
+/* --------------------------------------------------
+
+   	PRIMEFACES DATEPICKER OVERRIDES (Theme Matching) 
+   
+   -------------------------------------------------- */
+
+/* Recolor the calendar trigger button from blue to forest green */
+.search-panel .ui-datepicker-trigger.ui-button {
+	background-color: #2C5F2D !important;
+	border-color: #2C5F2D !important;
+	border-top-right-radius: 8px !important;
+	border-bottom-right-radius: 8px !important;
+}
+
+.search-panel .ui-datepicker-trigger.ui-button:hover {
+	background-color: #234A24 !important;
+	border-color: #234A24 !important;
+}
+
+/* Calendar Popup Colors */
+.ui-datepicker {
+	font-family: Arial, sans-serif !important;
+	border-radius: 8px !important;
+	border: 1px solid #cfc3ba !important;
+}
+
+.ui-datepicker .ui-datepicker-header {
+	background-color: #1e5631 !important;
+	color: #ffffff !important;
+	border: none !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar td a.ui-state-active,
+.ui-datepicker .ui-datepicker-calendar td a.ui-state-highlight {
+	background-color: #2C5F2D !important;
+	color: #ffffff !important;
+	border-radius: 4px;
+}    
+
+/* ---- Homepage hero slideshow (index.xhtml) ---- */
+
+.hero-slideshow {
+	position: relative;
+	width: 90%;
+	max-width: 1400px;
+	height: 700px;
+	margin: 25px auto 35px auto;
+	overflow: hidden;
+	border-radius: 16px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-slideshow img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center 35%;
+	opacity: 0;
+	animation: heroFade 30s infinite;
+}
+
+/* Five images, six seconds each, with a short crossfade between */
+@keyframes heroFade {
+	0%   { opacity: 0; }
+	2%   { opacity: 1; }
+	15%  { opacity: 1; }
+	18%  { opacity: 0; }
+	100% { opacity: 0; }
+}
+
+.hero-slideshow img:nth-child(1) { animation-delay: 0s; }
+.hero-slideshow img:nth-child(2) { animation-delay: 5s; }
+.hero-slideshow img:nth-child(3) { animation-delay: 10s; }
+.hero-slideshow img:nth-child(4) { animation-delay: 15s; }
+.hero-slideshow img:nth-child(5) { animation-delay: 20s; }
+.hero-slideshow img:nth-child(6) { animation-delay: 25s; }
+
+/* Respect a visitor's system setting for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.hero-slideshow img {
+		animation: none;
+	}
+	.hero-slideshow img:nth-child(1) {
+		opacity: 1;
+	}
+}
+
+/* ---- Welcome caption on the hero slideshow ---- */
+
+.hero-caption {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 85px;
+	font-weight: 800px;
+	line-height: 1.2;
+	background: linear-gradient(rgba(0, 0, 0, 20), rgba(0, 0, 0, 0));
+}
+
+/* A left-column heading should not be centred or underlined */
+.service-left h1 {
+	text-align: left;
+	border-bottom: none;
+	margin: 0;
+}
+
+/* The service row rule above sizes photos to a fixed box and crops the
+   overflow, which mangles the logo's wider aspect ratio */
+.service-left img.site-logo {
+	width: 320px;
+	height: auto;
+	object-fit: contain;
+}
+
+/* ---- Map and details row (index.xhtml) ---- */
+
+.map-column {
+	flex: 1 1 55%;
+}
+
+.map-frame {
+	display: block;
+	width: 100%;
+	height: 340px;
+	border: 0;
+	border-radius: 12px;
+}
+
+.map-details {
+	flex: 1 1 40%;
+}
+
+.map-details ul {
+	margin: 16px 0 0 0;
+	padding-left: 20px;
+	line-height: 1.9;
+	color: #000000;
+	font-size: 15px;
+}
+
+/* Quote text in the testimonial cards */
+.testimonial-quote {
+	flex: 1;
+	margin: 0 0 16px 0;
+	font-size: 15px;
+	font-style: italic;
+	line-height: 1.7;
+	color: #000000;
+}
+
+/* ---- Horizontally scrolling testimonials ---- */
+
+.testimonial-scroll {
+	grid-template-columns: none;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(300px, 1fr);
+	overflow-x: auto;
+	padding-bottom: 14px;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: thin;
+}
+
+.testimonial-scroll > .manage-card {
+	scroll-snap-align: start;
+}
+
+/* ---- Testimonial stars and avatar ---- */
+
+.testimonial-stars {
+	margin: 0 0 10px 0;
+	font-size: 18px;
+	letter-spacing: 3px;
+	color: #f1c40f;
+}
+
+.testimonial-person {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.testimonial-avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.testimonial-person .manage-card-title {
+	margin-bottom: 2px;
+}
+
+.testimonial-person .manage-card-desc {
+	margin-bottom: 0;
 }

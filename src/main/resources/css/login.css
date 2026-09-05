@@ -1,0 +1,262 @@
+/* ============================================================
+   3A PET HOTEL - LOGIN PAGE
+   Standalone stylesheet for login.xhtml only.
+   Split screen: form panel left third, hero image right two thirds.
+   ============================================================ */
+
+
+/* ---- BASE ----------------------------------------------------
+   Included so this file works whether or not styles.css is also
+   loaded. The border-bottom overrides cancel the global h1 / h2
+   rules in styles.css, which add brown underlines.
+   -------------------------------------------------------------- */
+
+.login-page {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	color: #4E342E;
+	background-color: beige;
+}
+
+
+/* ---- SPLIT LAYOUT ------------------------------------------ */
+
+.login-split {
+	display: flex;
+	min-height: 100vh;
+}
+
+
+/* ---- LEFT: FORM PANEL -------------------------------------- */
+
+.login-panel {
+	flex: 0 0 33.333%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 40px 35px;
+	background-color: #FFFDF9;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.login-form {
+	width: 100%;
+	max-width: 340px;
+}
+
+
+/* ---- HEADINGS ---------------------------------------------- */
+
+.login-brand {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 38px;
+	font-weight: normal;
+	letter-spacing: 0.02em;
+	color: #4E342E;
+	border-bottom: none;
+	text-align: center;
+	margin: 0 0 12px 0;
+}
+
+.login-welcome {
+	font-size: 15px;
+	font-weight: normal;
+	color: #8a7a70;
+	border-bottom: none;
+	text-align: center;
+	line-height: 1.5;
+	margin: 0 0 30px 0;
+}
+
+
+/* ---- FORM FIELDS ------------------------------------------- */
+
+.form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 20px;
+}
+
+.form-field label {
+	font-size: 13px;
+	font-weight: bold;
+	letter-spacing: 0.02em;
+	color: #6D4C41;
+}
+
+.form-field input {
+	width: 100%;
+	padding: 12px 14px;
+	font-size: 15px;
+	font-family: inherit;
+	color: #4E342E;
+	background-color: #ffffff;
+	border: 1px solid #cfc3ba;
+	border-radius: 8px;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input:focus {
+	outline: none;
+	border-color: #2C5F2D;
+	box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
+}
+
+
+/* ---- BUTTONS -----------------------------------------------
+   Shared by the Login submit button and the two navigation
+   buttons, so all three match.
+   ------------------------------------------------------------ */
+
+.btn-green {
+	display: block;
+	width: 100%;
+	padding: 13px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: inherit;
+	color: #ffffff;
+	background-color: #2C5F2D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.2s ease;
+}
+
+.btn-green:hover {
+	background-color: #234A24;
+}
+
+.btn-green:active {
+	background-color: #1C3B1D;
+}
+
+
+/* ---- "OR" DIVIDER ------------------------------------------ */
+
+.login-divider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 18px 0;
+	font-size: 13px;
+	color: #8a7a70;
+}
+
+.login-divider::before,
+.login-divider::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background-color: #e0d6cd;
+}
+
+
+/* ---- FACES MESSAGES ---------------------------------------- */
+
+.message-box {
+	margin-bottom: 20px;
+}
+
+.message-box ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.error-messages {
+	display: block;
+	background-color: #fdecea;
+	border-left: 4px solid #c0392b;
+	color: #922b21;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+.success-messages {
+	display: block;
+	background-color: #eaf6ec;
+	border-left: 4px solid #27804a;
+	color: #1d6138;
+	padding: 10px 14px;
+	margin-bottom: 8px;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+
+/* ---- RIGHT: HERO IMAGE ------------------------------------- */
+
+.login-hero {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+.login-hero-img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Gradient overlay keeps the caption legible on any photo */
+.login-hero::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.05));
+}
+
+/* z-index 2 lifts the caption above the gradient overlay */
+.login-hero-text {
+	position: absolute;
+	bottom: 70px;
+	left: 0;
+	right: 0;
+	z-index: 2;
+	text-align: center;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 44px;
+	color: #ffffff;
+	text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ---- RESPONSIVE --------------------------------------------
+   Below 900px the split stacks and the hero becomes a banner
+   above the form.
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+	.login-split {
+		flex-direction: column;
+	}
+	.login-panel {
+		flex: 1 1 auto;
+		padding: 35px 25px;
+	}
+	.login-hero {
+		flex: 0 0 200px;
+		order: -1;
+	}
+	.login-hero-text {
+		bottom: 25px;
+		font-size: 28px;
+	}
+	.login-brand {
+		font-size: 32px;
+	}
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+    <!-- Checks the user is an admin before the view is rendered -->
+    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+</f:metadata>
+
+<h:head>	
+    <h:outputStylesheet library="css" name="styles.css" />
+    <link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
+    <title>Admin Dashboard</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+    <div class="dashboard-wrapper">
+
+        <!-- Page Header -->
+        <div class="dashboard-title">Admin Dashboard</div>
+        <div class="dashboard-subtitle">
+            A quick look at the hotel right now, <strong>#{LoginBean.loggedInUser.name}</strong> (#{LoginBean.loggedInUser.role.label}).
+        </div>
+
+        <!-- Metric Cards Bar -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-value">#{reservationList.activeBookings.size()}</div>
+                <div class="metric-label">On site now</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{userList.numberOfCustomers}</div>
+                <div class="metric-label">Customers</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{petList.numberOfPets}</div>
+                <div class="metric-label">Pets</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">#{reservationList.numberOfReservations}</div>
+                <div class="metric-label">Bookings</div>
+            </div>
+        </div>
+
+        <!-- Manage Section Title -->
+        <div class="section-title">Manage</div>
+
+        <!-- Management Actions Grid -->
+        <h:form id="dashboardForm">
+            <div class="manage-grid">
+
+                <!-- Customers & Accounts -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customers &amp; Users</div>
+                        <div class="manage-card-desc">Search customers, manage user accounts, roles, and profile settings.</div>
+                    </div>
+                    <h:commandButton value="Manage users"
+                                     styleClass="btn-card-action"
+                                     action="/admin/userList?faces-redirect=true"/>
+                </div>
+
+                <!-- On Site & Registered Pets -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Registered Pets</div>
+                        <div class="manage-card-desc">Review and manage registered pets and special requirements on our system.</div>
+                    </div>
+                    <h:commandButton value="View all pets" 
+                                     styleClass="btn-card-action" 
+                                     action="/admin/petManagement?faces-redirect=true"/>
+                </div>
+
+                <!-- Bookings & Reservations -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Reservations</div>
+                        <div class="manage-card-desc">Review and confirm current customer bookings and past stay histories.</div>
+                    </div>
+                    <h:commandButton value="View all bookings" 
+                                     styleClass="btn-card-action"
+                                     action="/admin/bookings/allBookings?faces-redirect=true"/>
+                </div>
+
+                <!-- Listings & Prices -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Listings &amp; Prices</div>
+                        <div class="manage-card-desc">Manage, add, or update extra service offerings and nightly rates.</div>
+                    </div>
+                    <h:commandButton value="Edit prices"
+                                     styleClass="btn-card-action"
+                                     action="/admin/manageServices?faces-redirect=true"/>
+                </div>
+
+                <!-- Facility Capacity (Pods/Rooms) -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Pods &amp; Rooms</div>
+                        <div class="manage-card-desc">Inspect facility occupancy, pod allocations, and room inventory.</div>
+                    </div>
+                    <h:commandButton value="Manage capacity"
+                                     styleClass="btn-card-action" 
+                                     action="/admin/viewPodsRooms?faces-redirect=true"/>
+                </div>
+
+                <!-- Contact Messages -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Customer Messages</div>
+                        <div class="manage-card-desc">Read customer inquiries submitted through the website contact form.</div>
+                    </div>
+                    <h:commandButton value="View messages"
+                                     styleClass="btn-card-action"
+                                     action="/admin/viewContactForm?faces-redirect=true"/>
+                </div>
+                </div>
+                <!-- Manage Section Title -->
+        <div class="section-title">Other Views</div>
+                   <div class="manage-grid">
+                <!-- Customer Dashboard -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">View Customer Dashboard</div>
+                        <div class="manage-card-desc">See what the customer sees.</div>
+                    </div>
+                    <h:commandButton value="View Dashboard"
+                                     styleClass="btn-card-action"
+                                     action="/userDashboard?faces-redirect=true"/>
+                </div>
+                <!-- Attendant Dashboard  -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title">Pet Attendant's Dashboard</div>
+                        <div class="manage-card-desc">See what the Pet Attendants will see.</div>
+                    </div>
+                    <h:commandButton value="View Dashboard"
+                                     styleClass="btn-card-action"
+                                     action="/attendantDashboard?faces-redirect=true"/>
+                </div>
+
+                <!-- Logout Card -->
+                <div class="manage-card">
+                    <div>
+                        <div class="manage-card-title" style="color: #c0392b;">Session</div>
+                        <div class="manage-card-desc">End the current administrative session and exit securely.</div>
+                    </div>
+                    <h:commandButton value="Logout"
+                                     styleClass="btn-card-logout"
+                                     action="#{LoginBean.logout}"/>
+                </div>
+
+            </div>
+        </h:form>
+
+    </div>
+<ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

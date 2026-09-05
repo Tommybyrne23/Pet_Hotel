@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<f:metadata>
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>My Bookings</title>
+</h:head>
+
+<h:body>
+
+	<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
+		<!-- makes the page width slightly narrower, tables look better -->
+		<div class="dashboard-title">My Bookings</div>
+
+		<h:form>
+			<h:outputText
+				value="Number of bookings: #{BookingBean.userBookings.size()}" />
+
+			<br />
+			<br />
+
+			<!-- If user has no bookings -->
+			<h:panelGroup rendered="#{empty BookingBean.userBookings}">
+				<h:outputText value="You have no bookings yet." />
+				<br />
+				<h:link outcome="makeBooking" value="Make a Booking" />
+			
+			<!--  Faces Messages will appear in here -->
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="messagebox">
+				<h:messages globalOnly="true" infoStyle="color:green" errorStyle="color:red" />
+				</h:panelGroup>	
+			
+			<!-- Bookings table -->
+			<h:dataTable value="#{BookingBean.userBookings}" var="booking"
+				rendered="#{not empty BookingBean.userBookings}"
+				styleClass="productTable" headerClass="productTableHeader"
+				rowClasses="productTableOddRow, productTableEvenRow">
+
+				<h:column>
+					<f:facet name="header">Booking No.</f:facet>
+				#{booking.reservationID}
+			</h:column>
+
+				<h:column>
+					<f:facet name="header">Pet</f:facet>
+				#{booking.petName}
+			</h:column>
+
+				<h:column>
+					<f:facet name="header">Check-In</f:facet>
+				#{booking.checkInDate}
+			</h:column>
+
+				<h:column>
+					<f:facet name="header">Check-Out</f:facet>
+				#{booking.checkOutDate}
+			</h:column>
+
+				<h:column>
+					<f:facet name="header">Price</f:facet>
+				<!-- eruo -->
+				&#8364;
+					<!-- convert the number from a single decimal to 2 decimals  -->
+					<h:outputText value="#{booking.totalPrice}">
+    				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+					</h:outputText>
+			</h:column>
+
+				<h:column>
+					<f:facet name="header">Status</f:facet>
+				#{booking.status}
+			</h:column>
+				<h:column>
+				<f:facet name="header">Cancel</f:facet>
+				 
+				 <!-- Using the logout button class to indicate a red cancel button 
+				 	  rather than a green button which is more inviting 
+				 		
+				 	  Message onclick gives a popup browser asking for confirmation 
+				 	  to proceed to paypal. If the refund process doesn't work status 
+				 	  will remain confirmed!  -->
+				
+				<h:commandButton value="Cancel Booking"
+               				     rendered="#{RefundBean.isRefundable(booking.reservationID)}"
+                 				 styleClass="btn-card-logout"
+                 				 action="#{RefundBean.processRefund(booking.reservationID)}"
+                 				 onclick="return confirm('Are you sure you want to cancel this booking?\nPlease note refunds are only possible up to 48 hours before the check in date');" />
+
+				<!-- Inside the 48h window: the deadline has passed -->
+				<h:outputText 	 value="Cancellation window has closed"
+              					 rendered="#{booking.status eq 'Confirmed' and not RefundBean.isRefundAllowed(booking.reservationID)}" />
+
+				<!-- Still in time, but not refundable -> no payment reference on file -->
+				<h:outputText 	 value="Contact us to cancel	"
+              					 rendered="#{booking.status eq 'Confirmed' and RefundBean.isRefundAllowed(booking.reservationID) and not RefundBean.isRefundable(booking.reservationID)}" />
+				</h:column>
+			</h:dataTable>
+		</h:form>	
+			<br />
+				<h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
+		
+	</div>
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

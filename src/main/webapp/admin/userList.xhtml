@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+    <!-- Combined metadata checks at top level -->
+    <f:viewAction action="#{LoginBean.checkAdminAccess}" />
+    <f:event type="preRenderView" listener="#{ProfileBean.loadProfile}" />
+</f:metadata>
+
+<h:head>
+    <h:outputStylesheet library="css" name="styles.css" />
+    <title>Pet Hotel - Registered Users</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+    <div class="dashboard-wrapper">
+        <div class="dashboard-title">Registered Users Directory</div>
+
+        <!-- Display total number of registered users -->
+        <p>
+            Total Registered Users: <strong>#{userList.numberOfUsers}</strong>
+        </p>
+
+        <h:form id="userTableForm">
+            <!-- Displays confirmation and error messages -->
+            <h:messages id="messages" globalOnly="true" infoClass="info-message" errorClass="error-message" />
+
+            <!-- Table displaying all users stored in the ApplicationScoped list -->
+            <h:dataTable value="#{userList.users}" var="u"
+                styleClass="productTable" headerClass="productTableHeader"
+                rowClasses="productTableOddRow, productTableEvenRow">
+
+                <h:column>
+                    <f:facet name="header">User ID</f:facet>
+                    #{u.userID}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    #{u.name}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Email</f:facet>
+                    #{u.email}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Role</f:facet>
+
+                    <h:panelGroup rendered="#{u.userID == LoginBean.loggedInUser.userID}">
+                        #{u.role} (you)
+                    </h:panelGroup>
+
+                    <h:selectOneMenu value="#{u.role}" rendered="#{u.userID != LoginBean.loggedInUser.userID}">
+                        <f:selectItems value="#{userList.roles}" var="r" itemLabel="#{r}" itemValue="#{r}" />
+                    </h:selectOneMenu>
+                </h:column>
+
+                <!-- Add pet column for users registered with pets -->
+                <h:column>
+                    <f:facet name="header">Pets</f:facet>
+                    <ui:repeat value="#{petList.findByUserID(u.userID)}" var="pet">
+                        #{pet.name}<br />
+                    </ui:repeat>
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">Reset Password</f:facet>
+
+                    <h:panelGroup rendered="#{u.userID == LoginBean.loggedInUser.userID}">
+                        (you)
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{u.userID != LoginBean.loggedInUser.userID}">
+
+                        <h:panelGroup layout="block" styleClass="form-field">
+                            <h:outputLabel for="newPasswordInput" value="New password" />
+                            <h:inputSecret id="newPasswordInput"
+                                value="#{AdminPasswordBean.newPasswords[u.userID]}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" styleClass="form-field">
+                            <h:outputLabel for="confirmPasswordInput" value="Confirm password" />
+                            <h:inputSecret id="confirmPasswordInput"
+                                value="#{AdminPasswordBean.confirmPasswords[u.userID]}" />
+                        </h:panelGroup>
+
+                        <h:commandButton value="Reset" styleClass="btn-card-outline"
+                            action="#{AdminPasswordBean.resetPassword(u)}" />
+                    </h:panelGroup>
+                </h:column>
+
+            </h:dataTable>
+            <br />
+            
+            <h:commandButton value="Save Role Changes" action="#{userList.saveRoleChanges}" class="commandButton" /> 
+        </h:form>
+
+        <br />
+        <!-- Wrapped in h:form so action navigation works properly -->
+      <h:form>
+				<h:commandButton value="Return to Dashboard"
+					action="#{dashboardBean.dashboard()}" styleClass="btn-green50" />
+			</h:form>
+
+        <br />
+    </div>
+    <ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>

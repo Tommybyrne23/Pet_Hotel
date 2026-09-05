@@ -1,0 +1,893 @@
+package com.tus.pethotel;
+
+import java.io.Serializable;
+
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.List;
+
+import com.tus.services.Species;
+
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+@Named("RoomPodBean")
+@SessionScoped
+public class RoomPodBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	// Message client ids are built from these, so if a form id changes in
+	// the page it must change here too.
+	private static final String ROOM_FORM_ID = "adminAddRoom";
+	private static final String POD_FORM_ID = "adminAddPod";
+
+	// Add-a-room form
+	private String roomName;
+	private String roomLocation;
+	private Species roomSpecies;
+	
+	// Number of pods to automatically create for the room
+	private int numberOfPods = 0;
+
+	// Prefix used when automatically naming pods, e.g. A -> A1, A2, A3
+	private String podPrefix;
+
+	// Room currently being edited
+	private int editingRoomID = 0;
+
+	// Temporary values used while editing a room
+	private String editRoomName;
+	private String editRoomLocation;
+	private Species editRoomSpecies;
+
+	// Table filter, not part of either form. Defaults to today.
+	private String availabilityDate = LocalDate.now().toString();
+
+	// Add-a-pod form
+	private String podLabel;
+	private Integer podRoomID;
+
+	@Inject
+	private RoomList roomList;
+
+	@Inject
+	private PodList podList;
+
+
+	// ADDING A ROOM
+
+	public String addRoom() {
+
+	    // ---------------------------------------------------------
+	    // VALIDATE ROOM
+	    // ---------------------------------------------------------
+
+	    if (roomName == null || roomName.trim().isEmpty()) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomNameInput",
+	            "A room name is required."
+	        );
+	    }
+
+	    if (roomLocation == null || roomLocation.trim().isEmpty()) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomLocationInput",
+	            "An area or location is required."
+	        );
+	    }
+
+	    if (roomSpecies == null) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomSpeciesInput",
+	            "Choose which animal this room is for."
+	        );
+	    }
+
+	    // ---------------------------------------------------------
+	    // VALIDATE NUMBER OF PODS
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods < 0 || numberOfPods > 20) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "numberOfPodsInput",
+	            "The number of pods must be between 0 and 20."
+	        );
+	    }
+
+	    // ---------------------------------------------------------
+	    // VALIDATE POD PREFIX WHEN PODS ARE BEING CREATED
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods > 0) {
+
+	        if (podPrefix == null || podPrefix.trim().isEmpty()) {
+	            return blocked(
+	                ROOM_FORM_ID,
+	                "podPrefixInput",
+	                "A pod name/prefix is required when adding pods."
+	            );
+	        }
+
+	        // Keep the generated labels simple and predictable.
+	        // For example: A -> A1, A2, A3.
+	        if (!podPrefix.trim().matches("[A-Za-z]+")) {
+	            return blocked(
+	                ROOM_FORM_ID,
+	                "podPrefixInput",
+	                "The pod name/prefix should contain letters only."
+	            );
+	        }
+	    }
+
+	    // ---------------------------------------------------------
+	    // CREATE THE ROOM
+	    // ---------------------------------------------------------
+
+	    Room room = new Room(
+	        roomName.trim(),
+	        roomLocation.trim(),
+	        roomSpecies
+	    );
+
+	    if (!roomList.addRoom(room)) {
+	        return blocked(
+	            ROOM_FORM_ID,
+	            "roomNameInput",
+	            "A room with that name already exists."
+	        );
+	    }
+
+	    // ---------------------------------------------------------
+	    // CREATE THE PODS
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods > 0) {
+
+	        String prefix = podPrefix.trim();
+
+	        for (int i = 1; i <= numberOfPods; i++) {
+
+	            String label = prefix + i;
+
+	            Pod pod = new Pod(
+	                label,
+	                room.getRoomID()
+	            );
+
+	            if (!podList.addPod(pod)) {
+
+	                // The room has already been created at this point.
+	                // Normally this should not happen because the labels
+	                // are checked by PodList, but report it clearly if it does.
+	                addError(
+	                    "Room " + room.getName()
+	                    + " was created, but pod " + label
+	                    + " could not be added."
+	                );
+
+	                return null;
+	            }
+	        }
+	    }
+
+	    // ---------------------------------------------------------
+	    // SUCCESS MESSAGE
+	    // ---------------------------------------------------------
+
+	    if (numberOfPods == 0) {
+
+	        addSuccess(
+	            room.getName()
+	            + " has been added with no pods."
+	        );
+
+	    } else {
+
+	        addSuccess(
+	            room.getName()
+	            + " has been added with "
+	            + numberOfPods
+	            + " pods: "
+	            + podPrefix.trim()
+	            + "1 to "
+	            + podPrefix.trim()
+	            + numberOfPods
+	            + "."
+	        );
+	    }
+
+	    return reset();
+	}
+
+	// ADDING A POD
+
+	public String addPod() {
+
+		if (podLabel == null || podLabel.trim().isEmpty()) {
+			return blocked(POD_FORM_ID, "podLabelInput", "A pod label is required.");
+		}
+
+		if (podRoomID == null || podRoomID == 0) {
+			return blocked(POD_FORM_ID, "podRoomInput", "Choose which room this pod is in.");
+		}
+
+		
+
+		if (podList.isLabelTakenInRoom(podLabel, podRoomID)) {
+			return blocked(POD_FORM_ID, "podLabelInput", "That room already has a pod with that label.");
+		}
+
+		Pod pod = new Pod(podLabel.trim(), podRoomID);
+
+		if (!podList.addPod(pod)) {
+			return blocked(POD_FORM_ID, "podLabelInput", "The pod could not be added.");
+		}
+
+		addSuccess("Pod " + pod.getLabel() + " has been added to " + roomList.findByID(podRoomID).getName() + " and is out of service. Return it to service when it is ready for use.");
+
+		return reset();
+	}
+
+	// Takes a pod in or out of service, e.g. for cleaning or repairs.
+	// Refuses to take a pod offline while a pet is in it - the button is
+	// disabled for those pods, but the rule belongs here too rather than
+	// relying on the page to enforce it.
+	public String toggleOutOfService(Pod pod) {
+
+		if (pod == null) {
+			return null;
+		}
+
+		if (!pod.isOutOfService() && isPodLocked(pod)) {
+			addError("Pod " + pod.getLabel()
+			+ " has a pet booked in and cannot be taken out of service.");
+			return null;
+		}
+
+		pod.setOutOfService(!pod.isOutOfService());
+		return null;
+	}
+	
+	/**
+	 * Deletes a pod if it is out of service and has no
+	 * confirmed booking or active hold within the next 365 days.
+	 */
+	public String deletePod(Pod pod) {
+
+	    if (pod == null) {
+	        return null;
+	    }
+
+	    boolean deleted = podList.deletePod(pod.getPodID());
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+
+	    if (context != null) {
+
+	        if (deleted) {
+
+	            context.addMessage(
+	                "podTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_INFO,
+	                    "Pod " + pod.getLabel() + " has been deleted.",
+	                    null
+	                )
+	            );
+
+	        } else {
+
+	            context.addMessage(
+	                "podTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Pod " + pod.getLabel()
+	                        + " cannot be deleted. It must be out of service "
+	                        + "and have no bookings within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+	    }
+
+	    return null;
+	}
+
+	public String reset() {
+
+	    roomName = null;
+	    roomLocation = null;
+	    roomSpecies = null;
+
+	    numberOfPods = 0;
+	    podPrefix = null;
+
+	    podLabel = null;
+	    podRoomID = null;
+
+	    return "viewPodsRooms?faces-redirect=true";
+	}
+
+
+	// TABLE HELPERS
+
+	public String getRoomName(Pod pod) {
+		Room room = roomList.findByID(pod.getRoomID());
+		return room == null ? "-" : room.getName();
+	}
+
+	public String getSpeciesLabel(Pod pod) {
+		Species species = podList.getSpeciesFor(pod);
+		return species == null ? "-" : species.getLabel();
+	}
+
+	/*
+	 * Whether the pod is free tonight. The admin page has no date picker, so
+	 * "right now" means a one-night stay starting today - the same overlap
+	 * check the booking page uses, just with today's dates.
+	 */
+	public String getPodStatus(Pod pod) {
+
+	    LocalDate night = parseAvailabilityDate();
+
+	    boolean occupied = podList.isPodOccupied(
+	            pod.getPodID(),
+	            night.toString(),
+	            night.plusDays(1).toString());
+
+	    if (occupied) {
+	        return "Occupied";
+	    }
+
+	    if (pod.isOutOfService()) {
+	        return "Out of service";
+	    }
+
+	    return "Available";
+	}
+	// Pill styling for the status column, using the badge classes
+	// already in styles.css
+	public String getPodStatusClass(Pod pod) {
+
+	    String status = getPodStatus(pod);
+
+	    if ("Occupied".equals(status)) {
+	        return "status-pending";
+	    }
+
+	    if ("Out of service".equals(status)) {
+	        return "status-cancelled";
+	    }
+
+	    return "status-available";
+	}
+		
+		
+	// Shows how many pods each room has, e.g. "Cat Haven (3 pods)"
+	public String getRoomLabel(Room room) {
+		return room.getName() + " (" + podList.countPodsInRoom(room.getRoomID()) + " pods)";
+	}
+
+	public Species[] getSpeciesOptions() {
+		return Species.values();
+	}
+
+	public List<Room> getRoomOptions() {
+		return roomList.getRooms();
+	}
+
+
+	// MESSAGE HELPERS
+
+	// Attaches the message to a field and returns null, so callers can
+	// write "return blocked(...)"
+	private String blocked(String formId, String fieldId, String summary) {
+
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		if (context != null) {
+			context.addMessage(formId + ":" + fieldId, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+		}
+		return null;
+	}
+
+	private void addSuccess(String summary) {
+
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		if (context != null) {
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null));
+
+			// carries the message across the redirect
+			context.getExternalContext().getFlash().setKeepMessages(true);
+		}
+	}
+	
+	private void addError(String summary) {
+
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		if (context != null) {
+			context.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, null));
+		}
+	}
+	
+	// How many of this room's pods are open for business. An offline pod
+	// still occupies its physical slot, so it counts toward Total Pods
+	// but not toward this.
+	public int getPodsInService(Room room) {
+		return podList.countInServicePodsInRoom(room.getRoomID());
+	}
+	
+	/*
+	 * "3/5" - pods free for the night of the selected date, out of the pods
+	 * open for use. An offline pod counts in neither figure.
+	 */
+	public String getPodsAvailable(Room room) {
+
+		LocalDate night = parseAvailabilityDate();
+		String from = night.toString();
+		String to = night.plusDays(1).toString();
+
+		int free = 0;
+
+		for (Pod pod : podList.getPodsForRoom(room.getRoomID())) {
+			if (podList.isPodAvailable(pod.getPodID(), from, to)) {
+				free++;
+			}
+		}
+
+		return free + "/" + podList.countInServicePodsInRoom(room.getRoomID());
+	}
+
+	// Falls back to today if the field is empty or unparseable
+	private LocalDate parseAvailabilityDate() {
+
+		if (availabilityDate == null || availabilityDate.isBlank()) {
+			return LocalDate.now();
+		}
+		try {
+			return LocalDate.parse(availabilityDate.trim());
+		} catch (java.time.format.DateTimeParseException e) {
+			return LocalDate.now();
+		}
+	}
+	
+	/*
+	 * Pods grouped by the room they sit in, so the inventory reads room by
+	 * room rather than in the order the admin happened to add them.
+	 *
+	 * Built by walking the rooms rather than sorting the pods, so the table
+	 * follows the same room order as the Rooms list above it.
+	 */
+	public List<Pod> getPodsByRoom() {
+
+		List<Pod> grouped = new ArrayList<>();
+
+		for (Room room : roomList.getRooms()) {
+			grouped.addAll(podList.getPodsForRoom(room.getRoomID()));
+		}
+
+		return grouped;
+	}
+
+	// Reloads the rooms table against the newly picked date
+	public String applyAvailabilityDate() {
+		return null;			// the value is already bound; returning null just re-renders
+	}
+	
+	/*
+	 * A pod cannot be taken offline while it has a pet in it. Locked when
+	 * occupied on the selected date (so the button agrees with the status
+	 * column) or occupied today (so viewing a future date cannot unlock a
+	 * pod that is in use right now).
+	 */
+	public boolean isPodLocked(Pod pod) {
+
+		if (pod.isOutOfService()) {
+			return false;			// always allow returning a pod to service
+		}
+
+		LocalDate selected = parseAvailabilityDate();
+
+		boolean busyOnSelectedDate = !podList.isPodAvailable(pod.getPodID(),
+				selected.toString(), selected.plusDays(1).toString());
+
+		LocalDate today = LocalDate.now();
+
+		boolean busyToday = !podList.isPodAvailable(pod.getPodID(),
+				today.toString(), today.plusDays(1).toString());
+
+		return busyOnSelectedDate || busyToday;
+	}
+	
+	public String deleteRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    boolean deleted = roomList.deleteRoom(room.getRoomID());
+
+	    FacesContext context = FacesContext.getCurrentInstance();
+
+	    if (context != null) {
+
+	        if (deleted) {
+
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_INFO,
+	                    "Room " + room.getName() + " has been deleted.",
+	                    null
+	                )
+	            );
+
+	        } else {
+
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Room " + room.getName()
+	                        + " cannot be deleted. All pods in the room "
+	                        + "must be out of service and have no bookings "
+	                        + "within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+	    }
+
+	    return null;
+	}
+	
+	public String startEditRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    // A room can only be edited if every pod in it satisfies
+	    // the same rules as deleting that pod.
+	    if (!roomList.canEditRoom(room.getRoomID())) {
+
+	        FacesContext context = FacesContext.getCurrentInstance();
+
+	        if (context != null) {
+	            context.addMessage(
+	                "roomsTableForm",
+	                new FacesMessage(
+	                    FacesMessage.SEVERITY_ERROR,
+	                    "Room " + room.getName()
+	                        + " cannot be edited. All pods in the room "
+	                        + "must be out of service and have no bookings "
+	                        + "within the next 365 days.",
+	                    null
+	                )
+	            );
+	        }
+
+	        return null;
+	    }
+
+	    editingRoomID = room.getRoomID();
+
+	    editRoomName = room.getName();
+	    editRoomLocation = room.getLocation();
+	    editRoomSpecies = room.getSpecies();
+
+	    return null;
+	}
+	
+	public boolean isEditingRoom(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    return room.getRoomID() == editingRoomID;
+	}
+	
+	public String saveRoom(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    if (editRoomName == null || editRoomName.trim().isEmpty()) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditNameInput",
+	            "A room name is required."
+	        );
+	    }
+
+	    if (editRoomLocation == null || editRoomLocation.trim().isEmpty()) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditLocationInput",
+	            "An area or location is required."
+	        );
+	    }
+
+	    if (editRoomSpecies == null) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditSpeciesInput",
+	            "Choose which animal this room is for."
+	        );
+	    }
+
+	    String newName = editRoomName.trim();
+	    String newLocation = editRoomLocation.trim();
+
+	    // Room names must be unique, excluding the room being edited.
+	    if (roomList.isNameTakenByAnother(
+	            newName,
+	            room.getRoomID())) {
+
+	        return blocked(
+	            "roomsTableForm",
+	            "roomEditNameInput",
+	            "A room with that name already exists."
+	        );
+	    }
+
+	    boolean edited = roomList.editRoom(
+	        room.getRoomID(),
+	        newName,
+	        newLocation,
+	        editRoomSpecies
+	    );
+
+	    if (!edited) {
+	        addError("The room could not be updated.");
+	        return null;
+	    }
+
+	    editingRoomID = 0;
+	    editRoomName = null;
+	    editRoomLocation = null;
+	    editRoomSpecies = null;
+
+	    addSuccess("Room " + room.getName() + " has been updated.");
+
+	    return null;
+	}
+	
+	public String cancelRoomEdit() {
+
+	    editingRoomID = 0;
+	    editRoomName = null;
+	    editRoomLocation = null;
+	    editRoomSpecies = null;
+
+	    return null;
+	}
+	
+	public int getDogPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.DOG);
+	}
+
+	public int getCatPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.CAT);
+	}
+
+	public int getBirdPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.BIRD);
+	}
+
+	public int getReptilePodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.REPTILE);
+	}
+
+	public int getFishPodsAvailable() {
+	    return getPodsAvailableForSpecies(Species.FISH);
+	}
+
+	private int getPodsAvailableForSpecies(Species species) {
+
+	    String date = availabilityDate;
+
+	    // If no date has been selected, use today
+	    if (date == null || date.isBlank()) {
+	        date = LocalDate.now().toString();
+	    }
+
+	    // Count availability for one night/day
+	    String nextDay = LocalDate.parse(date)
+	            .plusDays(1)
+	            .toString();
+
+	    return podList.countAvailablePods(
+	            species,
+	            date,
+	            nextDay
+	    );
+	}
+	
+	public boolean isRoomLocked(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    return roomList.isRoomLocked(
+	        room.getRoomID(),
+	        availabilityDate
+	    );
+	}
+	
+	public String toggleRoomPodsOutOfService(Room room) {
+
+	    if (room == null) {
+	        return null;
+	    }
+
+	    boolean changed = roomList.toggleRoomPodsOutOfService(
+	        room.getRoomID(),
+	        availabilityDate
+	    );
+
+	    if (!changed) {
+
+	        FacesContext.getCurrentInstance().addMessage(
+	            null,
+	            new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                "Pods could not be updated.",
+	                "At least one pod in this room has a pet on the selected date."
+	            )
+	        );
+	    }
+
+	    return null;
+	}
+	
+	public boolean allPodsOutOfService(Room room) {
+
+	    if (room == null) {
+	        return false;
+	    }
+
+	    List<Pod> pods = podList.getPodsForRoom(room.getRoomID());
+
+	    if (pods.isEmpty()) {
+	        return false;
+	    }
+
+	    for (Pod pod : pods) {
+	        if (!pod.isOutOfService()) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+	
+	// GETTERS AND SETTERS
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getRoomLocation() {
+		return roomLocation;
+	}
+
+	public void setRoomLocation(String roomLocation) {
+		this.roomLocation = roomLocation;
+	}
+
+	public Species getRoomSpecies() {
+		return roomSpecies;
+	}
+
+	public void setRoomSpecies(Species roomSpecies) {
+		this.roomSpecies = roomSpecies;
+	}
+
+	public String getPodLabel() {
+		return podLabel;
+	}
+
+	public void setPodLabel(String podLabel) {
+		this.podLabel = podLabel;
+	}
+
+	public Integer getPodRoomID() {
+		return podRoomID;
+	}
+
+	public void setPodRoomID(Integer podRoomID) {
+		this.podRoomID = podRoomID;
+	}
+
+	// used for testing
+	public void setRoomList(RoomList roomList) {
+		this.roomList = roomList;
+	}
+
+	public void setPodList(PodList podList) {
+		this.podList = podList;
+	}
+	
+	// The room's size is however many pods have been added to it
+	public int getTotalPods(Room room) {
+		return podList.countPodsInRoom(room.getRoomID());
+	}
+	
+	public String getAvailabilityDate() {
+		return availabilityDate;
+	}
+
+	public void setAvailabilityDate(String availabilityDate) {
+		this.availabilityDate = availabilityDate;
+	}
+	
+	public int getEditingRoomID() {
+	    return editingRoomID;
+	}
+
+	public void setEditingRoomID(int editingRoomID) {
+	    this.editingRoomID = editingRoomID;
+	}
+
+	public String getEditRoomName() {
+	    return editRoomName;
+	}
+
+	public void setEditRoomName(String editRoomName) {
+	    this.editRoomName = editRoomName;
+	}
+
+	public String getEditRoomLocation() {
+	    return editRoomLocation;
+	}
+
+	public void setEditRoomLocation(String editRoomLocation) {
+	    this.editRoomLocation = editRoomLocation;
+	}
+
+	public Species getEditRoomSpecies() {
+	    return editRoomSpecies;
+	}
+
+	public void setEditRoomSpecies(Species editRoomSpecies) {
+	    this.editRoomSpecies = editRoomSpecies;
+	}
+	
+	public int getNumberOfPods() {
+	    return numberOfPods;
+	}
+
+	public void setNumberOfPods(int numberOfPods) {
+	    this.numberOfPods = numberOfPods;
+	}
+
+	public String getPodPrefix() {
+	    return podPrefix;
+	}
+
+	public void setPodPrefix(String podPrefix) {
+	    this.podPrefix = podPrefix;
+	}
+}

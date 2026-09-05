@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="login.css"/>
+	<link rel="icon" type="image/png" href="#{request.contextPath}/images/AdamsArkAndAvery.ico"/>
+	<title>Login</title>
+</h:head>
+
+<h:body styleClass="login-page">
+
+	<div class="login-split">
+
+		<!-- ===== LEFT THIRD: form ===== -->
+		<div class="login-panel">
+
+			<h:form id="loginForm" styleClass="login-form">
+
+				<h1 class="login-brand">3A Pet Hotel</h1>
+				<h2 class="login-welcome">Welcome back, login to access your account.</h2>
+
+				<h:panelGroup layout="block" styleClass="message-box">
+					<h:messages errorClass="error-messages" infoClass="success-messages" />
+				</h:panelGroup>
+
+				<div class="form-field">
+					<h:outputLabel for="emailInput" value="Email" />
+					<h:inputText id="emailInput" value="#{LoginBean.email}"
+						required="true" requiredMessage="Email is required." />
+				</div>
+
+				<div class="form-field">
+					<h:outputLabel for="passwordInput" value="Password" />
+					<h:inputSecret id="passwordInput" value="#{LoginBean.password}"
+						required="true" requiredMessage="Password is required." />
+				</div>
+
+				<h:commandButton value="Login" styleClass="btn-green"
+					action="#{LoginBean.login}" />
+				<div class="login-divider">or</div>
+
+				<h:button outcome="registration" value="Register Here"
+					styleClass="btn-green" />
+
+				<h:button outcome="index" value="Return to Homepage"
+					styleClass="btn-green" />
+
+			</h:form>
+
+		</div>
+
+		<!-- ===== RIGHT TWO THIRDS: hero image ===== -->
+		<div class="login-hero">
+			<h:graphicImage value="/images/AdamsArkAndAvery.ico" alt="3A Company Logo"
+				styleClass="login-hero-img" />
+			<span class="login-hero-text">Serving luxury care since 2012.</span>
+		</div>
+
+	</div>
+
+	<!-- Login error message from faces keep this at the bottom of the page -->
+	<h:panelGroup rendered="#{not empty facesContext.messageList}">
+	    <script type="text/javascript">
+	        window.addEventListener("DOMContentLoaded", function() {
+	            alert("#{facesContext.messageList[0].summary}");
+	        });
+	    </script>
+	</h:panelGroup>
+
+</h:body>
+</html>

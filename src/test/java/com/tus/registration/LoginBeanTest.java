@@ -1,0 +1,152 @@
+package com.tus.registration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.tus.pethotel.*;
+
+class LoginBeanTest {
+
+	LoginBean loginBean;
+	UserList userList;
+	User user;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		userList = new UserList();
+		User user1 = new User("Jonathan", "a00347373@student.tus.ie", "password");
+		userList.addUser(user1);
+		loginBean = new LoginBean();
+		loginBean.setUserList(userList);
+	}
+
+	@Test
+	void testCustomerLoginSuccess() {
+		loginBean.setEmail("a00347373@student.tus.ie");
+		loginBean.setPassword("password");
+		String outcome = loginBean.login();
+		assertEquals("/userDashboard?faces-redirect=true", outcome);
+		assertEquals("a00347373@student.tus.ie", loginBean.getLoggedInUser().getEmail());
+	}
+	
+	/*
+	 * Test for verifying login function when the password is incorrect
+	 * Need to work out issue with jakarta faces
+	 * 
+	 */
+	
+	@Test
+	void testCustomerLoginfailure() {
+		loginBean.setEmail("a00347373@student.tus.ie");
+		loginBean.setPassword("wrong");
+		String result = loginBean.login();
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		assertEquals(null, result);			//LOGIN CHECK FAILS
+		assertFalse(loggedInCheck);
+		
+	}
+	
+	@Test
+	@DisplayName("Test: Admin Logs in")
+	void testAdminLogin() {
+		loginBean.setEmail("admin@3apets.ie");
+		loginBean.setPassword("admin123");
+		String outcome = loginBean.login();
+		assertEquals("/adminDashboard?faces-redirect=true", outcome);
+		boolean isAdmin = loginBean.isAdmin();
+		assertTrue(isAdmin);
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(attendantCheck);
+		assertTrue(customerCheck);
+		}
+	
+	@Test
+	@DisplayName("Test: User Profile fails admin checks")
+	void testUserAsAdmin() {
+		loginBean.setEmail("user@3apets.ie");
+		loginBean.setPassword("user123");
+		String outcome = loginBean.login();
+		assertEquals("/userDashboard?faces-redirect=true", outcome);
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		boolean adminCheck = loginBean.isAdmin();
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(loggedInCheck);
+		assertFalse(adminCheck);					//admin will fail
+		assertFalse(attendantCheck);				//attendant will fail
+		assertTrue(customerCheck);					//will return true
+		
+	}
+	@Test
+	@DisplayName("Test: User Profile fails admin checks")
+	void testUserAsAttendant() {
+		loginBean.setEmail("attendant@3apets.ie");
+		loginBean.setPassword("attendant123");
+		String outcome = loginBean.login();
+		assertEquals("/attendantDashboard?faces-redirect=true", outcome);
+		boolean loggedInCheck = loginBean.isLoggedIn();
+		boolean adminCheck = loginBean.isAdmin();
+		boolean attendantCheck =loginBean.isAttendant();
+		boolean customerCheck =loginBean.isCustomer();
+		assertTrue(loggedInCheck);
+		assertFalse(adminCheck);
+		assertTrue(attendantCheck);
+		assertTrue(customerCheck);
+	}
+	
+	@Test
+	@DisplayName("Test: Logout")
+	void testUserLogout(){
+	//add details to the login bean
+	loginBean.setEmail("user@3apets.ie");
+	loginBean.setPassword("user123");
+	String outcome = loginBean.login();
+	
+	//confirm the user is logged in 
+	assertEquals("/userDashboard?faces-redirect=true", outcome);
+	boolean loggedInCheck = loginBean.isLoggedIn();
+	assertTrue(loggedInCheck);
+	
+	//now....log out...
+	loginBean.logout();
+	//confirm the status is logged out
+	assertFalse(loginBean.isLoggedIn());
+	
+	}
+	
+	@Test
+	@DisplayName("Test: Customer denied admin access")
+	void testCustomerDeniedAdminAccess() {
+
+	    loginBean.setEmail("user@3apets.ie");
+	    loginBean.setPassword("user123");
+
+	    loginBean.login();
+
+	    String result = loginBean.checkAdminAccess();
+
+	    assertEquals("/userDashboard?faces-redirect=true", result);
+	    assertTrue(loginBean.isLoggedIn());
+	    assertEquals("user@3apets.ie", loginBean.getLoggedInUser().getEmail());
+	}
+	
+	@Test
+	@DisplayName("Test: Customer denied attendant access")
+	void testCustomerDeniedAttendantAccess() {
+
+	    loginBean.setEmail("user@3apets.ie");
+	    loginBean.setPassword("user123");
+
+	    loginBean.login();
+
+	    String result = loginBean.checkAttendantAccess();
+
+	    assertEquals("/userDashboard?faces-redirect=true", result);
+	    assertTrue(loginBean.isLoggedIn());
+	    assertEquals("user@3apets.ie", loginBean.getLoggedInUser().getEmail());
+	}
+}

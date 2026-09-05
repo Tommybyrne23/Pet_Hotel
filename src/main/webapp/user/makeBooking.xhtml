@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets"
+	xmlns:pt="jakarta.faces.passthrough">
+
+
+<f:metadata>
+	<!-- Only logged-in users can make a booking -->
+	<f:viewAction action="#{LoginBean.checkCustomerAccess}" />
+</f:metadata>
+
+<h:head>
+	<h:outputStylesheet library="css" name="styles.css" />
+	<title>Make a Booking</title>
+</h:head>
+
+<h:body>
+<ui:include src="/WEB-INF/includes/header.xhtml" />
+	<div class="dashboard-wrapper">
+	<div class="dashboard-title">Make a booking</div>
+
+
+
+	<h:form id="bookingForm" styleClass="account">
+		<h:panelGrid columns="1" styleClass="account"
+			style="max-width: 450px;">
+
+			<h:messages />
+
+			<!-- If user has no pets, show message -->
+			<h:panelGroup rendered="#{!BookingBean.hasPets}">
+				<p
+					style="font-size: 16px; color: #721c24; background-color: #f8d7da; padding: 15px; border-radius: 6px;">
+					You need to register a pet before making a booking.</p>
+				<h:link outcome="/addPet" value="Register a Pet"
+					style="font-size: 16px; font-weight: bold;" />
+			</h:panelGroup>
+
+			<!-- Booking form - only shown if user has pets -->
+			<h:panelGroup rendered="#{BookingBean.hasPets}">
+
+				<!-- Select Pet (dropdown of registered pets) -->
+				<h:outputLabel value="Select Pet:" />
+				<h:selectOneMenu id="petSelect" value="#{BookingBean.selectedPetID}">
+					<f:selectItem itemLabel="-- Select a Pet --" itemValue="0" />
+					<f:selectItems value="#{BookingBean.userPets}" var="pet"
+						itemLabel="#{pet.name} (#{pet.species.label} - #{pet.breed})"
+						itemValue="#{pet.petID}" />
+					<f:ajax execute="@this" listener="#{BookingBean.petChanged}"
+						render="serviceArea" />
+				</h:selectOneMenu>
+
+				<br />
+
+				<!-- Check-in date with calendar picker -->
+				<h:outputLabel value="Check-in Date:" />
+				<h:inputText id="checkInDate" value="#{BookingBean.checkInDate}"
+					required="true" requiredMessage="Check-in date is required."
+					pt:type="date" />
+				
+				<!-- Check-out date with calendar picker -->
+				<h:outputLabel value="Check-out Date:" />
+				<h:inputText id="checkOutDate" value="#{BookingBean.checkOutDate}"
+					required="true" requiredMessage="Check-out date is required."
+					pt:type="date" />
+
+				<br />
+
+				<!-- POD AND EXTRAS - both depend on the selected pet -->
+				<h:panelGroup id="serviceArea" layout="block">
+
+					<h:panelGroup rendered="#{empty BookingBean.availablePods}"
+						layout="block" style="margin: 10px 0; color: #666;">
+						Select a pet to see the pods and services available.
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{not empty BookingBean.availablePods}"
+						layout="block">
+
+											
+					<!-- Updated 
+							The customer doesn't need to assign/select or register their pet into a pod
+							the nightly rate should show up instead with the pod availability for that specieis.   -->
+							<h:outputLabel value="Boarding:" />
+						<h:outputText
+							value="#{BookingBean.podService.name} - &#8364;#{BookingBean.podService.price} per night"
+							style="display: block; margin: 4px 0; font-weight: bold;" />
+						
+						<h:outputText value="#{BookingBean.podAvailabilityNote}"
+							rendered="#{not empty BookingBean.podAvailabilityNote}"
+							style="display: block; margin: 6px 0; color: #555555; font-size: 14px;" />
+
+						<br />
+
+						<!-- Any number of extras, including none -->
+						<h:outputText value="Extra Services:" style="font-weight: bold;" />
+
+						<h:selectManyCheckbox id="extrasSelect"
+							value="#{BookingBean.selectedExtraIDs}" layout="pageDirection"
+							style="margin: 8px 0;">
+
+							<f:selectItems value="#{BookingBean.availableExtras}" var="extra"
+								itemLabel="#{extra.name} (+&#8364;#{extra.price} #{extra.chargeType.label})"
+								itemValue="#{extra.serviceID}" />
+
+						</h:selectManyCheckbox>
+
+					</h:panelGroup>
+
+				</h:panelGroup>
+
+				<br />
+
+				<h:commandButton value="Calculate Price"
+					action="#{BookingBean.calculatePrice}" />
+
+				<h:panelGroup rendered="#{BookingBean.priceCalculated}"
+					layout="block" styleClass="message-box">
+					<h:messages globalOnly="true" errorClass="error-messages"
+						infoClass="success-messages" />
+					Total Price: &#8364;
+					<h:outputText value="#{BookingBean.totalPrice}">
+						<f:convertNumber type="number" minFractionDigits="2"
+							maxFractionDigits="2" />
+					</h:outputText>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{BookingBean.priceCalculated}">
+					<h:commandButton value="Confirm Booking"
+						action="#{BookingBean.confirmAndPay}" />
+				</h:panelGroup>
+
+			</h:panelGroup>
+
+			<br />
+
+			<!-- Cancel / Back -->
+			<h:commandButton value="Cancel" immediate="true"
+				action="#{BookingBean.cancel}" />
+
+			<h:panelGroup styleClass="login-prompt">
+				<h:link outcome="/userDashboard" value="Back to Dashboard" />
+			</h:panelGroup>
+
+		</h:panelGrid>
+	</h:form>
+</div>
+	<ui:include src="/WEB-INF/includes/footer.xhtml" />
+</h:body>
+</html>
+
